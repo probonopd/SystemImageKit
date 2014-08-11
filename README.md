@@ -166,6 +166,7 @@ The result
 
 In the system proposed here, what does the typical end user see?
 
+```
 /boot
 /boot/iso
 /boot/iso/fedora.iso
@@ -178,18 +179,21 @@ In the system proposed here, what does the typical end user see?
 /apps/Firefox.AppImage
 /apps/OpenOffice.AppImage
 /apps/VLC.AppImage
+```
 
 Some additional bootloader and helper files are left out here for brevity, but the total set of files to be managed is much more 
 concise than on a traditional operating system, and in the hundreds rather than in the hundreds of thousands.
 
 Also, "regular users" get the freedom to do things never imagined before:
 
+```
 /boot/iso/fedora.iso
 /boot/iso/ubuntu_32bit.iso
 /boot/iso/ubuntu_64bit.iso
 /apps/Firefox_20.AppImage
 /apps/Firefox_24.AppImage
 /apps/Firefox_25_nightly.AppImage
+```
 
 The system proposed here allows not only for substantial complexity reduction by a factor of thousand, but also allows normal end 
 users to try out operating systems and apps more easily, without having to "commit" to them (in the form of "installing"). This is 
