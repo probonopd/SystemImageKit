@@ -37,40 +37,57 @@ fi
 
 # Configure dconf
 # Obtained with dconf watch /
-# dconf write must be run by each user
-# FIXME: How to do this properly?
-cat >> /etc/profile.d/dconf-defaults.sh <<EOF
-# Fix touchpad
-dconf write /org/gnome/settings-daemon/peripherals/touchpad/motion-threshold 2
-dconf write /org/gnome/settings-daemon/peripherals/touchpad/motion-acceleration 8.1
-dconf write /org/gnome/settings-daemon/peripherals/touchpad/scroll-method 'two-finger-scrolling'
-dconf write /org/gnome/settings-daemon/peripherals/touchpad/tap-to-click true
-dconf write /org/gnome/settings-daemon/peripherals/touchpad/disable-while-typing false
-# Fix Retina display (works on Ubuntu), TODO: Make this run only on Retina devices
+
+cat > /usr/share/glib-2.0/schemas/60_site.gschema.override <<EOF
+[com.canonical.Unity.Launcher]
+favorites=['application://gedit.desktop', 'application://gnome-terminal.desktop', 'application://nautilus.desktop', 'application://firefox.desktop', 'application://libreoffice-writer.desktop', 'application://libreoffice-calc.desktop', 'application://libreoffice-impress.desktop', 'application://ubuntu-software-center.desktop', 'application://unity-control-center.desktop', 'unity://running-apps', 'unity://expo-icon', 'unity://devices']
+
+[org.gnome.settings-daemon.peripherals.touchpad]
+tap-to-click=true
+natural-scroll=false
+left-handed='mouse'
+scroll-method='two-finger-scrolling'
+motion-acceleration=8.1
+horiz-scroll-enabled=true
+disable-while-typing=false
+motion-threshold=2
+touchpad-enabled=true
+EOF
+sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
+
+# Fix Retina display (works on Ubuntu), TODO: Make this run only on Retina devices, and convert to the format above
 # dconf write /org/gnome/desktop/interface/cursor-size 36
 # dconf write /org/gnome/desktop/interface/text-scaling-factor 1.5
 # dconf write /org/compiz/profiles/unity/plugins/expo/x-offset 97
 # dconf write /org/compiz/profiles/unity/plugins/unityshell/launcher-capture-mouse false
 # dconf write /org/compiz/profiles/unity/plugins/unityshell/num-launchers 1
-EOF
-
 # Alternatively, could set the resolution to non-Retina
 # dconf write /org/compiz/profiles/unity/plugins/core/outputs ['1440x900+0+0']
 
 # Disable crash reporter
-sed -i -e 's|enabled=1|enabled=0|g' /etc/default/apport 2>/dev/null
+if [ -e /etc/default/apport ] ; then
+  sed -i -e 's|enabled=1|enabled=0|g' /etc/default/apport
+fi
 
 # No restricted driver nagging in Ubuntu
-echo "Hidden=true" >> /etc/xdg/autostart/jockey-gtk.desktop
+if [ -e /etc/xdg/autostart/jockey-gtk.desktop ] ; then
+  echo "Hidden=true" >> /etc/xdg/autostart/jockey-gtk.desktop
+fi
 
 # Remove dist-upgrade nag screen
-mv /usr/lib/update-manager/check-new-release-gtk /usr/lib/update-manager/check-new-release-gtk.disabled 2>/dev/null
+if [ -e /usr/lib/update-manager/check-new-release-gtk ] ; then
+  mv /usr/lib/update-manager/check-new-release-gtk /usr/lib/update-manager/check-new-release-gtk.disabled
+fi
 
 # Disable gnome-keyring
-mv /usr/bin/gnome-keyring-daemon /usr/bin/gnome-keyring-daemon.disabled || echo "Could not disable gnome-keyring"
+if [ -e /usr/bin/gnome-keyring-daemon ] ; then
+  mv /usr/bin/gnome-keyring-daemon /usr/bin/gnome-keyring-daemon.disabled
+fi
 
 # Disable GNOME Login Sound
-echo "X-GNOME-Autostart-enabled=false" > /usr/share/gnome/autostart/libcanberra-login-sound.desktop
+if [ -e /usr/share/gnome/autostart/libcanberra-login-sound.desktop ] ; then
+  echo "X-GNOME-Autostart-enabled=false" > /usr/share/gnome/autostart/libcanberra-login-sound.desktop
+fi
 
 # Remove crap from desktop
 find /home/ -wholename "*Desktop/*.desktop" -exec rm {} \;
@@ -81,13 +98,15 @@ options hid_apple fnmode=2
 EOF
 rmmod hid_apple 2>/dev/null && modprobe hid_apple
 
-# Dualhead on, works for NVidia on Ubuntu 11.04 at least
-cat > /etc/X11/Xsession.d/80dualhead <<\EOF
-xrandr --output VGA-1 --right-of DVI-I-1
-EOF
+# Dualhead on, works for NVidia on Ubuntu 11.04 at least - no longer needed in 14.04
+# cat > /etc/X11/Xsession.d/80dualhead <<\EOF
+# xrandr --output VGA-1 --right-of DVI-I-1
+# EOF
 
 # Add universe
-sed -i -e 's|main restricted|main universe multiverse restricted|g' /etc/apt/sources.list
+if [ -e /etc/apt/sources.list ] ; then
+  sed -i -e 's|main restricted|main universe multiverse restricted|g' /etc/apt/sources.list
+fi
 
 # Disable apt translations
 rm /var/lib/apt/lists/*_i18n_*
@@ -124,8 +143,12 @@ EOF
 )
 
 # Revert stupidity that prevents running bash files from FAT disks
-sed -i -e 's|showexec|\x00\x00\x00\x00\x00\x00\x00\x00|g' /usr/lib/udisks/udisks-daemon
-sed -i -e 's|showexec|\x00\x00\x00\x00\x00\x00\x00\x00|g' /usr/lib/udisks2/udisksd # Ubuntu 12.10
+if [ -e /usr/lib/udisks/udisks-daemon ] ; then
+  sed -i -e 's|showexec|\x00\x00\x00\x00\x00\x00\x00\x00|g' /usr/lib/udisks/udisks-daemon
+fi
+if [ -e /usr/lib/udisks2/udisksd ] ; then
+  sed -i -e 's|showexec|\x00\x00\x00\x00\x00\x00\x00\x00|g' /usr/lib/udisks2/udisksd # Ubuntu 12.10
+fi
 
 # Mount .ExtensionImage files
 ARCH=$(uname -p)
