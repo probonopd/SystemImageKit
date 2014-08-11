@@ -1,0 +1,467 @@
+#!/bin/sh
+# Filename:      42_live-iso
+# Purpose:       grub-mkconfig helper script for many different Live ISO systems
+#                Working:
+#                * ubuntu-12.04.2-desktop-i386.iso and other Casper-based systems
+#                * binary.hybrid.iso and other debian-live 3.x based systems
+#                * kali-linux-1.0.3-i386.iso
+#                * Fedora-Live-Desktop-i686-19-1.iso and other Dracut 029 based systems
+#                * debian-live-7.5.0-i386-gnome-desktop.iso
+#                * debian-live-7.5-i386-gnome-desktop+nonfree.iso
+#                * Fedora-Live-Desktop-i686-20-1.iso
+#                * Fedora-Live-Xfce-i686-20-1.iso
+#                * kali-linux-1.0.7-i386.iso
+#                * netrunner-13.12-dvd-32bit.iso
+#                * openSUSE-13.1-GNOME-Live-i686.iso
+#                * redobackup-livecd-1.0.4.iso
+#                * ubuntu-14.04-desktop-i386.iso
+#                Not working yet (FIXME):
+#                * webc-20.0.iso
+#                * clonezilla-live-2.1.1-25-i686-pae.iso
+#                * tails-i386-0.19.iso and other debian-live 2.x based systems
+#                * live-2.2.1.iso
+# Authors:       probono (c) 2013-14
+#                based on previous work by the Grml team (grml.org), 
+#                (c) Andreas Gredler <jimmy@grml.org>, Michael Prokop <mika@grml.org>
+# License:       This file is licensed under the GPL v2+.
+# Changelog:
+#                2014-05-25
+#                * Allow for generate script to be run from live USB system
+#                * Redirect generate script output to 1>&2
+#                * insmod part_msdos
+#                2014-08-11
+#                * Use iso/ location relative to this script
+########################################################################################
+
+# Test with
+# sudo qemu -hda /dev/sdX -snapshot
+
+# Temporarily disable GNOME automount
+# also for Unity in Ubuntu 11.04 and later
+gsettings set org.gnome.desktop.media-handling automount 'false'
+
+# Exit on errors
+set -e
+
+echo "insmod part_msdos"
+
+
+prefix=/usr
+exec_prefix=${prefix}
+bindir=${exec_prefix}/bin
+libdir=${exec_prefix}/lib
+
+if [ -e "/usr/lib/grub/grub-mkconfig_lib" ] ; then
+  . /usr/lib/grub/grub-mkconfig_lib # Ubuntu
+fi
+
+if [ -e "/usr/share/grub/grub-mkconfig_lib" ] ; then
+  . /usr/share/grub/grub-mkconfig_lib # Fedora
+fi
+
+if [ -e "/usr/share/grub2/grub-mkconfig_lib" ] ; then
+  . /usr/share/grub2/grub-mkconfig_lib # openSUSE
+fi
+
+
+# default unless configured otherwise:
+# Casper
+if [ -e "/isodevice/boot/iso" ] ; then
+  BOOT_MOUNTPOINT="/isodevice/boot"
+fi
+
+# Dracut
+if [ -e "/run/initramfs/isoscan/boot" ] ; then
+  BOOT_MOUNTPOINT="/run/initramfs/isoscan/boot"
+fi
+
+# debian-live
+if [ -e "/lib/live/mount/findiso/boot" ] ; then
+  BOOT_MOUNTPOINT="/lib/live/mount/findiso/boot"
+fi
+
+# KIWI
+if [ -e "/isofrom/boot" ] ; then
+  BOOT_MOUNTPOINT="/isofrom/boot"
+fi
+
+# Relative to this script
+HERE=$(dirname $(readlink -f "${0}"))
+if [ -e "${HERE}/iso" ] ; then
+  BOOT_MOUNTPOINT="${HERE}"
+fi
+
+ISO_LOCATION=$BOOT_MOUNTPOINT"/iso"
+ADDITIONAL_INITRAMFS=$BOOT_MOUNTPOINT"/iso/additional-initramfs/initramfs"
+ADDITIONAL_GENERATE=$BOOT_MOUNTPOINT"/iso/additional-initramfs/generate"
+rel_additional_initramfs="$(make_system_path_relative_to_its_root $ADDITIONAL_INITRAMFS)"
+
+# Default
+# XKBLAYOUT=de
+# 
+# if [ -e "/etc/default/keyboard" ] ; then
+#   . /etc/default/keyboard 
+# fi
+# 
+# KEYBOARD=$XKBLAYOUT # "de"
+KEYBOARD=de
+
+# LANGUAGE=$LANG # "de_DE.UTF-8"
+LANGUAGE=de_DE.UTF-8
+
+# TIMEZONE=$(cat /etc/timezone) # "Europe/Berlin"
+TIMEZONE="Europe/Berlin"
+
+USER="me"
+HOST="host"
+
+if [ -r /etc/default/live-iso-boot ] ; then
+  . /etc/default/live-iso-boot
+fi
+
+ROOTDEV=$(mount | grep  "on / type" | cut -d " " -f 1)
+
+# http://live.debian.net/manpages/3.x/en/txt/live-config.7.txt
+DEBIAN_LIVE_3_ARGS="for-debian-live-3 --> findiso=\${iso_path} live-config.keyboard-layouts=$KEYBOARD live-config.locales=$LANGUAGE live-config.timezone=$TIMEZONE live-config.username=$USER live-config.hostname=$HOST" # debian-live systems
+
+# http://live.debian.net/manpages/2.x/en/txt/live-boot.7.txt
+# $ROOTDEV = /dev/sdX
+# Currently not working yet, gives
+# losetup /dev/loop0: No such file or directory
+# mkdir: can't create directory '/isofrom': File exists
+# mount: mounting /dev/sda1 on /isofrom failed: No such file or directory
+# or
+# Warning: device for bootoption fromiso= (/boot/iso/tails-i386-0.19.iso) not found
+DEBIAN_LIVE_2_ARGS="for-debian-live-2 --> fromiso=$ROOTDEV/\${iso_path} live-config.keyboard-layouts=$KEYBOARD live-config.locales=$LANGUAGE live-config.timezone=$TIMEZONE live-config.username=$USER live-config.hostname=$HOST"
+
+# Which distros use this?
+# fromhd=$ROOTDEV fromiso=\${iso_path}
+
+# http://manpages.ubuntu.com/manpages/precise/man7/casper.7.html
+CASPER_ARGS="for-casper --> iso-scan/filename=\${iso_path} console-setup/layoutcode=$KEYBOARD locale=$LANGUAGE timezone=$TIMEZONE username=$USER hostname=$HOST noprompt" # casper-based systems besides Ubuntu (which has loopback.cfg)
+
+# http://people.redhat.com/harald/dracut.html
+# Dracut seems to be changing the required args frequently
+# In F19 it expects something like 
+# iso-scan/filename=/boot/iso/Fedora-Live-Desktop-i686-19-1.iso root=live:CDLABEL=Fedora-Live-Desktop-i686-19-1 
+# rootfstype=auto ro rd.live.image quiet rhgb rd.luks=0 rd.md=0 rd.dm=0
+# To pass in language and keyboard, still need to patch files as of Fedora 19
+DRACUT_F19_ARGS="for-dracut --> iso-scan/filename=\${iso_path} selinux=0 rd.live.deltadir=/run/initramfs/isoscan/boot/deltadir vconsole.keymap=$KEYBOARD locale.LANG=$LANGUAGE" 
+# the rest will be parsed from the ISO itself
+
+#cat << EOF
+#
+#        args="$DEBIAN_LIVE_ARGS $CASPER_ARGS custom--> $CUSTOM_BOOTOPTIONS additional--> $additional_param parsed_from_iso-->"
+#        export args
+#
+#EOF
+
+# openSUSE uses KIWI
+# https://bugzilla.novell.com/show_bug.cgi?id=805771#c4
+# https://github.com/openSUSE/kiwi/commit/98369480629c54e1e2610fae7d9e21d93aae23a3
+KIWI_ARGS="for-kiwi --> isofrom_device=/dev/sda1 isofrom_system=\${iso_path} lang=$LANGUAGE"
+
+resolve_dm_name() {
+  retval="$1"
+  base=${1##*/}
+  for block in /sys/block /sys/class/block ; do
+    [ ! -d ${block}/${base}/dm ] && continue
+    retval="/dev/mapper/$(cat ${block}/${base}/dm/name)"
+    break
+  done
+  case "$retval" in
+    /dev/dm-*)
+    minor=${retval##*-}
+   retval="/dev/mapper/$(dmsetup info -C --noheadings -o name -j 253 -m $minor)"
+    ;;
+  esac
+
+  echo "$retval"
+}
+
+get_dependencies() {
+  device=${1}
+  if [ -z ${device} ] ; then
+    return
+  fi
+  device=$(readlink -f ${device})
+  case "$device" in
+    /dev/mapper/*)
+    device="/dev/dm-$(dmsetup info -C --noheadings -o minor "$device")"
+    ;;
+  esac
+
+  base=${device##*/}
+  dependencies=""
+  additional_dependencies=""
+  for block in /sys/block /sys/class/block ; do
+    [ ! -d ${block}/${base}/slaves ] && continue
+    for file in  ${block}/${base}/slaves/* ; do
+      dep_name="/dev/${file##*/}"
+      dep_name=$(resolve_dm_name ${dep_name})
+
+      # resolve recursively all dependencies
+      additional_dependencies=$(get_dependencies ${dep_name})
+
+      dependencies="$dependencies $additional_dependencies $dep_name"
+    done
+    break
+  done
+  echo $dependencies
+
+}
+
+iso_list=""
+for file in "${ISO_LOCATION}"/*.iso ; do
+     if grub_file_is_not_garbage "$file" ; then
+       iso_list="$iso_list $file "
+     fi
+done
+
+sh $ADDITIONAL_GENERATE 1>&2
+
+for the_iso in $iso_list ; do
+
+  rel_dirname="$(make_system_path_relative_to_its_root $(dirname $the_iso))"
+  iso_name="$(basename $the_iso)"
+  device="$(${grub_probe} -t device ${the_iso})"
+
+  additional_param=""
+
+  case "$device" in
+    /dev/mapper*|/dev/md*)
+      dependencies=$(get_dependencies ${device})
+      dep_string=""
+      for dep in $dependencies $device ; do
+        dep_string="$dep_string,$dep"
+      done
+      dep_string=${dep_string#,}
+      additional_param="live-media=$dep_string"
+    ;;
+  esac
+
+  title="$iso_name"
+  M=/tmp/.__mount/
+  mkdir $M
+  mount -o ro "$the_iso" $M
+  #ls $M >&2
+
+  # Ubuntu has loopback.cfg, debian-live systems have live.cfg, Fedora 19 has isolinux.cfg, some have EFI/grub.cfg
+  unset CONFIG
+  CONFIG=$(find $M -name loopback.cfg | head -n 1 | sed -e "s|$M|/|g")
+  if [ -z "$CONFIG" ] ; then
+      CONFIG=$(find $M -name live.cfg | head -n 1 | sed -e "s|$M|/|g")
+  fi
+  if [ -z "$CONFIG" ] ; then
+      CONFIG=$(find $M -name isolinux.cfg | head -n 1 | sed -e "s|$M|/|g")
+  fi
+  if [ -z "$CONFIG" ] ; then
+      CONFIG=$(find $M -name grub.cfg | head -n 1 | sed -e "s|$M|/|g")
+  fi
+
+  if [ ! -f $M/$CONFIG ] ; then
+      echo "  .cfg not found, skipping" >&2
+      umount $M
+      rm -r $M
+      continue
+  fi
+
+  # Everyone is welcome to improve the regex; be sure to test on a  *lot* of different live ISOs
+  unset INITRD
+  unset KERNEL
+  unset ARGS
+  KERNEL=$(grep "vmlinu" $M/$CONFIG | head -n 1 | grep -o -e '/[[:alnum:]\/\.\-\_]*' | head -n 1 )
+  INITRD=$(grep "initrd" $M/$CONFIG | head -n 1 | grep -o -e '/[[:alnum:]\/\.\-\_]*' | head -n 1 )
+  ARGS=$(grep "boot=" $M/$CONFIG | sed -e "s|linux\t||" | head -n 1 | sed -e "s|append ||" \
+         -e "s|initrd=||" -e "s|$KERNEL||" -e "s|linux ||" -e "s|\t||" -e 's/^ *//g' -e 's/ *$//g' -e "s|$INITRD ||")
+  echo $ARGS >&2
+  if [ -z "$ARGS" ] ; then
+    # Fedora 19 uses isolinux.cfg
+    KERNELNAME=$(grep "kernel" $M/$CONFIG | head -n 1 | awk '{ print $2; }')
+    echo "KERNELNAME $KERNELNAME from $M/$CONFIG" >&2
+    KERNEL=$(find $M -name $KERNELNAME | head -n 1 | sed -e "s|$M|/|g")
+    INITRDNAME=$(grep "append" $M/$CONFIG | head -n 1 | awk '{ print $2; }' | sed -e 's|initrd=||g' )
+    echo $INITRDNAME >&2
+    INITRD=$(find $M -name $INITRDNAME | head -n 1 | sed -e "s|$M|/|g")
+    ARGS=$(grep "root=live" $M/$CONFIG | sed -e "s|linux\t||" | head -n 1 | sed -e "s|append ||" \
+           -e "s|initrd=||" -e "s|$KERNELNAME||" -e "s|linux ||" -e "s|\t||" -e 's/^ *//g' \
+           -e 's/ *$//g' -e "s|$INITRDNAME ||" ) # For KIWI, I do this specifically below (easier)
+  fi
+
+  # Find a human-readable name for the ISO
+  unset NAME
+  # if [ -e $M/.disk/info ] ; then
+  #     NAME=$(cat $M/.disk/info | head -n 1 | sed -e 's|\"||g')
+  # fi
+
+  # If we did not find a name, we use the ISO filename
+  if [ -z "$NAME" ] ; then
+      NAME=$title
+  fi
+
+  # Find out the type and version of the live ISO
+  unset CASPER_VERSION
+  unset DEBIAN_LIVE_VERSION
+  unset DRACUT_VERSION
+  unset KIWI_VERSION
+  unset ANDROIDX86_VERSION
+  if [ -e $M/casper/filesystem.manifest ] ; then
+      CASPER_VERSION=$(grep -e "^casper" $M/casper/filesystem.manifest | head -n 1 | awk '{ print $2; }')
+  fi
+  if [ -e $M/live/filesystem.packages ] ; then
+      DEBIAN_LIVE_VERSION=$(grep -e "^live-boot" $M/live/filesystem.packages | head -n 1 | awk '{ print $2; }')
+  fi
+  if [ -e $M/LiveOS/squashfs.img ] ; then
+      mount $M/LiveOS/squashfs.img $M -o loop
+      if [ -e $M/LiveOS/ext3fs.img ] ; then
+          mount $M/LiveOS/ext3fs.img $M -o loop
+          DRACUT_VERSION=$(find $M/var/lib/yum/yumdb/ -name *dracut-0* | grep -o -e dracut.*$ | sed -e 's|dracut-||g')
+          # . $M/lib/dracut/dracut-version.sh # conveniently sets DRACUT_VERSION but does not exist in CentOS 6.4
+          NAME=$(cat $M/etc/redhat-release)
+          umount $M
+      fi
+      umount $M
+  fi
+  if [ -e $M/live/filesystem.git/objects/pack ] ; then
+      echo "  Type of live ISO detected (uses GIT pack), but don't know how to loop-boot these" >&2
+  fi
+  if [ -e $M/config.isoclient ] ; then
+      IMAGE=$(find $M/ -type f -size +150M | head -n 1) # Find file larger than 150 MB
+      mount $IMAGE $M -o loop
+      KIWI_VERSION=$(cat $M/image/.profile | grep kiwi_iversion | cut -d "'" -f 2)
+      NAME=$(cat $M/image/.profile | grep kiwi_displayname | cut -d "'" -f 2)
+      umount $M
+  fi
+  if [ -e $M/isolinux/android-x86.png ] ; then
+    ANDROIDX86_VERSION=1
+  fi
+
+  # Depending on the type of the live ISO, give it the corresponding args
+  unset VERSION
+  unset MAJOR
+  unset LIVE_ARGS
+  if [ -n "$CASPER_VERSION" ] ; then
+      VERSION="Casper $CASPER_VERSION"
+      MAJOR=$(echo $CASPER_VERSION | cut -d "." -f 1)
+      LIVE_ARGS="$CASPER_ARGS"
+  fi
+  if [ -n "$DEBIAN_LIVE_VERSION" ] ; then
+      VERSION="debian-live $DEBIAN_LIVE_VERSION"
+      MAJOR=$(echo $DEBIAN_LIVE_VERSION | cut -d "." -f 1)
+      if [ $MAJOR -eq 3 ] ; then
+          LIVE_ARGS="$DEBIAN_LIVE_3_ARGS"
+      elif [ $MAJOR -eq 2 ] ; then
+          LIVE_ARGS="$DEBIAN_LIVE_2_ARGS"
+      else
+          echo "  Unhandled debian-live version found, skipping" >&2
+          umount $M
+          rm -r $M
+          continue
+      fi
+  fi
+  if [ -n "$DRACUT_VERSION" ] ; then
+      VERSION="Dracut $DRACUT_VERSION"
+      MAJOR=$(echo $DRACUT_VERSION | cut -d "-" -f 1)
+      LIVE_ARGS="$DRACUT_F19_ARGS"
+      # patch-dracut-initrd "${the_iso}" >&2
+      if [ $MAJOR -lt 29 ] ; then
+          echo "  Dracut versions below 029 do not support ISO booting, need additional initramfs!" >&2
+          # Patch the initrd to make it happen...
+          # umount $M
+          # rm -r $M
+          # continue
+      fi
+  fi
+  if [ -n "$KIWI_VERSION" ] ; then
+      VERSION="KIWI $KIWI_VERSION"
+      LIVE_ARGS="$KIWI_ARGS"
+      ARGS=$(grep "append" $M/$CONFIG | head -n 1 | sed -e 's|append initrd=initrd ||g')
+  fi
+  if [ -n "$ANDROIDX86_VERSION" ] ; then
+     VERSION="ANDROIDX86 $ANDROIDX86_VERSION"
+     LIVE_ARGS=""
+     KERNEL="/kernel"
+     INITRD="/initrd.img"
+     ARGS=$(grep "append" $M/isolinux/isolinux.cfg | head -n 1 | sed -e 's|      append initrd=/initrd.img ||g')
+  fi
+
+  echo "  CONFIG=$CONFIG" >&2
+  echo "  NAME=$NAME" >&2
+  echo "  INITRD=$INITRD" >&2
+  echo "  KERNEL=$KERNEL" >&2
+  echo "  ARGS=$ARGS" >&2
+  echo "  CASPER_VERSION=$CASPER_VERSION" >&2
+  echo "  DEBIAN_LIVE_VERSION=$DEBIAN_LIVE_VERSION" >&2
+  echo "  DRACUT_VERSION=$DRACUT_VERSION" >&2
+  echo "  KIWI_VERSION=$KIWI_VERSION" >&2
+  echo "  ANDROIDX86_VERSION=$ANDROIDX86_VERSION" >&2
+
+  # Check whether we have KERNEL, INITRD and they are files on the ISO, and whether we have ARGS
+  if [ ! -f $M/$KERNEL ] ; then
+      echo "  Kernel not found, skipping" >&2
+      umount $M
+      rm -r $M
+      continue
+  fi
+  if [ ! -f $M/$INITRD ] ; then
+      echo "  Initrd not found, skipping" >&2
+      umount $M
+      rm -r $M
+      continue
+  fi
+  if [ -z "$ARGS" ] ; then
+      echo "  Boot arguments not found, skipping" >&2
+      umount $M
+      rm -r $M
+      continue
+  fi
+
+  umount $M
+  rm -r $M
+
+  if [ -z "$VERSION" ] ; then
+      echo "  Type of live ISO not detected, skipping" >&2
+      continue
+  fi
+
+  # Check if there is a initrd file next to the ISO that has the same name as the ISO + ".addon"
+  # if that is the case, then assume that we want to ise that file as the initrd in addition to
+  # the one contained inside the ISO. This allows for easy customization of the early (and thus, late)
+  # boot process of the Live ISO.
+  # If there is a file ending in ".override", we don't load the original initramfs but only the override.
+  # This is beneficial e.g., for backporting later initramfs to legacy version systems.
+
+  if [ -f "${rel_dirname}/${iso_name}.override" ] ; then
+      INITRD_STRING="$rel_additional_initramfs ${rel_dirname}/${iso_name}.override" 
+  elif [ -f "${rel_dirname}/${iso_name}.addon" ] ; then
+      INITRD_STRING="(loop)$INITRD $rel_additional_initramfs ${rel_dirname}/${iso_name}.addon" # Look Ma, multiple initramfs images
+  else
+      INITRD_STRING="(loop)$INITRD $rel_additional_initramfs"
+  fi
+
+  cat << EOF
+menuentry "${iso_name} - ${VERSION}" {
+        iso_path="${rel_dirname}/${iso_name}"
+        search --no-floppy --file \${iso_path} --set
+        live_args="$LIVE_ARGS"
+        custom_args="$CUSTOM_BOOTOPTIONS"
+        iso_args="$ARGS"
+        loopback loop \${iso_path}
+        linux (loop)$KERNEL \${live_args} \${custom_args} \${iso_args}
+        initrd $INITRD_STRING
+}
+EOF
+# The following line adds a lot of complicated looking
+# stuff to grub.conf which I don't really need
+# but it's probably there for a reason...
+# $( prepare_grub_to_access_device "$device" | sed -e "s/^/        /")
+
+done
+
+# Do not exit on errors anymore
+set +e
+
+# Enable GNOME automount again
+gsettings set org.gnome.desktop.media-handling automount 'true'
+
+## END OF FILE #################################################################

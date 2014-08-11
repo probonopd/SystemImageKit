@@ -1,0 +1,34 @@
+#!/bin/bash
+
+#set -x
+#set -e
+
+#
+# Create additional, secondary initramfs image that we load in addition
+# to the one contained on the Live ISO
+#
+
+HERE="$(dirname "$(readlink -f "${0}")")"
+
+TEMP=/tmp/.__initrdtmp
+
+if [ $UID -ne 0 ] ; then
+  echo "You need to be root"
+  exit 1
+fi
+
+mkdir "${TEMP}"
+cd "${TEMP}"
+
+DIRS=$(find "${HERE}" -maxdepth 1 -mindepth 1 -type d)
+
+for DIR in $DIRS; do
+  cp -rf "${DIR}"/* .
+done
+
+echo "Packing ${HERE}/initramfs ..."
+find . | cpio -o -H newc -v | gzip -9 > "${HERE}/initramfs"
+
+cd - >/dev/null
+
+rm -r "${TEMP}"

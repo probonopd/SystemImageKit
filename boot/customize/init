@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Mount first FAT partition that is mounted read-write
+# assuming this is the partition that holds the Live ISO
+ISOHOST=$(mount | grep "type vfat" | head -n 1 | cut -d " " -f 3)
+mount "${ISOHOST}" -o remount,rw
+
+try() {
+  if [ -e "$1" ] ; then
+   $@
+  else
+    echo "* $(basename $1) not installed"
+  fi
+}
+
+# Fedora; based on
+# http://anderson.the-silvas.com/2014/02/14/fedora-20-on-a-macbook-pro-13-late-2013-retina-display/
+#if [ -e /etc/redhat-release ] ; then
+  try /usr/libexec/gsd-backlight-helper --set-brightness 4
+  try rfkill block bluetooth # TODO: Disable Bluetooth
+  echo 50 > /sys/class/leds/smc::kbd_backlight/brightness
+  echo '1500' > '/proc/sys/vm/dirty_writeback_centisecs'
+  echo 'min_power' > '/sys/class/scsi_host/host0/link_power_management_policy'
+  echo '1' > '/sys/module/snd_hda_intel/parameters/power_save'
+  echo '0' > '/proc/sys/kernel/nmi_watchdog'
+  for DEVICE in $(find /sys/bus/pci/devices/*) ; do
+    echo "auto" > $DEVICE/power/control
+  done
+#fi
+
+exit 0
+
+# Configure dconf
+# Obtained with dconf watch /
+# dconf write must be run by each user
+# FIXME: How to do this properly?
+cat >> /etc/profile.d/dconf-defaults.sh <<EOF
+# Fix touchpad
+dconf write /org/gnome/settings-daemon/peripherals/touchpad/motion-threshold 2
+dconf write /org/gnome/settings-daemon/peripherals/touchpad/motion-acceleration 8.1
+dconf write /org/gnome/settings-daemon/peripherals/touchpad/scroll-method 'two-finger-scrolling'
+dconf write /org/gnome/settings-daemon/peripherals/touchpad/tap-to-click true
+dconf write /org/gnome/settings-daemon/peripherals/touchpad/disable-while-typing false
+# Fix Retina display (works on Ubuntu)
+# dconf write /com/ubuntu/user-interface/scale-factor {'eDP1': 12}
+dconf write /org/gnome/desktop/interface/cursor-size 36
+# dconf write /org/gnome/desktop/interface/scaling-factor uint32 1
+dconf write /org/gnome/desktop/interface/text-scaling-factor 1.5
+dconf write /org/compiz/profiles/unity/plugins/expo/x-offset 97
+dconf write /org/compiz/profiles/unity/plugins/unityshell/launcher-capture-mouse false
+dconf write /org/compiz/profiles/unity/plugins/unityshell/num-launchers 1
+EOF
+
+# Alternatively, could set the resolution to non-Retina
+# dconf write /org/compiz/profiles/unity/plugins/core/outputs ['1440x900+0+0']
