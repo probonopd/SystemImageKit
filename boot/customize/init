@@ -150,6 +150,11 @@ if [ -e /usr/lib/udisks2/udisksd ] ; then
   sed -i -e 's|showexec|\x00\x00\x00\x00\x00\x00\x00\x00|g' /usr/lib/udisks2/udisksd # Ubuntu 12.10
 fi
 
+# Set the correct timezone; TODO: Move this to the localization and make it dependent on cmdline
+if [ -e /usr/share/zoneinfo/Europe/Berlin ] ; then
+  ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+fi
+
 # Mount .ExtensionImage files
 ARCH=$(uname -p)
 EXTENSIONS=$(find $HERE/$ARCH/ -type f -name *ExtensionImage)
