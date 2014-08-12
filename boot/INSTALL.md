@@ -58,9 +58,8 @@ umount /mnt
 If you format the device manually and run into "error: will not proceed with blocklists", then use gparted to move the start of the first partition up 1MB. This works without having to reformat the device.
 
 We need to do this only once.
-Whenever we add additional ISOs, we just have to re-run 
+Whenever we add additional ISOs, we just have to re-run (the example is for a running Ubuntu Live system):
 
 ```
-/mnt/boot/42_liveiso > /mnt/boot/grub/grub.cfg
-
+/isodevice/boot/42_liveiso > /isodevice/boot/grub/grub.cfg
 ```
