@@ -52,6 +52,9 @@ horiz-scroll-enabled=true
 disable-while-typing=false
 motion-threshold=2
 touchpad-enabled=true
+
+[com.canonical.indicator.datetime]
+timezone-name='Europe/Berlin Berlin'
 EOF
 sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
 
