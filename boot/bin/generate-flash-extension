@@ -2,18 +2,30 @@
 
 HERE="$(dirname "$(readlink -f "${0}")")"
 
-mksquashfs -v || sudo apt-get install squashfs-tools
+mksquashfs -v || apt-get install squashfs-tools
 
-rm "${HERE}/../customize/x86_64/flash.ExtensionImage"
+rm -f "${HERE}/../customize/x86_64/flash.ExtensionImage"
 mkdir /tmp/flash_x86_64
 cd /tmp/flash_x86_64
 wget -c "http://fpdownload.macromedia.com/get/flashplayer/current/install_flash_player_11_linux.x86_64.tar.gz"
 tar xfvz *.tar.gz
 mkdir -p usr/lib/mozilla/plugins/
 mv libflashplayer.so usr/lib/mozilla/plugins/
-rm *.tar.gz
-rm readme.txt
+rm -f *.tar.gz
+rm -f readme.txt
 mkdir -p "${HERE}/../customize/x86_64/"
 mksquashfs . "${HERE}/../customize/x86_64/flash.ExtensionImage"
+cd -
 
+rm -f "${HERE}/../customize/i686/flash.ExtensionImage"
+mkdir /tmp/flash_i686
+cd /tmp/flash_i686
+wget -c "http://fpdownload.macromedia.com/get/flashplayer/current/install_flash_player_11_linux.i386.tar.gz"
+tar xfvz *.tar.gz
+mkdir -p usr/lib/mozilla/plugins/
+mv libflashplayer.so usr/lib/mozilla/plugins/
+rm -f *.tar.gz
+rm -f readme.txt
+mkdir -p "${HERE}/../customize/i686/"
+mksquashfs . "${HERE}/../customize/i686/flash.ExtensionImage"
 cd -
