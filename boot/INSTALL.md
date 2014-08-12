@@ -36,9 +36,9 @@ grub-install --boot-directory=/mnt/boot/ /dev/sdX
 # Install bootloader for Mac
 sudo apt-get -y install grub-efi-amd64
 mkdir /mnt/boot/efi
-sudo grub-install --target=x86_64-efi --efi-directory=/mnt/boot/efi --boot-directory=/mnt/boot/ /dev/sdd1
+sudo grub-install --target=x86_64-efi --efi-directory=/mnt/boot/EFI --boot-directory=/mnt/boot/ /dev/sdX1
 mkdir -p /mnt/EFI/BOOT
-mv /mnt/boot/efi/EFI/ubuntu/grubx64.efi /mnt/EFI/BOOT/bootx64.efi
+mv /mnt/boot/EFI/BOOT/grubx64.efi /mnt/EFI/BOOT/bootx64.efi
 
 # Download Ubuntu ISO
 wget -c "http://releases.ubuntu.com/14.04.1/ubuntu-14.04.1-desktop-amd64.iso" -O /mnt/boot/iso/ubuntu-14.04.1-desktop-amd64.iso
@@ -47,7 +47,10 @@ wget -c "http://releases.ubuntu.com/14.04.1/ubuntu-14.04.1-desktop-amd64.iso" -O
 /mnt/boot/42_liveiso > /mnt/boot/grub/grub.cfg
 
 # Create and install an ExtensionImage for Adobe Flash Player (just as an example)
-/mnt/boot/bin/generate-flash-extension
+bash /mnt/boot/bin/generate-flash-extension
+
+# Create and install an ExtensionImage for Broadcom WLAN firmware
+bash /mnt/boot/bin/generate-b43firmware-extension
 
 umount /mnt
 
