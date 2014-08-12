@@ -15,5 +15,5 @@ LC_MONETARY=$LOCALE
 LC_PAPER=$LOCALE
 LC_MEASUREMENT=$LOCALE
 EOF
-. /etc/locale.conf
+. "${NEWROOT}"/etc/locale.conf
 fi
