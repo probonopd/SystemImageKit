@@ -13,6 +13,7 @@ mkdir -p usr/lib/mozilla/plugins/
 mv libflashplayer.so usr/lib/mozilla/plugins/
 rm *.tar.gz
 rm readme.txt
+mkdir -p "${HERE}/../customize/x86_64/"
 mksquashfs . "${HERE}/../customize/x86_64/flash.ExtensionImage"
 
 cd -
