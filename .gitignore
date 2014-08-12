@@ -1,4 +1,4 @@
-# git ls-files --others --exclude-from=.git/info/exclude
+# git ls-files --others --exclude-from=.gitignore
 # Lines that start with '#' are comments.
 *~
 *.iso
