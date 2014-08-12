@@ -4,9 +4,11 @@
 *.iso
 .Trash-999
 boot/deltadir/lib/firmware
+EFI/
 boot/grub/fonts/
 boot/grub/i386-pc/
 boot/grub/locale/
+boot/grub/x86_64-efi/
 boot/deltadir/usr/bin/*
 *ExtensionImage
 */initramfs
