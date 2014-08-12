@@ -1,7 +1,7 @@
 Install
 -------
 
-Boot Ubuntu Live system and run the following steps.
+Boot Ubuntu Live system (tested with Ubuntu 14.04 LTS Trusty Tahr) and run the following steps.
 NOTE: All data on /dev/sdX will be deleted.
 
 ```
@@ -45,6 +45,10 @@ wget -c "http://releases.ubuntu.com/14.04.1/ubuntu-14.04.1-desktop-amd64.iso" -O
 
 # Configure bootloader
 /mnt/boot/42_liveiso > /mnt/boot/grub/grub.cfg
+
+umount /mnt
+
+# The disk should now be bootable
 
 ```
 
