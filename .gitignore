@@ -13,3 +13,8 @@ boot/deltadir/usr/bin/*
 *ExtensionImage
 */initramfs
 */grub.cfg
+.Spotlight-V100/
+.TemporaryItems/
+._*
+.fseventsd/
+

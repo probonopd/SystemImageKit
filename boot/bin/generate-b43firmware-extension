@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#
+# Install firmware for Broadcom BCM43xx based wireless network card
+# into ExtensionImage
+#
+
+HERE="$(dirname "$(readlink -f "${0}")")"
+
+which mksquashfs || apt-get install squashfs-tools
+which b43-fwcutter || apt-get install b43-fwcutter
+
+rm -f "${HERE}/../customize/x86_64/b43firmware.ExtensionImage"
+
+mkdir -p /tmp/firmware/lib/firmware
+cd /tmp/firmware/
+wget -c "http://www.lwfinger.com/b43-firmware/broadcom-wl-5.100.138.tar.bz2"
+tar xfvz *.tar.bz2
+b43-fwcutter  ./broadcom-wl-5.100.138/linux/wl_apsta.o -w .
+mv b43 lib/firmware/
+rm -rf broadcom-* 
+mkdir -p "${HERE}/../customize/x86_64/"
+mksquashfs . "${HERE}/../customize/x86_64/b43firmware.ExtensionImage"
+cd -
+
+# TODO: Make this architecture independent
+mkdir -p "${HERE}/../customize/i686/"
+cp "${HERE}/../customize/x86_64/b43firmware.ExtensionImage" "${HERE}/../customize/i686/b43firmware.ExtensionImage"
