@@ -46,6 +46,9 @@ wget -c "http://releases.ubuntu.com/14.04.1/ubuntu-14.04.1-desktop-amd64.iso" -O
 # Configure bootloader
 /mnt/boot/42_liveiso > /mnt/boot/grub/grub.cfg
 
+# Create and install an ExtensionImage for Adobe Flash Player (just as an example)
+/mnt/boot/bin/generate-flash-extension
+
 umount /mnt
 
 # The disk should now be bootable
