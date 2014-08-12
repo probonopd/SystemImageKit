@@ -61,5 +61,6 @@ We need to do this only once.
 Whenever we add additional ISOs, we just have to re-run (the example is for a running Ubuntu Live system):
 
 ```
+sudo su
 /isodevice/boot/42_liveiso > /isodevice/boot/grub/grub.cfg
 ```
