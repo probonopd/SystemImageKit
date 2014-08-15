@@ -2,7 +2,15 @@
 
 HERE="$(dirname "$(readlink -f "${0}")")"
 
-which mksquashfs || apt-get install squashfs-tools
+if [ -e /usr/bin/apt-get ] ; then
+  which mksquashfs || apt-get -y install squashfs-tools
+  which wget || apt-get -y install wget
+fi
+
+if [ -e /usr/bin/yum ] ; then
+  which mksquashfs || yum -y install squashfs-tools
+  which wget || yum -y install wget
+fi
 
 rm -f "${HERE}/../customize/x86_64/flash.ExtensionImage"
 mkdir /tmp/flash_x86_64
