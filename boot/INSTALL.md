@@ -31,7 +31,8 @@ git clone https://github.com/probonopd/SystemImageKit.git /mnt
 
 # Install bootloader for PC
 # Tested with grub-install (GRUB) 2.02~beta2-9 from Ubuntu 14.04 LTS Trusty Tahr
-grub-install --boot-directory=/mnt/boot/ /dev/sdX
+grub-install --boot-directory=/mnt/boot/ /dev/sdX # Ubuntu
+grub2-install --boot-directory=/mnt/boot/ /dev/sdX # Fedora
 
 # Install bootloader for Mac
 sudo apt-get -y install grub-efi-amd64
