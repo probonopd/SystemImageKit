@@ -7,15 +7,24 @@
 
 HERE="$(dirname "$(readlink -f "${0}")")"
 
-which mksquashfs || apt-get install squashfs-tools
-which b43-fwcutter || apt-get install b43-fwcutter
+if [ -e /usr/bin/apt-get ] ; then
+  which mksquashfs || apt-get -y install squashfs-tools
+  which b43-fwcutter || apt-get -y install b43-fwcutter
+  which wget || apt-get -y install wget
+fi
+
+if [ -e /usr/bin/yum ] ; then
+  which mksquashfs || yum -y install squashfs-tools
+  which b43-fwcutter || yum -y install b43-fwcutter
+  which wget || yum -y install wget
+fi
 
 rm -f "${HERE}/../customize/x86_64/b43firmware.ExtensionImage"
 
 mkdir -p /tmp/firmware/lib/firmware
 cd /tmp/firmware/
 wget -c "http://www.lwfinger.com/b43-firmware/broadcom-wl-5.100.138.tar.bz2"
-tar xfvz *.tar.bz2
+tar xfvj *.tar.bz2
 b43-fwcutter  ./broadcom-wl-5.100.138/linux/wl_apsta.o -w .
 mv b43 lib/firmware/
 rm -rf broadcom-* 
