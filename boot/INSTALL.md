@@ -31,6 +31,7 @@ git clone https://github.com/probonopd/SystemImageKit.git /mnt
 
 # Install bootloader for PC
 # Tested with grub-install (GRUB) 2.02~beta2-9 from Ubuntu 14.04 LTS Trusty Tahr
+# and with grub2-install (GRUB) 2.02~beta2 from Fedora 22 (Rawhide)
 grub-install --boot-directory=/mnt/boot/ /dev/sdX # Ubuntu
 grub2-install --boot-directory=/mnt/boot/ /dev/sdX # Fedora
 
@@ -45,7 +46,7 @@ mv /mnt/boot/EFI/BOOT/grubx64.efi /mnt/EFI/BOOT/bootx64.efi
 wget -c "http://releases.ubuntu.com/14.04.1/ubuntu-14.04.1-desktop-amd64.iso" -O /mnt/boot/iso/ubuntu-14.04.1-desktop-amd64.iso
 
 # Configure bootloader
-/mnt/boot/42_liveiso > /mnt/boot/grub/grub.cfg
+/mnt/boot/42_liveiso > /mnt/boot/gru*/grub.cfg
 
 # Create and install an ExtensionImage for Adobe Flash Player (just as an example)
 bash /mnt/boot/bin/generate-flash-extension
