@@ -1,0 +1,23 @@
+#! /bin/sh
+
+PREREQ=""
+DESCRIPTION="Touch LOCAL-BOTTOM..."
+
+prereqs()
+{
+       echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+       prereqs
+       exit 0
+       ;;
+esac
+
+. /scripts/casper-functions
+
+log_begin_msg "$DESCRIPTION"
+
+touch /root/LOCAL-BOTTOM
