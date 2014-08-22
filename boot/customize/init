@@ -82,11 +82,6 @@ if [ -e /usr/lib/update-manager/check-new-release-gtk ] ; then
   mv /usr/lib/update-manager/check-new-release-gtk /usr/lib/update-manager/check-new-release-gtk.disabled
 fi
 
-# Disable gnome-keyring
-if [ -e /usr/bin/gnome-keyring-daemon ] ; then
-  mv /usr/bin/gnome-keyring-daemon /usr/bin/gnome-keyring-daemon.disabled
-fi
-
 # Disable GNOME Login Sound
 if [ -e /usr/share/gnome/autostart/libcanberra-login-sound.desktop ] ; then
   echo "X-GNOME-Autostart-enabled=false" > /usr/share/gnome/autostart/libcanberra-login-sound.desktop
@@ -176,6 +171,47 @@ for EXTENSION in $EXTENSIONS ; do
      "${EXTENSION}"/ExtensionRun
   fi
 done
+
+# Configure dual head setup
+mkdir -p /etc/gnome-settings-daemon/xrandr/
+cat > /etc/gnome-settings-daemon/xrandr/monitors.xml <<\EOF
+cat ./.config/monitors.xml
+<monitors version="1">
+  <configuration>
+    <clone>no</clone>
+    <output name="DVI-I-1">
+      <vendor>BNQ</vendor>
+      <product>BenQ GW2260</product>
+      <serial>X3D02624019</serial>
+      <width>1080</width>
+      <height>1920</height>
+      <rate>60</rate>
+      <x>0</x>
+      <y>0</y>
+      <rotation>right</rotation>
+      <reflect_x>no</reflect_x>
+      <reflect_y>no</reflect_y>
+      <primary>yes</primary>
+      <presentation>no</presentation>
+    </output>
+    <output name="VGA-1">
+      <vendor>BNQ</vendor>
+      <product>BenQ GW2260</product>
+      <serial>X3D03548019</serial>
+      <width>1920</width>
+      <height>1080</height>
+      <rate>60</rate>
+      <x>1080</x>
+      <y>496</y>
+      <rotation>normal</rotation>
+      <reflect_x>no</reflect_x>
+      <reflect_y>no</reflect_y>
+      <primary>no</primary>
+      <presentation>no</presentation>
+    </output>
+  </configuration>
+</monitors>
+EOF
 
 # Continue as usual
 tput sgr0
