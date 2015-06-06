@@ -54,6 +54,7 @@ echo "* APPEND $APPEND"
 #
 
 read -r -d '' GRUBENTRY << EOM
+
 menuentry "$ISONAME - $LIVETOOL $LIVETOOLVERSION" {
         iso_path="/boot/iso/$ISONAME"
         search --no-floppy --file \${iso_path} --set
@@ -63,6 +64,7 @@ menuentry "$ISONAME - $LIVETOOL $LIVETOOLVERSION" {
         loopback loop \${iso_path}
         linux (loop)$LINUX \${live_args} \${custom_args} \${iso_args}
         initrd (loop)$INITRD /boot/iso/additional-initramfs/initramfs
+}
 EOM
 
 }

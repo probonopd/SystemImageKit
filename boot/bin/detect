@@ -52,3 +52,5 @@ for ISO in $ISOS; do
 
 done
 
+grub-script-check /tmp/grub.cfg
+
