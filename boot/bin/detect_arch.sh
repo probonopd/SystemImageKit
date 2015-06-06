@@ -62,7 +62,7 @@ read -r -d '' GRUBENTRY << EOM
 menuentry "$ISONAME - $LIVETOOL $LIVETOOLVERSION" --class arch {
         iso_path="/boot/iso/$ISONAME"
         search --no-floppy --file \${iso_path} --set
-        live_args="for-arch --> img_loop=\${iso_path}" img_dev=/dev/disk/by-uuid=6F6E-CB8F
+        live_args="for-arch --> img_loop=\${iso_path} img_dev=/dev/disk/by-uuid/6F6E-CB8F layout=$KEYBOARD keytable=$KEYBOARD lang=$LOCALE"
         custom_args=""
         iso_args="$APPEND"
         loopback loop \${iso_path}
