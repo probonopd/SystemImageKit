@@ -25,14 +25,11 @@ trap finish EXIT
 # also for Unity in Ubuntu 11.04 and later
 gsettings set org.gnome.desktop.media-handling automount 'false'
 
-
 echo "# Automatically generated" > /tmp/grub.cfg
 
-# TODO: Autodetect
-# /isodevice/boot/iso/ # On Ubuntu live systems
-# /lib/live/mount/findiso/ # On debian live systems
-
-ISOS=$(find /lib/live/mount/findiso/ -name "*.iso")
+# TODO: Better autodetect, or detect target disk based on the location of this script
+LIVE=$(mount | grep vfat | cut -d " " -f 3)
+ISOS=$(find $LIVE/boot/iso -name "*.iso")
 
 for ISO in $ISOS; do
   unset LIVETOOL
