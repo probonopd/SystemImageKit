@@ -2,8 +2,7 @@
 
 # TODO
 # Disable /etc/xdg/autostart/cnchi.desktop nag screen
-# Do not hardcode UUID in /dev/disk/by-uuid - use blkid /dev/sdb1 -s UUID -o value
-# Set language etc.
+# Set hostname etc.
 
 # Successfully detects
 # antergos-2014.08.07-x86_64.iso
@@ -62,7 +61,7 @@ read -r -d '' GRUBENTRY << EOM
 menuentry "$ISONAME - $LIVETOOL $LIVETOOLVERSION" --class arch {
         iso_path="/boot/iso/$ISONAME"
         search --no-floppy --file \${iso_path} --set
-        live_args="for-arch --> img_loop=\${iso_path} img_dev=/dev/disk/by-uuid/6F6E-CB8F layout=$KEYBOARD keytable=$KEYBOARD lang=$LOCALE_NODOT"
+        live_args="for-arch --> img_loop=\${iso_path} img_dev=/dev/disk/by-uuid/$UUID layout=$KEYBOARD keytable=$KEYBOARD lang=$LOCALE_NODOT"
         custom_args=""
         iso_args="$APPEND"
         loopback loop \${iso_path}
