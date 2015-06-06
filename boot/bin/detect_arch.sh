@@ -6,6 +6,7 @@
 
 # Successfully detects
 # antergos-2014.08.07-x86_64.iso
+# archlinux-2015.06.01-dual.iso
 
 detect_arch() {
 
@@ -17,8 +18,8 @@ MOUNTPOINT="$1"
 # Make sure this ISO is one that this script understands - otherwise return asap
 #
 
-find "$MOUNTPOINT"/arch/boot/archiso.img 2>/dev/null || return
-find "$MOUNTPOINT"/arch/root-image.sfs 2>/dev/null || return
+find "$MOUNTPOINT"/arch/boot -name archiso.img 2>/dev/null || return
+find "$MOUNTPOINT"/arch/ -name *.sfs 2>/dev/null || return
 
 #
 # Parse the required information out of the ISO
@@ -46,7 +47,7 @@ CFG=$(find "$MOUNTPOINT"/loader/entries/archiso-*.conf | head -n 1)
 LINUX=$(cat $CFG | grep "linux " | head -n 1 | sed -e 's|linux ||g' | xargs)
 echo "* LINUX $LINUX"
 
-INITRD=$(cat $CFG | grep "initrd " | head -n 1 | sed -e 's|initrd ||g' | xargs)
+INITRD=$(cat $CFG | grep "archiso.img" | head -n 1 | sed -e 's|initrd ||g' | xargs)
 echo "* INITRD $INITRD"
 
 APPEND=$(cat $CFG | grep "options " | head -n 1 | sed -e 's|options ||g' | xargs)
@@ -71,4 +72,3 @@ menuentry "$ISONAME - $LIVETOOL $LIVETOOLVERSION" --class arch {
 EOM
 
 }
-
