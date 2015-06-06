@@ -30,7 +30,7 @@ echo "# Automatically generated" > /tmp/grub.cfg
 
 # TODO: Better autodetect, or detect target disk based on the location of this script
 LIVE=$(mount | grep vfat | cut -d " " -f 1) # /dev/sdXX
-LIVEMNT=$(mount | grep vfat | cut -d " " -f 3) # /mountpoint
+LIVEMNT=$(mount | grep vfat | cut -d " " -f 3) # mountpoint
 mount "$LIVE" -o remount,rw
 UUID=$(blkid "$LIVE" -s UUID -o value)
 ISOS=$(find "$LIVEMNT"/boot/iso -name "*.iso")
@@ -66,5 +66,4 @@ for ISO in $ISOS; do
 
 done
 
-grub-script-check /tmp/grub.cfg
-
+grub-script-check /tmp/grub.cfg && cp /tmp/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg.add
