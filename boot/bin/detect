@@ -8,6 +8,7 @@ HOSTNAME="host" # Format: "host"
 
 HERE=$(dirname $(readlink -f $0))
 . "$HERE"/detect_debian_live.sh
+. "$HERE"/detect_arch.sh
 
 if [[ $EUID -ne 0 ]]; then
   echo "You must be a root user" 2>&1
@@ -16,12 +17,22 @@ fi
 
 function finish {
   umount /opt 2>/dev/null
+  gsettings set org.gnome.desktop.media-handling automount 'true'
 }
 trap finish EXIT 
 
+# Temporarily disable GNOME automount
+# also for Unity in Ubuntu 11.04 and later
+gsettings set org.gnome.desktop.media-handling automount 'false'
+
+
 echo "# Automatically generated" > /tmp/grub.cfg
 
-ISOS=$(find /isodevice/boot/iso/ -name "*.iso")
+# TODO: Autodetect
+# /isodevice/boot/iso/ # On Ubuntu live systems
+# /lib/live/mount/findiso/ # On debian live systems
+
+ISOS=$(find /lib/live/mount/findiso/ -name "*.iso")
 
 for ISO in $ISOS; do
   unset LIVETOOL
@@ -33,7 +44,9 @@ for ISO in $ISOS; do
   ISONAME=$(basename "$ISO")
 
   detect_debian_live "/opt" >/dev/null
+  detect_arch "/opt" # >/dev/null
 
+  sleep 0.1
   umount /opt
   [[ -z $LIVETOOL || -z $LIVETOOL || -z $LINUX || -z $INITRD || -z $APPEND || -z $GRUBENTRY ]] && continue
   echo "$ISONAME"
