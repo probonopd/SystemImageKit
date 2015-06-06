@@ -29,8 +29,9 @@ gsettings set org.gnome.desktop.media-handling automount 'false'
 echo "# Automatically generated" > /tmp/grub.cfg
 
 # TODO: Better autodetect, or detect target disk based on the location of this script
-LIVE=$(mount | grep vfat | cut -d " " -f 3)
+LIVE=$(mount | grep vfat | cut -d " " -f 1) # /dev/sdXX
 mount "$LIVE" -o remount,rw
+UUID=$(blkid "$LIVE" -s UUID -o value)
 ISOS=$(find $LIVE/boot/iso -name "*.iso")
 
 for ISO in $ISOS; do
