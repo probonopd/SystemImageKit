@@ -30,6 +30,7 @@ echo "# Automatically generated" > /tmp/grub.cfg
 
 # TODO: Better autodetect, or detect target disk based on the location of this script
 LIVE=$(mount | grep vfat | cut -d " " -f 3)
+mount "$LIVE" -o remount,rw
 ISOS=$(find $LIVE/boot/iso -name "*.iso")
 
 for ISO in $ISOS; do
