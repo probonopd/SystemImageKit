@@ -39,7 +39,7 @@ find "$MOUNTPOINT"/arch/root-image.sfs 2>/dev/null || return
 # umount "$MOUNTPOINT"
 # umount "$MOUNTPOINT"
 
-LIVETOOL=arch
+LIVETOOL=archiso
 LIVETOOLVERSION=0
 
 CFG=$(find "$MOUNTPOINT"/loader/entries/archiso-*.conf | head -n 1)
