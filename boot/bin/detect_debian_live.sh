@@ -55,7 +55,7 @@ echo "* APPEND $APPEND"
 
 read -r -d '' GRUBENTRY << EOM
 
-menuentry "$ISONAME - $LIVETOOL $LIVETOOLVERSION" {
+menuentry "$ISONAME - $LIVETOOL $LIVETOOLVERSION" --class debian {
         iso_path="/boot/iso/$ISONAME"
         search --no-floppy --file \${iso_path} --set
         live_args="for-debian-live-3 --> findiso=\${iso_path} live-config.keyboard-layouts=$KEYBOARD live-config.locales=$LOCALE live-config.timezone=$TIMEZONE live-config.username=$USERNAME live-config.hostname=$HOSTNAME"
