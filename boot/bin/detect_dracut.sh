@@ -65,7 +65,7 @@ read -r -d '' GRUBENTRY << EOM
 menuentry "$ISONAME - $LIVETOOL $LIVETOOLVERSION" --class fedora {
         iso_path="/boot/iso/$ISONAME"
         search --no-floppy --file \${iso_path} --set
-        live_args="for-dracut --> iso-scan/filename=\${iso_path} selinux=0 rd.live.deltadir=/run/initramfs/isoscan/boot/deltadir vconsole.keymap=$KEYBOARD locale.LANG=$LANGUAGE"
+        live_args="for-dracut --> iso-scan/filename=\${iso_path} selinux=0 rd.live.deltadir=/run/initramfs/isoscan/boot/deltadir vconsole.keymap=$KEYBOARD locale.LANG=$LOCALE"
         custom_args=""
         iso_args="$APPEND"
         loopback loop \${iso_path}
