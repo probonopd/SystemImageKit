@@ -24,7 +24,7 @@ MOUNTPOINT="$1"
 #
 # Make sure this ISO is one that this script understands - otherwise return asap
 #
-ls /opt/LiveOS
+
 find "$MOUNTPOINT"/LiveOS/squashfs.img 2>/dev/null || return
 
 #
