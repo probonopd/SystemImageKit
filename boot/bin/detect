@@ -8,9 +8,10 @@ USERNAME="me" # Format: "me"
 HOSTNAME="host" # Format: "host"
 
 HERE=$(dirname $(readlink -f $0))
-. "$HERE"/detect_debian_live.sh
-. "$HERE"/detect_arch.sh
-. "$HERE"/detect_casper.sh
+. "$HERE"/detect_debian_live.sh || exit 1
+. "$HERE"/detect_arch.sh || exit 1
+. "$HERE"/detect_casper.sh || exit 1
+. "$HERE"/detect_dracut.sh || exit 1
 
 if [[ $EUID -ne 0 ]]; then
   echo "You must be a root user" 2>&1
@@ -48,11 +49,12 @@ for ISO in $ISOS; do
   detect_debian_live "/opt" >/dev/null
   detect_arch "/opt" >/dev/null
   detect_casper "/opt" >/dev/null
+  detect_dracut "/opt" >/dev/null
 
   sleep 0.1
   umount /opt
 
-  [[ -z $LIVETOOL || -z $LIVETOOL || -z $LINUX || -z $INITRD || -z $APPEND || -z $GRUBENTRY ]] && continue
+  [[ -z $LIVETOOL || -z $LIVETOOLVERSION || -z $LINUX || -z $INITRD || -z $APPEND || -z $GRUBENTRY ]] && continue
   echo "$ISONAME"
   echo "$LIVETOOL"
   echo "$LIVETOOLVERSION"
