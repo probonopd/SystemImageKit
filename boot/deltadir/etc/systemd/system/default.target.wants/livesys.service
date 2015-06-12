@@ -1,0 +1,12 @@
+[Unit]
+Description=Live Image
+Before=accounts-daemon.service
+
+[Service]
+#EnvironmentFile=/etc/sysconfig/crond
+ExecStart=/usr/sbin/livesys
+Type=oneshot
+
+[Install]
+WantedBy=default.target
+
