@@ -3,7 +3,6 @@
 # Based on former Fedora Init script for live image
 #
 
-
 . /etc/init.d/functions
 
 if ! strstr "`cat /proc/cmdline`" rd.live.image ; then
@@ -20,6 +19,13 @@ exists() {
 }
 
 touch /.liveimg-configured
+
+# Set username
+USERNAME="liveuser"
+USER=$(grep -o "rd.live.user=[a-zA-Z]*" /proc/cmdline | cut -d "=" -f 2)
+if [ -n $USER ]; then
+  USERNAME=$USER
+fi
 
 # Make sure we don't mangle the hardware clock on shutdown
 ln -sf /dev/null /etc/systemd/system/hwclock-save.service
@@ -80,8 +86,8 @@ mountPersistentHome() {
   # we should make that the real /home.  useful for mtd device on olpc
   if [ -d /home/home ]; then mount --bind /home/home /home ; fi
   [ -x /sbin/restorecon ] && /sbin/restorecon /home
-  mkdir -p /home/liveuser #####
-  if [ -d /home/liveuser ]; then USERADDARGS="-M" ; fi
+  mkdir -p /home/$USERNAME #####
+  if [ -d /home/$USERNAME ]; then USERADDARGS="-M" ; fi
 }
 
 findPersistentHome() {
@@ -115,9 +121,9 @@ if [ -n "$configdone" ]; then
 fi
 
 # add fedora user with no passwd
-action "Adding live user" useradd $USERADDARGS -c "Live System User" liveuser
-passwd -d liveuser > /dev/null
-usermod -aG wheel liveuser > /dev/null
+action "Adding live user" useradd $USERADDARGS -c "Live System User" $USERNAME
+passwd -d $USERNAME > /dev/null
+usermod -aG wheel $USERNAME > /dev/null
 
 # Remove root password lock
 passwd -d root > /dev/null
@@ -145,6 +151,12 @@ systemctl stop atd.service 2> /dev/null || :
 # https://bugzilla.redhat.com/show_bug.cgi?id=679486
 echo "localhost" > /etc/hostname
 
+# Set hostname
+HOST=$(grep -o "rd.live.host=[a-zA-Z]*" /proc/cmdline | cut -d "=" -f 2)
+if [ -n $HOST ]; then
+  echo "$HOST" > /etc/hostname
+fi
+
 # disable updates plugin
 cat >> /usr/share/glib-2.0/schemas/org.gnome.settings-daemon.plugins.updates.gschema.override << FOE
 [org.gnome.settings-daemon.plugins.updates]
@@ -152,8 +164,8 @@ active=false
 FOE
 
 # don't run gnome-initial-setup
-mkdir ~liveuser/.config
-touch ~liveuser/.config/gnome-initial-setup-done
+mkdir /home/$USERNAME/.config
+touch /home/$USERNAME/.config/gnome-initial-setup-done
 
 # rebuild schema cache with any overrides we installed
 glib-compile-schemas /usr/share/glib-2.0/schemas
@@ -162,12 +174,12 @@ glib-compile-schemas /usr/share/glib-2.0/schemas
 cat > /etc/gdm/custom.conf << FOE
 [daemon]
 AutomaticLoginEnable=True
-AutomaticLogin=liveuser
+AutomaticLogin=$USERNAME
 FOE
 
 # make sure to set the right permissions and selinux contexts
-chown -R liveuser:liveuser /home/liveuser/
-restorecon -R /home/liveuser/
+chown -R $USERNAME:$USERNAME /home/$USERNAME/
+restorecon -R /home/$USERNAME/
 
 # Set keyboard language
 # Example: boot with keymap=de or vconsole.keymap=de-latin1-nodeadkeys
