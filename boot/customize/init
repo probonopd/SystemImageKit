@@ -155,6 +155,7 @@ fi
 
 # Mount .ExtensionImage files
 ARCH=$(uname -p)
+ARCH=$(arch) # for Debian
 EXTENSIONS=$(find $HERE/$ARCH/ -type f -name *ExtensionImage)
 EXTDIR=/var/run/Extensions
 mkdir -p "${EXTDIR}"
