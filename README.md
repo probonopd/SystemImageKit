@@ -1,4 +1,4 @@
-Copyright (c) 2004-14 Simon Peter probono@puredarwin.org All rights reserved. Redistribution of this document is permitted only in unchanged form. Version 2015-06-14
+Copyright (c) 2004-15 Simon Peter probono@puredarwin.org All rights reserved. Redistribution of this document is permitted only in unchanged form. Version 2015-06-14
 
 SystemImageKit
 ==============
