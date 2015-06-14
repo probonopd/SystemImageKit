@@ -12,6 +12,7 @@ HERE=$(dirname $(readlink -f $0))
 . "$HERE"/detect_arch.sh || exit 1
 . "$HERE"/detect_casper.sh || exit 1
 . "$HERE"/detect_dracut.sh || exit 1
+. "$HERE"/detect_kiwi.sh || exit 1
 
 if [[ $EUID -ne 0 ]]; then
   echo "You must be a root user" 2>&1
@@ -31,6 +32,7 @@ gsettings set org.gnome.desktop.media-handling automount 'false'
 echo "# Automatically generated" > /tmp/grub.cfg
 
 # TODO: Better autodetect, or detect target disk based on the location of this script
+# and not assuming fat
 LIVE=$(mount | grep vfat | cut -d " " -f 1) # /dev/sdXX
 LIVEMNT=$(mount | grep vfat | cut -d " " -f 3) # mountpoint
 mount "$LIVE" -o remount,rw
@@ -50,7 +52,8 @@ for ISO in $ISOS; do
   detect_arch "/opt" >/dev/null
   detect_casper "/opt" >/dev/null
   detect_dracut "/opt" >/dev/null
-
+  detect_kiwi "/opt" >/dev/null
+  
   sleep 0.1
   umount /opt
 

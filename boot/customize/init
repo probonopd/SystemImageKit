@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 # Yellow text
 echo -e '\E[33;40m'"\033[1m"
@@ -6,7 +6,9 @@ echo -e '\E[33;40m'"\033[1m"
 # Be verbose
 HERE="$(dirname "$(readlink -f "${0}")")"
 echo "$HERE running"
+set -x
 
+echo "1"
 # Mount first FAT partition that is mounted read-write
 # assuming this is the partition that holds the Live ISO
 ISOHOST=$(mount | grep "type vfat" | head -n 1 | cut -d " " -f 3)
@@ -20,6 +22,7 @@ try() {
   fi
 }
 
+echo "2"
 # Fedora; based on
 # http://anderson.the-silvas.com/2014/02/14/fedora-20-on-a-macbook-pro-13-late-2013-retina-display/
 if [ -e /usr/libexec/gsd-backlight-helper ] ; then
@@ -38,6 +41,7 @@ fi
 # Configure dconf
 # Obtained with dconf watch /
 
+echo "3"
 cat > /usr/share/glib-2.0/schemas/60_site.gschema.override <<EOF
 [com.canonical.Unity.Launcher]
 favorites=['application://gedit.desktop', 'application://gnome-terminal.desktop', 'application://nautilus.desktop', 'application://firefox.desktop', 'application://libreoffice-writer.desktop', 'application://libreoffice-calc.desktop', 'application://libreoffice-impress.desktop', 'application://ubuntu-software-center.desktop', 'application://unity-control-center.desktop', 'unity://running-apps', 'unity://expo-icon', 'unity://devices']
@@ -67,6 +71,7 @@ sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
 # Alternatively, could set the resolution to non-Retina
 # dconf write /org/compiz/profiles/unity/plugins/core/outputs ['1440x900+0+0']
 
+echo "4"
 # Disable crash reporter
 if [ -e /etc/default/apport ] ; then
   sed -i -e 's|enabled=1|enabled=0|g' /etc/default/apport
@@ -87,6 +92,11 @@ if [ -e /usr/share/gnome/autostart/libcanberra-login-sound.desktop ] ; then
   echo "X-GNOME-Autostart-enabled=false" > /usr/share/gnome/autostart/libcanberra-login-sound.desktop
 fi
 
+# Disable SUSEgreeter
+if [ -e /etc/xdg/autostart/SUSEgreeter.desktop ] ; then
+  rm /etc/xdg/autostart/SUSEgreeter.desktop
+fi
+
 # Remove crap from desktop
 find /home/ -wholename "*Desktop/*.desktop" -exec rm {} \;
 
@@ -101,6 +111,7 @@ rmmod hid_apple 2>/dev/null && modprobe hid_apple
 # xrandr --output VGA-1 --right-of DVI-I-1
 # EOF
 
+echo "5"
 # Add universe
 if [ -e /etc/apt/sources.list ] ; then
   sed -i -e 's|main restricted|main universe multiverse restricted|g' /etc/apt/sources.list
@@ -114,6 +125,7 @@ Acquire {
 };
 EOF
 
+echo "6"
 # Fix major KDE4 annoyances. See
 # http://techbase.kde.org/KDE_System_Administration/PlasmaDesktopScripting#Examples
 # On non-Kubuntu systems, the following locations might be relevant as well:
@@ -140,6 +152,7 @@ Volume=100
 EOF
 )
 
+echo "7"
 # Revert stupidity that prevents running bash files from FAT disks
 if [ -e /usr/lib/udisks/udisks-daemon ] ; then
   sed -i -e 's|showexec|\x00\x00\x00\x00\x00\x00\x00\x00|g' /usr/lib/udisks/udisks-daemon
@@ -153,7 +166,7 @@ if [ -e /usr/share/zoneinfo/Europe/Berlin ] ; then
   ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 fi
 
-# Mount .ExtensionImage files
+# Mount, link, and run .ExtensionImage files
 ARCH=$(uname -p)
 ARCH=$(arch) # for Debian
 EXTENSIONS=$(find $HERE/$ARCH/ -type f -name *ExtensionImage)
@@ -163,16 +176,13 @@ for EXTENSION in $EXTENSIONS ; do
   SHORT=$(basename "${EXTENSION}")
   mkdir -p "${EXTDIR}"/"${SHORT}"
   mount -o loop,ro "${EXTENSION}" "${EXTDIR}"/"${SHORT}"
-done
-
-EXTENSIONS=$(mount | grep ExtensionImage | cut -d " " -f 3)
-for EXTENSION in $EXTENSIONS ; do
-  cp -rsf "${EXTENSION}"/* /
-  if [ -x "${EXTENSION}"/ExtensionRun ] ; then
-     "${EXTENSION}"/ExtensionRun
+  cp -rsf "${EXTDIR}"/"${SHORT}"/* /
+  if [ -x "${EXTDIR}"/"${SHORT}"/ExtensionRun ] ; then
+     "${EXTDIR}"/"${SHORT}"/ExtensionRun
   fi
 done
 
+echo "8"
 # Configure dual head setup
 mkdir -p /etc/gnome-settings-daemon/xrandr/
 cat > /etc/gnome-settings-daemon/xrandr/monitors.xml <<\EOF
@@ -214,6 +224,10 @@ cat ./.config/monitors.xml
 </monitors>
 EOF
 
+echo "9"
 # Continue as usual
 tput sgr0
+if [ -f /usr/lib/systemd/systemd ] ; then
+  exec /usr/lib/systemd/systemd # for OpenSUSE, works
+fi
 grep -r init= /proc/cmdline && exec /sbin/init
