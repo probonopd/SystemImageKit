@@ -1,4 +1,4 @@
-Copyright (c) 2004-14 Simon Peter probono@puredarwin.org All rights reserved. Redistribution of this document is permitted only in unchanged form. Version 2014-08-11
+Copyright (c) 2004-14 Simon Peter probono@puredarwin.org All rights reserved. Redistribution of this document is permitted only in unchanged form. Version 2015-06-14
 
 SystemImageKit
 ==============
@@ -173,7 +173,7 @@ In the system proposed here, what does the typical end user see?
 /boot/customize/init
 /boot/grub
 /boot/grub/grub.cfg
-/boot/tools/update
+/boot/bin/detect
 /boot/extensions/b43firmware.ExtensionImage
 /apps/
 /apps/Firefox.AppImage
