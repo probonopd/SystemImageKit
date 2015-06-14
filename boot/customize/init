@@ -9,9 +9,13 @@ echo "$HERE running"
 set -x
 
 echo "1"
+
 # Mount first FAT partition that is mounted read-write
-# assuming this is the partition that holds the Live ISO
-ISOHOST=$(mount | grep "type vfat" | head -n 1 | cut -d " " -f 3)
+# Here the first ISO is loop-mounted into the system
+FILE=$(losetup -a | grep iso | head -n 1 | cut -d "(" -f 2 | cut -d ")" -f 1)
+# The mount point portion of the path to the ISO
+ISOHOST=$(df -P $FILE | awk 'END{print $NF}')
+
 mount "${ISOHOST}" -o remount,rw
 
 try() {
@@ -164,6 +168,11 @@ fi
 # Set the correct timezone; TODO: Move this to the localization and make it dependent on cmdline
 if [ -e /usr/share/zoneinfo/Europe/Berlin ] ; then
   ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+fi
+
+# Do not use UTC on Ubuntu
+if [ -e /etc/default/rcS ] ; then
+  sed -i -e 's|UTC=yes|UTC=no|g' /etc/default/rcS
 fi
 
 # Mount, link, and run .ExtensionImage files
