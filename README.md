@@ -5,10 +5,13 @@ SystemImageKit
 
 Image-based computing: Operating system complexity reduction by encapsulation
 
-Install
-=======
+Installing
+==========
 
-Boot Ubuntu Live system (tested with Ubuntu 14.04 LTS Trusty Tahr) and run the following steps.
+The following steps illustrate how to install an Operating System onto a USB drive using SystemImageKit.
+
+In order to do this, boot Ubuntu Live system (tested with Ubuntu 14.04 LTS Trusty Tahr) and run the following steps.
+
 NOTE: All data on /dev/sdX will be deleted.
 
 ```
