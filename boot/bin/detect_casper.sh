@@ -24,6 +24,11 @@ ls "$MOUNTPOINT"/boot/grub/loopback.cfg 2>/dev/null || return
 LIVETOOL="casper"
 LIVETOOLVERSION=$(grep -e "^casper" "$MOUNTPOINT"/casper/filesystem.manifest | head -n 1 | awk '{ print $2; }')
 
+# The following is needed for xubuntu-15.10-core-amd64.iso
+if [ "x$LIVETOOLVERSION" == "x" ] ; then
+  LIVETOOLVERSION=0
+fi
+
 CFG=$(find "$MOUNTPOINT" -name loopback.cfg | head -n 1)
 
 LINUX=$(cat $CFG | grep "linux" | head -n 1 | sed -e 's|linux\t||g' | xargs)

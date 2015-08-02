@@ -63,7 +63,6 @@ for ISO in $ISOS; do
   sleep 0.1
   umount /opt
 
-  [[ -z $LIVETOOL || -z $LIVETOOLVERSION || -z $LINUX || -z $INITRD || -z $APPEND || -z $GRUBENTRY ]] && continue
   echo "$ISONAME"
   echo "$LIVETOOL"
   echo "$LIVETOOLVERSION"
@@ -71,10 +70,9 @@ for ISO in $ISOS; do
   echo "$INITRD"
   echo "$APPEND"
   # echo "$GRUBENTRY"
-  echo ""
-
+  [[ -z $LIVETOOL || -z $LIVETOOLVERSION || -z $LINUX || -z $INITRD || -z $APPEND || -z $GRUBENTRY ]] && continue
   ISONAME=$(basename "$ISO")
-
+  echo "Writing boot entry"
   echo "$GRUBENTRY" >> /tmp/grub.cfg
   echo "" >> /tmp/grub.cfg
 
