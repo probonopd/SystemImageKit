@@ -4,7 +4,7 @@
 # Language, keyboard
 
 # Successfully detects
-# openSUSE-Tumbleweed-KDE-Live-x86_64-Current.iso
+# openSUSE-Tumbleweed-GNOME-Live-x86_64-Snapshot20150728-Media.iso
 
 detect_kiwi() {
 
