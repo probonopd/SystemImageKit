@@ -1,0 +1,37 @@
+#!/bin/bash
+
+HERE="$(dirname "$(readlink -f "${0}")")"
+
+if [ -e /usr/bin/apt-get ] ; then
+  which mksquashfs || apt-get -y install squashfs-tools
+  which wget || apt-get -y install wget
+fi
+
+if [ -e /usr/bin/yum ] ; then
+  which mksquashfs || yum -y install squashfs-tools
+  which wget || yum -y install wget
+fi
+
+rm -f "${HERE}/../customize/x86_64/java.ExtensionImage"
+mkdir /tmp/java_x86_64
+cd /tmp/java_x86_64
+URL=$(wget -qq "https://www.java.com/en/download/linux_manual.jsp" -O - | grep "Linux x64 en JRE" | head -n 1 | cut -d '"' -f 4 | xargs)
+wget "$URL" -O - | tar xfvz -
+mkdir -p target/usr/share/applications target/usr/share/icons/hicolor/48x48/apps/
+mv jre*/plugin/desktop/sun_java.desktop target/usr/share/applications/
+mv jre*/plugin/desktop/sun_java.png target/usr/share/icons/hicolor/48x48/apps/
+mv jre*/* target/usr/
+mksquashfs target/ "${HERE}/../customize/x86_64/java.ExtensionImage"
+cd -
+
+rm -f "${HERE}/../customize/i686/java.ExtensionImage"
+mkdir /tmp/java_i686
+cd /tmp/java_i686
+URL=$(wget -qq "https://www.java.com/en/download/linux_manual.jsp" -O - | grep "Linux en JRE" | head -n 1 | cut -d '"' -f 4 | xargs)
+wget "$URL" -O - | tar xfvz -
+mkdir -p target/usr/share/applications target/usr/share/icons/hicolor/48x48/apps/
+mv jre*/plugin/desktop/sun_java.desktop target/usr/share/applications/
+mv jre*/plugin/desktop/sun_java.png target/usr/share/icons/hicolor/48x48/apps/
+mv jre*/* target/usr/
+mksquashfs target/ "${HERE}/../customize/i686/java.ExtensionImage"
+cd -
