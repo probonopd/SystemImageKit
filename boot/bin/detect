@@ -21,13 +21,13 @@ fi
 
 function finish {
   umount /opt 2>/dev/null
-  gsettings set org.gnome.desktop.media-handling automount 'true'
+  gsettings set org.gnome.desktop.media-handling automount 'true' 2>/dev/null
 }
 trap finish EXIT 
 
 # Temporarily disable GNOME automount
 # also for Unity in Ubuntu 11.04 and later
-gsettings set org.gnome.desktop.media-handling automount 'false'
+gsettings set org.gnome.desktop.media-handling automount 'false' 2>/dev/null
 
 cat > /tmp/grub.cfg <<EOF
 insmod part_msdos
@@ -45,6 +45,7 @@ UUID=$(blkid "$LIVE" -s UUID -o value)
 ISOS=$(find "$LIVEMNT"/boot/iso -name "*.iso")
 
 for ISO in $ISOS; do
+  echo $ISO
   unset LIVETOOL
   unset LIVETOOLVERSION
   unset LINUX
@@ -79,7 +80,16 @@ for ISO in $ISOS; do
 
 done
 
+# For Ubuntu
 grub-script-check /tmp/grub.cfg && (
+# Backup the previous version
+cp "$LIVEMNT"/boot/grub/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg.old
+cp /tmp/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg
+echo "Successfully updated bootloader configuration"
+)
+
+# For openSUSE
+grub2-script-check /tmp/grub.cfg && (
 # Backup the previous version
 cp "$LIVEMNT"/boot/grub/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg.old
 cp /tmp/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg
