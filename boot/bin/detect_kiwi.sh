@@ -46,7 +46,7 @@ read -r -d '' GRUBENTRY << EOM
 menuentry "$ISONAME - $LIVETOOL $LIVETOOLVERSION" --class opensuse --class os {
         iso_path="/boot/iso/$ISONAME"
         search --no-floppy --file \${iso_path} --set
-        live_args="for-kiwi --> isofrom_device=/dev/disk/by-uuid/$UUID isofrom_system=\${iso_path} lang=$LOCALE"
+        live_args="for-kiwi --> isofrom_device=/dev/disk/by-uuid/$UUID isofrom_system=\${iso_path} lang=$LOCALE max_loop=256"
         custom_args="init=/isofrom/boot/customize/init"
         iso_args="$APPEND"
         loopback loop \${iso_path}

@@ -43,7 +43,7 @@ read -r -d '' GRUBENTRY << EOM
 menuentry "$ISONAME - $LIVETOOL $LIVETOOLVERSION" --class ubuntu {
         iso_path="/boot/iso/$ISONAME"
         search --no-floppy --file \${iso_path} --set
-        live_args="for-casper --> iso-scan/filename=\${iso_path} console-setup/layoutcode=$KEYBOARD locale=$LANGUAGE timezone=$TIMEZONE username=$USERNAME hostname=$HOSTNAME noprompt init=/isodevice/boot/customize/init"
+        live_args="for-casper --> iso-scan/filename=\${iso_path} console-setup/layoutcode=$KEYBOARD locale=$LANGUAGE timezone=$TIMEZONE username=$USERNAME hostname=$HOSTNAME noprompt init=/isodevice/boot/customize/init max_loop=256"
         custom_args=""
         iso_args="$APPEND"
         loopback loop \${iso_path}
