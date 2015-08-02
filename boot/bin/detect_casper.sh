@@ -1,8 +1,9 @@
 #!/bin/bash
 
-
 # Successfully detects
-# ...
+# ubuntu-14.04.1-desktop-amd64.iso
+# ubuntu-gnome-15.04-desktop-amd64.iso
+# xubuntu-15.10-core-amd64.i
 
 detect_casper() {
 
@@ -58,4 +59,3 @@ menuentry "$ISONAME - $LIVETOOL $LIVETOOLVERSION" --class ubuntu {
 EOM
 
 }
-
