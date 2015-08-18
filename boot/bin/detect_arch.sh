@@ -7,6 +7,7 @@
 # Successfully detects
 # antergos-2014.08.07-x86_64.iso
 # archlinux-2015.06.01-dual.iso
+# bbqlinux-2015.05.16-x86_64-xfce4.iso
 
 detect_arch() {
 
@@ -18,26 +19,14 @@ MOUNTPOINT="$1"
 # Make sure this ISO is one that this script understands - otherwise return asap
 #
 
-find "$MOUNTPOINT"/arch/boot -name archiso.img 2>/dev/null || return
-find "$MOUNTPOINT"/arch/ -name *.sfs 2>/dev/null || return
+find "$MOUNTPOINT" -name archiso.img | grep -q img || return
+find "$MOUNTPOINT" -name *.sfs | grep -q sfs || return
+
+echo "$ISONAME" assumed to be ARCH
 
 #
 # Parse the required information out of the ISO
 #
-
-# mount "$MOUNTPOINT"/arch/root-image.sfs "$MOUNTPOINT" -o loop,ro
-# mount "$MOUNTPOINT"/root-image.img "$MOUNTPOINT" -o loop,ro
-
-
-# if [ -f "$MOUNTPOINT"/usr/share/doc/live-boot/changelog.Debian.gz ] ; then
-#   LIVETOOL=$(zcat "$MOUNTPOINT"/usr/share/doc/live-boot/changelog.Debian.gz | head -n 1 | cut -d ";" -f 1 | xargs | cut -d " " -f 1)
-#   echo "* LIVETOOL $LIVETOOL"
-#   LIVETOOLVERSION=$(zcat "$MOUNTPOINT"/usr/share/doc/live-boot/changelog.Debian.gz | head -n 1 | cut -d "(" -f 2 | cut -d ")" -f 1)
-#   echo "* LIVETOOLVERSION $LIVETOOLVERSION"
-# fi
-
-# umount "$MOUNTPOINT"
-# umount "$MOUNTPOINT"
 
 LIVETOOL=archiso
 LIVETOOLVERSION=0
