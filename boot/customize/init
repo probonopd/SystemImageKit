@@ -239,7 +239,10 @@ EOF
 echo "9"
 # Continue as usual
 tput sgr0
-if [ -f /usr/lib/systemd/systemd ] ; then
-  grep -r SUSE /etc/*release && exec /usr/lib/systemd/systemd # for OpenSUSE, works. CentOS 7 does not like this (stalls boot)
+if [ -s /usr/lib/systemd/systemd ] ; then
+  if [ -s /etc/SuSE-release ] ; then
+    # for OpenSUSE, works. CentOS 7 does not like this (stalls boot)
+    exec /usr/lib/systemd/systemd
+  fi
 fi
 grep -r init= /proc/cmdline && exec /sbin/init
