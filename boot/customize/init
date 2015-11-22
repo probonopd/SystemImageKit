@@ -272,6 +272,10 @@ sys
 tmp
 usr
 var
+initrd.img
+vmlinuz
+rofs
+cdrom
 EOF
 
 grep -r init= /proc/cmdline && exec /sbin/init
