@@ -81,4 +81,3 @@ menuentry "$ISONAME - $LIVETOOL $LIVETOOLVERSION" --class debian {
 EOM
 
 }
-

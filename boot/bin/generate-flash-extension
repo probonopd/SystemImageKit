@@ -15,7 +15,7 @@ fi
 rm -f "${HERE}/../customize/x86_64/flash.ExtensionImage"
 mkdir /tmp/flash_x86_64
 cd /tmp/flash_x86_64
-wget -c "https://fpdownload.adobe.com/get/flashplayer/pdc/11.2.202.466/install_flash_player_11_linux.x86_64.tar.gz"
+wget -c $(wget -q https://www.adobe.com/products/flashplayer/distribution3.html -O - | grep -o -e "http.*linux.x86_64.tar.gz")
 tar xfvz *.tar.gz
 mkdir -p usr/lib/mozilla/plugins/
 mv libflashplayer.so usr/lib/mozilla/plugins/
@@ -28,7 +28,7 @@ cd -
 rm -f "${HERE}/../customize/i686/flash.ExtensionImage"
 mkdir /tmp/flash_i686
 cd /tmp/flash_i686
-wget -c "https://fpdownload.adobe.com/get/flashplayer/pdc/11.2.202.466/install_flash_player_11_linux.i386.tar.gz"
+wget -c $(wget -q https://www.adobe.com/products/flashplayer/distribution3.html -O - | grep -o -e "http.*linux.i386.tar.gz")
 tar xfvz *.tar.gz
 mkdir -p usr/lib/mozilla/plugins/
 mv libflashplayer.so usr/lib/mozilla/plugins/

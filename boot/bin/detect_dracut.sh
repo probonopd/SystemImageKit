@@ -36,12 +36,16 @@ LIVETOOLVERSION=1
 mount "$MOUNTPOINT"/LiveOS/squashfs.img "$MOUNTPOINT" -o loop
 if [ -e "$MOUNTPOINT"/LiveOS/ext3fs.img ] ; then
   mount "$MOUNTPOINT"/LiveOS/ext3fs.img "$MOUNTPOINT" -o loop
-  LIVETOOLVERSION=$(find "$MOUNTPOINT"/var/lib/yum/yumdb/ -name *dracut-0* | grep -o -e dracut.*$ | sed -e 's|dracut-||g')
-  # . "$MOUNTPOINT"/lib/dracut/dracut-version.sh # conveniently sets DRACUT_VERSION but does not exist in CentOS 6.4
+  if [ -e "$MOUNTPOINT"/lib/dracut/dracut-version.sh ] ; then
+    . "$MOUNTPOINT"/lib/dracut/dracut-version.sh # conveniently sets DRACUT_VERSION but does not exist in CentOS 6.4
+    LIVETOOLVERSION=$DRACUT_VERSION # For Fedora 23
+  else
+    LIVETOOLVERSION=$(find "$MOUNTPOINT"/var/lib/yum/yumdb/ -name *dracut-0* | grep -o -e dracut.*$ | sed -e 's|dracut-||g')
+    # yumdb is no longer there in Fedora 23
+  fi
   umount "$MOUNTPOINT"
 fi
 umount "$MOUNTPOINT"
-
 
 CFG=$(find "$MOUNTPOINT" -name isolinux.cfg | head -n 1)
 

@@ -7,6 +7,7 @@
 # Successfully detects
 # antergos-2014.08.07-x86_64.iso
 # archlinux-2015.06.01-dual.iso
+# bbqlinux-2015.05.16-x86_64-xfce4.iso
 
 detect_arch() {
 
