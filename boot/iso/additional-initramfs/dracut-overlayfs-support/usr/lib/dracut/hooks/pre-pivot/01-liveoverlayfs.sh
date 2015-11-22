@@ -1,8 +1,10 @@
-#!/bin/sh
-
 # After the live system has been mounted using the usual dracut dmsquash way,
 # we actually change things to use overlayfs and tmpfs instead.
 # This is a bit hackish and should be integrated properly into dmsquash instead.
+
+MODULE=$(find /sysroot/lib/modules/*/kernel/fs/overlayfs/overlay.ko.xz)
+
+if [ "x$MODULE" != "x" ] ; then
 
 # Mount the overlayfs kernel module from inside the Live system
 # since the kernel module is missing in the initrd. This is why we use this
@@ -25,3 +27,5 @@ mount /run/initramfs/squashfs/LiveOS/ext3fs.img /run/sysroot
 mkdir -p /run/upper
 mkdir -p /run/work
 mount -t overlay -o lowerdir=/run/sysroot,upperdir=/run/upper,workdir=/run/work overlay "${NEWROOT}"
+
+fi
