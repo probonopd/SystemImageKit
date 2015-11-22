@@ -252,4 +252,26 @@ if [ -s /usr/lib/systemd/systemd ] ; then
     exec /usr/lib/systemd/systemd
   fi
 fi
+
+echo "10"
+cat > /.hidden <<EOF
+bin
+boot
+dev
+etc
+lib
+lib64
+media
+mnt
+opt
+proc
+run
+sbin
+srv
+sys
+tmp
+usr
+var
+EOF
+
 grep -r init= /proc/cmdline && exec /sbin/init
