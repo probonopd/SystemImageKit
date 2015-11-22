@@ -17,6 +17,8 @@ FILE=$(losetup -a | grep iso | head -n 1 | cut -d "(" -f 2 | cut -d ")" -f 1)
 ISOHOST=$(df -P $FILE | awk 'END{print $NF}')
 
 mount "${ISOHOST}" -o remount,rw
+mkdir -p  /isodevice/ # This is where Ubuntu has it
+sudo mount -o bind "${ISOHOST}" /isodevice/ # This way we have all systems also have it where Ubuntu has it
 
 try() {
   if [ -e "$1" ] ; then
@@ -54,6 +56,7 @@ favorites=['application://gedit.desktop', 'application://gnome-terminal.desktop'
 launcher-capture-mouse=false
 
 [org.gnome.settings-daemon.peripherals.touchpad]
+speed=1.0
 tap-to-click=true
 natural-scroll=false
 left-handed='mouse'
@@ -68,6 +71,10 @@ touchpad-enabled=true
 timezone-name='Europe/Berlin Berlin'
 EOF
 sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
+
+# For the following to work for Fedora 21 it would have to be run by the user, not root
+dconf write /org/gnome/desktop/peripherals/touchpad/speed 1.0
+dconf write /org/gnome/desktop/peripherals/touchpad/tap-to-click true
 
 # Fix Retina display (works on Ubuntu), TODO: Make this run only on Retina devices, and convert to the format above
 # dconf write /org/gnome/desktop/interface/cursor-size 36
@@ -239,7 +246,10 @@ EOF
 echo "9"
 # Continue as usual
 tput sgr0
-if [ -f /usr/lib/systemd/systemd ] ; then
-  exec /usr/lib/systemd/systemd # for OpenSUSE, works
+if [ -s /usr/lib/systemd/systemd ] ; then
+  if [ -s /etc/SuSE-release ] ; then
+    # for OpenSUSE, works. CentOS 7 does not like this (stalls boot)
+    exec /usr/lib/systemd/systemd
+  fi
 fi
 grep -r init= /proc/cmdline && exec /sbin/init
