@@ -4,12 +4,12 @@
 
 set +e
 
+if [ -f "$(ls /sysroot/lib/modules/*/kernel/fs/overlayfs/overlay.ko.xz)" ] ; then
+
 # Mount the overlayfs kernel module from inside the Live system
 # since the kernel module is missing in the initrd. This is why we use this
 # script in addition to, rather than instead of, dmsquash. (FIXME)
-/sysroot/usr/sbin/insmod /sysroot/lib/modules/*/kernel/fs/overlayfs/overlay.ko.xz && OVSUCCESS=YES
-
-if [ "$OVSUCCESS" == "YES" ] ; then
+/sysroot/usr/sbin/insmod /sysroot/lib/modules/*/kernel/fs/overlayfs/overlay.ko.xz
 
 # Now we do not need the sysroot provided by dmsquash any longer
 umount -lf /sysroot
@@ -32,3 +32,4 @@ else
   # Next command needs to succeed so that older ISOs can still be booted
   echo "Overlayfs filesystem not available"
 fi
+
