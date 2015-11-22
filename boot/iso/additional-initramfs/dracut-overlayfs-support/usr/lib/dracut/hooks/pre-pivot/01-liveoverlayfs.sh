@@ -2,14 +2,14 @@
 # we actually change things to use overlayfs and tmpfs instead.
 # This is a bit hackish and should be integrated properly into dmsquash instead.
 
-MODULE=$(find /sysroot/lib/modules/*/kernel/fs/overlayfs/overlay.ko.xz)
-
-if [ "x$MODULE" != "x" ] ; then
+set +e
 
 # Mount the overlayfs kernel module from inside the Live system
 # since the kernel module is missing in the initrd. This is why we use this
 # script in addition to, rather than instead of, dmsquash. (FIXME)
-/sysroot/usr/sbin/insmod /sysroot/lib/modules/*/kernel/fs/overlayfs/overlay.ko.xz
+/sysroot/usr/sbin/insmod /sysroot/lib/modules/*/kernel/fs/overlayfs/overlay.ko.xz && OVSUCCESS=YES
+
+if [ "$OVSUCCESS" == "YES" ] ; then
 
 # Now we do not need the sysroot provided by dmsquash any longer
 umount -lf /sysroot
@@ -28,4 +28,7 @@ mkdir -p /run/upper
 mkdir -p /run/work
 mount -t overlay -o lowerdir=/run/sysroot,upperdir=/run/upper,workdir=/run/work overlay "${NEWROOT}"
 
+else
+  # Next command needs to succeed so that older ISOs can still be booted
+  echo "Overlayfs filesystem not available"
 fi
