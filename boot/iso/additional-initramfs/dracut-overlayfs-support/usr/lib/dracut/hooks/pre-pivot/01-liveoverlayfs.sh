@@ -1,3 +1,4 @@
+# https://github.com/haraldh/dracut/issues/104
 # After the live system has been mounted using the usual dracut dmsquash way,
 # we actually change things to use overlayfs and tmpfs instead.
 # This is a bit hackish and should be integrated properly into dmsquash instead.
