@@ -276,6 +276,9 @@ initrd.img
 vmlinuz
 rofs
 cdrom
+LGPL
 EOF
+
+rm /usr/share/pixmaps/fedora_whitelogo.svg 2>/dev/null # No fedora logo in the bottom right corner
 
 grep -r init= /proc/cmdline && exec /sbin/init
