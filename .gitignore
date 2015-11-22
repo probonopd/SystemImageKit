@@ -17,4 +17,5 @@ boot/deltadir/usr/bin/*
 .TemporaryItems/
 ._*
 .fseventsd/
-
+initramfs
+grub.cfg
