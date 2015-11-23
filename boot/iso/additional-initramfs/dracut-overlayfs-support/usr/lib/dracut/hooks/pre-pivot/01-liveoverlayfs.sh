@@ -3,14 +3,12 @@
 # we actually change things to use overlayfs and tmpfs instead.
 # This is a bit hackish and should be integrated properly into dmsquash instead.
 
-set +e
-
-if [ -f "$(ls /sysroot/lib/modules/*/kernel/fs/overlayfs/overlay.ko.xz)" ] ; then
-
 # Mount the overlayfs kernel module from inside the Live system
 # since the kernel module is missing in the initrd. This is why we use this
 # script in addition to, rather than instead of, dmsquash. (FIXME)
-/sysroot/usr/sbin/insmod /sysroot/lib/modules/*/kernel/fs/overlayfs/overlay.ko.xz
+modprobe -d /sysroot -va overlay
+
+if [ $? -eq 0 ] ; then
 
 # Now we do not need the sysroot provided by dmsquash any longer
 umount -lf /sysroot
