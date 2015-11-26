@@ -14,6 +14,7 @@
 # CentOS-6.4-i386-LiveDVD.iso
 # Fedora-Live-Desktop-i686-19-1.iso
 # CentOS-7.0-1406-x86_64-GnomeLive.iso
+# Solus-RC1.iso
 
 detect_dracut() {
 
@@ -50,11 +51,15 @@ umount "$MOUNTPOINT"
 CFG=$(find "$MOUNTPOINT" -name isolinux.cfg | head -n 1)
 
 LINUX=$(cat $CFG | grep "kernel " | head -n 1 | sed -e 's|kernel ||g' | xargs)
-LINUX=$(find "$MOUNTPOINT" -name "$LINUX" | sed -e "s|$MOUNTPOINT||g" ) # Need to get full path
+if [[ $LINUX != *"/"* ]] ; then
+  LINUX=$(find "$MOUNTPOINT" -name "$LINUX" | sed -e "s|$MOUNTPOINT||g" ) # Need to get full path
+fi
 echo "* LINUX $LINUX"
 
 INITRD=$(cat $CFG | grep "append " | head -n 1 | cut -d = -f 2 | cut -d " " -f 1 | xargs)
-INITRD=$(find "$MOUNTPOINT" -name "$INITRD" | sed -e "s|$MOUNTPOINT||g" ) # Need to get full path
+if [[ $INITRD != *"/"* ]] ; then
+  INITRD=$(find "$MOUNTPOINT" -name "$INITRD" | sed -e "s|$MOUNTPOINT||g" ) # Need to get full path
+fi
 echo "* INITRD $INITRD"
 
 APPEND=$(cat $CFG | grep "append " | head -n 1 | sed -e 's|append ||g' | xargs)
