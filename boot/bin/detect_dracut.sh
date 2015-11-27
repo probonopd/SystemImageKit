@@ -62,8 +62,8 @@ if [[ $INITRD != *"/"* ]] ; then
 fi
 echo "* INITRD $INITRD"
 
-APPEND=$(cat $CFG | grep "append " | head -n 1 | sed -e 's|append ||g' | xargs)
-echo "* APPEND $APPEND" # TODO: Remove extraneous initrd (first argument)
+APPEND=$(cat $CFG | grep "append " | head -n 1 | sed -e 's|append ||g' | sed -e 's|initrd=initrd0.img ||g' | xargs)
+echo "* APPEND $APPEND"
 
 #
 # Put together a grub entry
