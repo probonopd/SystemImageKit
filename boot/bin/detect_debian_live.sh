@@ -11,6 +11,7 @@
 # debian_7.0.0_wheezy_i386_20130705_binary.hybrid.iso - live-boot 3.0.1-1
 # debian-live-8.0.0-amd64-xfce-desktop+nonfree.iso - live-boot 4.0.2-1
 # tails-i386-1.5.iso
+# tanglu-3.0-gnome-live-amd64.hybrid.iso
 
 detect_debian_live() {
 
@@ -23,7 +24,7 @@ MOUNTPOINT="$1"
 #
 
 find "$MOUNTPOINT"/live/filesystem.squashfs 2>/dev/null || return
-grep -o "Debian GNU/Linux" "$MOUNTPOINT"/.disk/info 2>/dev/null || return
+find "$MOUNTPOINT"/.disk/cd_type 2>/dev/null || return
 
 #
 # Parse the required information out of the ISO
