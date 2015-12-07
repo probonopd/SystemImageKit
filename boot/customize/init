@@ -75,17 +75,19 @@ sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
 # The following is run whenever a shell (terminal window) is opened by each user
 cat > /etc/profile.d/customize.sh <<\EOF
 #!/bin/bash
-CUSTOMLANG=$(echo $LANG | cut -d _ -f 1)
-dconf write /org/gnome/settings-daemon/peripherals/touchpad/disable-while-typing true # Ubuntu
-dconf write /org/gnome/settings-daemon/peripherals/touchpad/motion-acceleration 10.0 # Ubuntu
-dconf write /org/gnome/settings-daemon/peripherals/touchpad/motion-threshold 1 # Ubuntu
-dconf write /org/gnome/desktop/peripherals/touchpad/speed 1.0 # Fedora
-dconf write /org/gnome/desktop/peripherals/touchpad/tap-to-click true # Fedora
-dconf write /org/gnome/desktop/input-sources/sources "[('xkb', '$CUSTOMLANG')]"
-dconf write /org/gnome/shell/favorite-apps "['firefox.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.gedit.desktop', 'org.gnome.Terminal.desktop', 'org.gnome.Software.desktop']"
-# Enable certain GNOME Extensions
-dconf write /org/gnome/shell/enabled-extensions "['places-menu@gnome-shell-extensions.gcampax.github.com', 'launch-new-instance@gnome-shell-extensions.gcampax.github.com', 'dash-to-dock@micxgx.gmail.com', 'apps-menu@gnome-shell-extensions.gcampax.github.com', 'alternate-tab@gnome-shell-extensions.gcampax.github.com']"
-dconf write /org/gnome/shell/extensions/dash-to-dock/dock-position "'BOTTOM'"
+if [ $(which dconf) ] ; then
+  CUSTOMLANG=$(echo $LANG | cut -d _ -f 1)
+  dconf write /org/gnome/settings-daemon/peripherals/touchpad/disable-while-typing true # Ubuntu
+  dconf write /org/gnome/settings-daemon/peripherals/touchpad/motion-acceleration 10.0 # Ubuntu
+  dconf write /org/gnome/settings-daemon/peripherals/touchpad/motion-threshold 1 # Ubuntu
+  dconf write /org/gnome/desktop/peripherals/touchpad/speed 1.0 # Fedora
+  dconf write /org/gnome/desktop/peripherals/touchpad/tap-to-click true # Fedora
+  dconf write /org/gnome/desktop/input-sources/sources "[('xkb', '$CUSTOMLANG')]"
+  dconf write /org/gnome/shell/favorite-apps "['firefox.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.gedit.desktop', 'org.gnome.Terminal.desktop', 'org.gnome.Software.desktop']"
+  # Enable certain GNOME Extensions
+  dconf write /org/gnome/shell/enabled-extensions "['places-menu@gnome-shell-extensions.gcampax.github.com', 'launch-new-instance@gnome-shell-extensions.gcampax.github.com', 'dash-to-dock@micxgx.gmail.com', 'apps-menu@gnome-shell-extensions.gcampax.github.com', 'alternate-tab@gnome-shell-extensions.gcampax.github.com']"
+  dconf write /org/gnome/shell/extensions/dash-to-dock/dock-position "'BOTTOM'"
+fi
 EOF
 chmod a+x /etc/profile.d/customize.sh
 
