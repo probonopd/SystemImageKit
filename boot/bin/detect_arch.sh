@@ -6,8 +6,10 @@
 
 # Successfully detects
 # antergos-2014.08.07-x86_64.iso
-# archlinux-2015.06.01-dual.iso
-# bbqlinux-2015.05.16-x86_64-xfce4.iso
+# antergos-2015.11.14-x86_64.iso
+# (BROKEN?) archlinux-2015.06.01-dual.iso
+# (BROKEN?) bbqlinux-2015.05.16-x86_64-xfce4.iso
+
 
 detect_arch() {
 
@@ -19,8 +21,7 @@ MOUNTPOINT="$1"
 # Make sure this ISO is one that this script understands - otherwise return asap
 #
 
-find "$MOUNTPOINT" -name archiso.img | grep -q img || return
-find "$MOUNTPOINT" -name *.sfs | grep -q sfs || return
+ls "$MOUNTPOINT"/arch 2>/dev/null || return
 
 echo "$ISONAME" assumed to be ARCH
 
