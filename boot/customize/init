@@ -126,6 +126,11 @@ if [ -e /etc/xdg/autostart/SUSEgreeter.desktop ] ; then
   rm /etc/xdg/autostart/SUSEgreeter.desktop
 fi
 
+# Disable Antergos cnchi
+if [ -e /etc/skel/.config/autostart/cnchi.desktop ] ; then
+  rm /etc/skel/.config/autostart/cnchi.desktop
+fi
+
 # Remove crap from desktop
 find /home/ -wholename "*Desktop/*.desktop" -exec rm {} \;
 
