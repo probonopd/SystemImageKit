@@ -8,6 +8,7 @@ USERNAME="me" # Format: "me"
 HOSTNAME="host" # Format: "host"
 
 HERE=$(dirname $(readlink -f $0))
+
 . "$HERE"/detect_debian_live.sh || exit 1
 . "$HERE"/detect_arch.sh || exit 1
 . "$HERE"/detect_casper.sh || exit 1
@@ -38,10 +39,11 @@ menuentry "Old" {
 EOF
 
 LIVEMNT=$(df -P "$HERE" | awk 'END{print $NF}') # mountpoint
-LIVE=$( cat /proc/mounts  | grep "$LIVEMNT" | cut -d " " -f 1) # /dev/sdXX
+LIVE=$( cat /proc/mounts  | grep "$LIVEMNT" | cut -d " " -f 1 | head -n 1) # /dev/sdXX
 
 mount "$LIVE" -o remount,rw
 UUID=$(blkid "$LIVE" -s UUID -o value)
+echo $UUID
 ISOS=$(find "$LIVEMNT"/boot/iso -name "*.iso")
 
 for ISO in $ISOS; do
