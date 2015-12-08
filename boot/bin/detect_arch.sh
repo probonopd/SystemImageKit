@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # TODO
-# Disable /etc/xdg/autostart/cnchi.desktop nag screen
 # Set hostname etc.
 
 # Successfully detects
