@@ -14,6 +14,7 @@ HERE=$(dirname $(readlink -f $0))
 . "$HERE"/detect_casper.sh || exit 1
 . "$HERE"/detect_dracut.sh || exit 1
 . "$HERE"/detect_tumbleweed.sh || exit 1
+. "$HERE"/detect_mageia.sh || exit 1
 
 if [[ $EUID -ne 0 ]]; then
   echo "You must be a root user" 2>&1
@@ -61,6 +62,7 @@ for ISO in $ISOS; do
   detect_casper "/opt" >/dev/null
   detect_dracut "/opt" >/dev/null
   detect_kiwi "/opt" >/dev/null
+  detect_mageia "/opt" >/dev/null
   
   sleep 0.1
   umount /opt
