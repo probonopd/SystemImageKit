@@ -6,9 +6,10 @@
 # Mount the overlayfs kernel module from inside the Live system
 # since the kernel module is missing in the initrd. This is why we use this
 # script in addition to, rather than instead of, dmsquash. (FIXME)
+
 modprobe -d /sysroot -va overlay
 
-if [ $? -eq 0 ] ; then
+if [ $? -eq 0 ] && [ ! -e /etc/mageia-release ] ; then
 
 # Now we do not need the sysroot provided by dmsquash any longer
 umount -lf /sysroot
