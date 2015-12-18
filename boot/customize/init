@@ -194,6 +194,9 @@ fi
 if [ -e /usr/lib/udisks2/udisksd ] ; then
   sed -i -e 's|showexec|\x00\x00\x00\x00\x00\x00\x00\x00|g' /usr/lib/udisks2/udisksd # Ubuntu 12.10
 fi
+if [ -e /usr/libexec/udisks2/udisksd ] ; then
+  sed -i -e 's|showexec|\x00\x00\x00\x00\x00\x00\x00\x00|g' /usr/libexec/udisks2/udisksd # Fedora 23
+fi
 
 # Set the correct timezone; TODO: Move this to the localization and make it dependent on cmdline
 if [ -e /usr/share/zoneinfo/Europe/Berlin ] ; then
