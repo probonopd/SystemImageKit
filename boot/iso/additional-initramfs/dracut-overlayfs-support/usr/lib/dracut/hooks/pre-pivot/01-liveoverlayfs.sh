@@ -7,7 +7,7 @@
 # since the kernel module is missing in the initrd. This is why we use this
 # script in addition to, rather than instead of, dmsquash. (FIXME)
 
-modprobe -d /sysroot -va overlay
+modprobe -d /sysroot overlay
 
 if [ $? -eq 0 ] && [ ! -e /etc/mageia-release ] ; then
 
