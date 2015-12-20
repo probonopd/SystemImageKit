@@ -27,7 +27,13 @@ wget -c "http://www.lwfinger.com/b43-firmware/broadcom-wl-5.100.138.tar.bz2"
 tar xfvj *.tar.bz2
 b43-fwcutter  ./broadcom-wl-5.100.138/linux/wl_apsta.o -w .
 mv b43 lib/firmware/
-rm -rf broadcom-* 
+rm -rf broadcom-*
+cat > ExtensionRun <<EOF
+#!/bin/bash
+# Some systems (e.g., F23) load modules before this Extension
+rmmod b43; modprobe b43
+EOF
+chmod a+x ExtensionRun
 mkdir -p "${HERE}/../customize/x86_64/"
 mksquashfs . "${HERE}/../customize/x86_64/b43firmware.ExtensionImage"
 cd -

@@ -219,6 +219,7 @@ for EXTENSION in $EXTENSIONS ; do
   mkdir -p "${EXTDIR}"/"${SHORT}"
   mount -o loop,ro "${EXTENSION}" "${EXTDIR}"/"${SHORT}"
   cp -rsf "${EXTDIR}"/"${SHORT}"/* /
+  cp -rsf "${EXTDIR}"/"${SHORT}"/lib/* /lib ### FIXME: Workaround for Fedora where lib is a link
   if [ -x "${EXTDIR}"/"${SHORT}"/ExtensionRun ] ; then
      "${EXTDIR}"/"${SHORT}"/ExtensionRun
   fi
