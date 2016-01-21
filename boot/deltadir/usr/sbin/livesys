@@ -142,6 +142,7 @@ gsettings set org.gnome.settings-daemon.plugins.updates active 'false' || :
 
 # don't enable automatic download of updates
 gsettings set org.gnome.software download-updates 'false' || :
+chmod a-x /usr/libexec/packagekitd
 
 # don't start cron/at as they tend to spawn things which are
 # disk intensive that are painful on a live image
