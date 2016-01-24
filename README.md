@@ -57,17 +57,17 @@ sudo grub-install --target=x86_64-efi --efi-directory=/mnt/boot/EFI --boot-direc
 mkdir -p /mnt/EFI/BOOT
 mv /mnt/boot/EFI/BOOT/grubx64.efi /mnt/EFI/BOOT/bootx64.efi
 
+# Generate additional initrd (gets loaded in addition to the one on the ISO)
+/mnt/boot/iso/additional-initramfs/generate
+
 # Download Ubuntu ISO
 wget -c "http://releases.ubuntu.com/14.04.1/ubuntu-14.04.1-desktop-amd64.iso" -O /mnt/boot/iso/ubuntu-14.04.1-desktop-amd64.iso
 
 # Configure bootloader
 /mnt/boot/bin/generate
 
-# Create and install an ExtensionImage for Adobe Flash Player (just as an example)
-bash /mnt/boot/bin/generate-flash-extension
-
-# Create and install an ExtensionImage for Broadcom WLAN firmware
-bash /mnt/boot/bin/generate-b43firmware-extension
+# Create and install ExtensionImages, e.g., for Adobe Flash Player and proprietary firmware
+bash /mnt/boot/bin/generate-*
 
 umount /mnt
 
