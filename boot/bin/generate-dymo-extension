@@ -1,0 +1,31 @@
+#!/bin/bash
+
+HERE="$(dirname "$(readlink -f "${0}")")"
+
+if [ -e /usr/bin/apt-get ] ; then
+  which mksquashfs || apt-get -y install squashfs-tools
+  which wget || apt-get -y install wget
+fi
+
+if [ -e /usr/bin/yum ] ; then
+  which mksquashfs || yum -y install squashfs-tools
+  which wget || yum -y install wget
+fi
+
+rm -f "${HERE}/../customize/x86_64/printer-driver-dymo.ExtensionImage"
+mkdir -p /tmp/printer-driver-dymo_x86_64
+cd /tmp/printer-driver-dymo_x86_64
+wget -c "http://mirrors.kernel.org/ubuntu/pool/universe/d/dymo-cups-drivers/printer-driver-dymo_1.4.0-2_amd64.deb"
+dpkg -x *deb . ; rm -f *deb
+mkdir -p "${HERE}/../customize/x86_64/"
+mksquashfs . "${HERE}/../customize/x86_64/printer-driver-dymo.ExtensionImage"
+cd -
+
+rm -f "${HERE}/../customize/i686/printer-driver-dymo.ExtensionImage"
+mkdir -p /tmp/printer-driver-dymo_i686
+cd /tmp/printer-driver-dymo_i686
+wget -q "http://mirrors.kernel.org/ubuntu/pool/universe/d/dymo-cups-drivers/printer-driver-dymo_1.4.0-2_i386.deb"
+dpkg -x *deb . ; rm -f *deb
+mkdir -p "${HERE}/../customize/i686/"
+mksquashfs . "${HERE}/../customize/i686/printer-driver-dymo.ExtensionImage"
+cd -
