@@ -1,4 +1,4 @@
-Copyright (c) 2004-15 Simon Peter
+Copyright (c) 2004-16 Simon Peter
 probono@puredarwin.org
 
 SystemImageKit
