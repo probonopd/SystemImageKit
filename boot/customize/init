@@ -87,6 +87,10 @@ if [ $(which dconf) ] ; then
   # Enable certain GNOME Extensions
   dconf write /org/gnome/shell/enabled-extensions "['places-menu@gnome-shell-extensions.gcampax.github.com', 'launch-new-instance@gnome-shell-extensions.gcampax.github.com', 'dash-to-dock@micxgx.gmail.com', 'apps-menu@gnome-shell-extensions.gcampax.github.com', 'alternate-tab@gnome-shell-extensions.gcampax.github.com']"
   dconf write /org/gnome/shell/extensions/dash-to-dock/dock-position "'BOTTOM'"
+  # Fix Ubuntu multiscreen stupidity (sticky edges, multiple docks)
+  dconf write /org/compiz/profiles/unity/plugins/unityshell/launcher-capture-mouse false
+  dconf write /org/compiz/profiles/unity/plugins/unityshell/num-launchers 1
+
 fi
 EOF
 chmod a+x /etc/profile.d/customize.sh
