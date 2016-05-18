@@ -135,6 +135,9 @@ if [ -e /etc/skel/.config/autostart/cnchi.desktop ] ; then
   rm /etc/skel/.config/autostart/cnchi.desktop
 fi
 
+# Remove gnome-getting-started
+apt-get -y remove --auto-remove gnome-getting-started-docs || true
+
 # Remove crap from desktop
 find /home/ -wholename "*Desktop/*.desktop" -exec rm {} \;
 
@@ -308,5 +311,30 @@ LGPL
 EOF
 
 rm /usr/share/pixmaps/fedora_whitelogo.svg 2>/dev/null # No fedora logo in the bottom right corner
+
+#############################################
+#
+# AppImage handling
+#
+#############################################
+
+cat > /tmp/executable.desktop <<\EOF
+[Desktop Entry]
+Version=1.0
+Name=executable
+Exec=bash -c "FILE=%f;chmod a+x \\$FILE;exec \\$FILE"
+Icon=utilities-terminal
+Terminal=false
+Type=Application
+Categories=Application;
+MimeType=application/x-executable;
+NoDisplay=true
+EOF
+sudo desktop-file-install /tmp/executable.desktop
+rm /tmp/executable.desktop
+
+sudo update-desktop-database /usr/share/applications/
+
+#############################################
 
 grep -r init= /proc/cmdline && exec /sbin/init
