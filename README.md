@@ -64,7 +64,7 @@ mv /mnt/boot/EFI/BOOT/grubx64.efi /mnt/EFI/BOOT/bootx64.efi
 wget -c "http://releases.ubuntu.com/14.04.1/ubuntu-14.04.1-desktop-amd64.iso" -O /mnt/boot/iso/ubuntu-14.04.1-desktop-amd64.iso
 
 # Configure bootloader
-/mnt/boot/bin/generate
+/mnt/boot/bin/detect
 
 # Create and install ExtensionImages, e.g., for Adobe Flash Player and proprietary firmware
 bash /mnt/boot/bin/generate-*
