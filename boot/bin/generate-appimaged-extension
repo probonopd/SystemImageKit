@@ -56,13 +56,14 @@ mkdir -p usr/lib/systemd/user/
 cat > usr/lib/systemd/user/appimaged.service<<\EOF
 [Unit]
 Description=AppImage daemon
+After=basic.target
 
 [Service]
 ExecStart=/usr/bin/appimaged
 Restart=always
 
 [Install]
-WantedBy=default.target
+WantedBy=graphical.target
 EOF
 
 mkdir -p "${HERE}/../customize/x86_64/"
