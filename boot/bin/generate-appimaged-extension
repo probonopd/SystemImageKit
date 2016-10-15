@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# To test:
+# systemctl --user status appimaged
+# systemctl --user enable appimaged
+# systemctl --user start appimaged
+
 set -e
 
 HERE="$(dirname "$(readlink -f "${0}")")"
@@ -45,5 +50,5 @@ WantedBy=default.target
 EOF
 
 mkdir -p "${HERE}/../customize/x86_64/"
-mksquashfs . "${HERE}/../customize/x86_64/flash.ExtensionImage" -noappend
+mksquashfs . "${HERE}/../customize/x86_64/appimaged.ExtensionImage" -noappend
 cd -
