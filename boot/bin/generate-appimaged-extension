@@ -1,0 +1,49 @@
+#!/bin/bash
+
+set -e
+
+HERE="$(dirname "$(readlink -f "${0}")")"
+
+if [ -e /usr/bin/apt-get ] ; then
+  which mksquashfs || apt-get -y install squashfs-tools
+  which wget || apt-get -y install wget
+fi
+
+if [ -e /usr/bin/yum ] ; then
+  which mksquashfs || yum -y install squashfs-tools
+  which wget || yum -y install wget
+fi
+
+rm -f "${HERE}/../customize/x86_64/appimaged.ExtensionImage"
+mkdir -p /tmp/appimaged_x86_64
+cd /tmp/appimaged_x86_64
+
+mkdir -p usr/bin
+
+# Get the ID of the last successful build on Travis CI
+ID=$(wget -q https://api.travis-ci.org/repos/probonopd/appimagetool/builds -O - | head -n 1 | sed -e 's|}|\n|g' | grep '"result":0' | head -n 1 | sed -e 's|,|\n|g' | grep '"id"' | cut -d ":" -f 2)
+# Get the transfer.sh URL from the logfile of the last successful build on Travis CI
+# Only Travis knows why build ID and job ID don't match and why the above doesn't give both...
+URL=$(wget -q "https://s3.amazonaws.com/archive.travis-ci.org/jobs/$((ID+1))/log.txt" -O - | grep "https://transfer.sh/.*/appimaged" | tail -n 1 | sed -e 's|\r||g')
+if [ -z "$URL" ] ; then
+  URL=$(wget -q "https://s3.amazonaws.com/archive.travis-ci.org/jobs/$((ID+2))/log.txt" -O - | grep "https://transfer.sh/.*/appimaged" | tail -n 1 | sed -e 's|\r||g')
+fi
+wget -c "$URL" -O usr/bin/appimaged
+chmod a+x usr/bin/appimaged
+
+mkdir -p usr/lib/systemd/user/
+cat > usr/lib/systemd/user/appimaged.service<<\EOF
+[Unit]
+Description=AppImage daemon
+
+[Service]
+ExecStart=/usr/bin/appimaged
+Restart=always
+
+[Install]
+WantedBy=default.target
+EOF
+
+mkdir -p "${HERE}/../customize/x86_64/"
+mksquashfs . "${HERE}/../customize/x86_64/flash.ExtensionImage" -noappend
+cd -
