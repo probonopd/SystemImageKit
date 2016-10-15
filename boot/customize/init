@@ -130,10 +130,8 @@ if [ -e /etc/xdg/autostart/SUSEgreeter.desktop ] ; then
   rm /etc/xdg/autostart/SUSEgreeter.desktop
 fi
 
-# Disable Antergos cnchi
-if [ -e /etc/skel/.config/autostart/cnchi.desktop ] ; then
-  rm /etc/skel/.config/autostart/cnchi.desktop
-fi
+# Disable autostarts, e.g., Antergos cnchi and Ubuntu MATE ubuntu-mate-welcome
+rm /etc/skel/.config/autostart/*.desktop 2>/dev/null || true
 
 # Remove gnome-getting-started
 apt-get -y remove --auto-remove gnome-getting-started-docs || true
