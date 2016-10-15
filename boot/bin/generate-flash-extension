@@ -16,7 +16,6 @@ VERSION=$(curl -q "http://get.adobe.com/flashplayer/webservices/json/" | strings
 MAJORVERSION=$(echo $VERSION | cut -d "." -f 1)
 echo $VERSION
 
-rm -f "${HERE}/../customize/x86_64/flash.ExtensionImage"
 mkdir /tmp/flash_x86_64
 cd /tmp/flash_x86_64
 wget -c "https://fpdownload.adobe.com/get/flashplayer/pdc/${VERSION}/install_flash_player_${MAJORVERSION}_linux.x86_64.tar.gz"
@@ -26,10 +25,9 @@ mv libflashplayer.so usr/lib/mozilla/plugins/
 rm -f *.tar.gz
 rm -f readme.txt
 mkdir -p "${HERE}/../customize/x86_64/"
-mksquashfs . "${HERE}/../customize/x86_64/flash.ExtensionImage"
+mksquashfs . "${HERE}/../customize/x86_64/flash.ExtensionImage" -noappend
 cd -
 
-rm -f "${HERE}/../customize/i686/flash.ExtensionImage"
 mkdir /tmp/flash_i686
 cd /tmp/flash_i686
 wget -c "https://fpdownload.adobe.com/get/flashplayer/pdc/${VERSION}/install_flash_player_${MAJORVERSION}_linux.i386.tar.gz"
@@ -39,5 +37,5 @@ mv libflashplayer.so usr/lib/mozilla/plugins/
 rm -f *.tar.gz
 rm -f readme.txt
 mkdir -p "${HERE}/../customize/i686/"
-mksquashfs . "${HERE}/../customize/i686/flash.ExtensionImage"
+mksquashfs . "${HERE}/../customize/i686/flash.ExtensionImage" -noappend
 cd -
