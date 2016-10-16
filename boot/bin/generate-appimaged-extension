@@ -61,6 +61,8 @@ After=basic.target
 [Service]
 ExecStart=/usr/bin/appimaged
 Restart=always
+RestartSec=5s
+StartLimitInterval=0
 
 [Install]
 WantedBy=graphical.target
