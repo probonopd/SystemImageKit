@@ -68,6 +68,14 @@ StartLimitInterval=0
 WantedBy=graphical.target
 EOF
 
+# Install AppImageUpdate to usr/local/bin
+APP=AppImageUpdate
+nodeFileName=$(wget -q "https://bintray.com/package/files/probono/AppImages/$APP?order=desc&sort=fileLastModified&basePath=&tab=files" -O - | grep -e '-x86_64.AppImage">' | cut -d '"' -f 6 | head -n 1)
+wget -c "https://bintray.com/$nodeFileName" -O "$APP"
+chmod a+x "$APP"
+mkdir -p usr/local/bin/
+sudo mv "$APP" usr/local/bin/
+
 mkdir -p "${HERE}/../customize/x86_64/"
 mksquashfs . "${HERE}/../customize/x86_64/appimaged.ExtensionImage" -noappend
 cd -
