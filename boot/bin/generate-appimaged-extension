@@ -30,6 +30,7 @@ cd /tmp/appimaged_x86_64
 
 # The following directories must exist when the session starts, otherwise the user must log out and in
 # for appimaged to work properly. This is NOT an appimaged bug. Send a pull request if you can fix this.
+# It looks like it is too late here to populate skel, hence this DOES NOT WORK
 mkdir -p etc/skel/.icons
 echo "This directory must exist before the session starts in order to work" >> etc/skel/.icons/.note
 mkdir -p etc/skel/.local/share/icons/hicolor/48x48/
@@ -52,8 +53,12 @@ fi
 wget -c "$URL" -O usr/bin/appimaged
 chmod a+x usr/bin/appimaged
 
-mkdir -p usr/lib/systemd/user/
-cat > usr/lib/systemd/user/appimaged.service<<\EOF
+# Without those, the service doesn't automatically launch on boot
+cat > ExtensionRun <<\EOF
+#!/bin/sh
+
+mkdir -p /usr/lib/systemd/user/
+cat > /usr/lib/systemd/user/appimaged.service<<\EOxxF
 [Unit]
 Description=AppImage daemon
 After=basic.target
@@ -66,12 +71,33 @@ StartLimitInterval=0
 
 [Install]
 WantedBy=graphical.target
+EOxxF
+
+# Enable per-user launchd unit for all users in a way that users can disable it
+systemctl --global enable appimaged # does not seem to work
+
+# Enable per-user launchd unit for all users, does not seem to work either
+mkdir -p /usr/lib/systemd/user/graphical.target.wants/
+( cd /usr/lib/systemd/user/graphical.target.wants/ ; ln -s ../appimaged.service . )
+
+# Really desperate now
+mkdir -p /home/me/.config/systemd/user/graphical.target.wants/
+ln -s /usr/lib/systemd/user/appimaged.service /home/me/.config/systemd/user/graphical.target.wants/appimaged.service
+chown -R me /home/me/
 EOF
 
-# Without those, the service doesn't automatically launch on boot
-mkdir -p etc/systemd/systemd/user/graphical.target.wants/
-( cd etc/systemd/systemd/user/ ; ln -s ../../../../usr/lib/systemd/user/appimaged.service . )
-( cd etc/systemd/systemd/user/graphical.target.wants/ ; ln -s ../../../../../usr/lib/systemd/user/appimaged.service . )
+chmod a+x ExtensionRun
+
+# Since all of the above does not work, I am using an autostart file
+# but it would nice if systemd could do this on its own
+mkdir -p etc/xdg/autostart/
+cat > etc/xdg/autostart/appimaged.desktop <<EOF
+[Desktop Entry]
+Exec=systemctl --user start appimaged
+Terminal=false
+Type=Application
+NoDisplay=true
+EOF
 
 # Install AppImageUpdate to usr/local/bin
 APP=AppImageUpdate
