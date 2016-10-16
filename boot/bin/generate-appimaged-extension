@@ -68,6 +68,11 @@ StartLimitInterval=0
 WantedBy=graphical.target
 EOF
 
+# Without those, the service doesn't automatically launch on boot
+mkdir -p etc/skel/.config/systemd/user/graphical.target.wants/
+( cd etc/skel/.config/systemd/user/ ; ln -s ../../../../../usr/lib/systemd/user/appimaged.service . )
+( cd etc/skel/.config/systemd/user/graphical.target.wants/ ; ln -s ../../../../../../usr/lib/systemd/user/appimaged.service . )
+
 # Install AppImageUpdate to usr/local/bin
 APP=AppImageUpdate
 nodeFileName=$(wget -q "https://bintray.com/package/files/probono/AppImages/$APP?order=desc&sort=fileLastModified&basePath=&tab=files" -O - | grep -e '-x86_64.AppImage">' | cut -d '"' -f 6 | head -n 1)
