@@ -69,9 +69,9 @@ WantedBy=graphical.target
 EOF
 
 # Without those, the service doesn't automatically launch on boot
-mkdir -p etc/skel/.config/systemd/user/graphical.target.wants/
-( cd etc/skel/.config/systemd/user/ ; ln -s ../../../../../usr/lib/systemd/user/appimaged.service . )
-( cd etc/skel/.config/systemd/user/graphical.target.wants/ ; ln -s ../../../../../../usr/lib/systemd/user/appimaged.service . )
+mkdir -p etc/systemd/systemd/user/graphical.target.wants/
+( cd etc/systemd/systemd/user/ ; ln -s ../../../../usr/lib/systemd/user/appimaged.service . )
+( cd etc/systemd/systemd/user/graphical.target.wants/ ; ln -s ../../../../../usr/lib/systemd/user/appimaged.service . )
 
 # Install AppImageUpdate to usr/local/bin
 APP=AppImageUpdate
