@@ -1,8 +1,7 @@
 Copyright (c) 2004-16 Simon Peter
 probono@puredarwin.org
 
-SystemImageKit
-==============
+# SystemImageKit
 
 Image-based computing: Operating system complexity reduction by encapsulation.
 
@@ -10,8 +9,7 @@ SystemImageKit lets you run Fedora, CentOS, Ubuntu, Debian, and openSUSE (based)
 
 SystemImageKit also has means to customize every aspect of the boot process and the booted system, so that you can customize the live systems without having to remaster their live ISOs. It does so by allowing you to overlay files in the initramfs and to overlay files in the booted system.
 
-Installing
-==========
+## Installing
 
 The following steps illustrate how to install an Operating System onto a USB drive using SystemImageKit.
 
@@ -84,8 +82,7 @@ Whenever we add additional ISOs, we just have to re-run (the example is for a ru
 sudo /isodevice/boot/generate
 ```
 
-The challenge
-=============
+## The challenge
 
 Today's operating sytems are hugely complex collections of various files, which are scattered on the mass storage in a way that 
 makes it hard for end users to understand, maintain, and upgrade. Here, a way of encapsulating - and thus, making more 
@@ -145,8 +142,7 @@ Many of the issues above are caused by the "tight coupling" of operating system,
 way of the file system. The key to resolving the issues described above is encapsulation of the logical units used in a computer 
 system.
 
-The solution
-============
+## The solution
 
 System-level virtuaization has been used to address some of the issue above (e.g., running multiple operating systems 
 easily on the 
@@ -175,8 +171,7 @@ configuration)
 
 In the following paragraps, each of these components is discussed.
 
-Bootloader
-----------
+### Bootloader
 
 We use grub2, a bootloader that is capable of booting operating systems contained in ISO image files. grub2 can loop-mount and ISO 
 file and load the kernel and the initrd from the ISO. What happens once the kernel has control is up to the operating system. 
@@ -189,8 +184,7 @@ system ISO.
 The advantage of using the bootloader in the way described is that virtually unlimited operating systems can be booted on a computer 
 without having to partition the mass storage.
 
-Operating system ISO files
---------------------------
+### Operating system ISO files
 
 Many common operating systems (such as	CentOS,	Fedora,	debian,	Ubuntu and openSUSE) nowadays provide readymade Live systems 
 (originally intended to run from CD-ROM and/or DVD) which are ideal for our purpose, because they provide defined baseline sets of 
@@ -205,8 +199,7 @@ in without having to remaster the ISO.
 The advantage of using live system ISO files in the way described is that operating systems can be added and removed very easily, 
 and at each reboot the system is back to its original condition.
 
-ExtensionImage files
---------------------
+### ExtensionImage files
 
 Some software deeply integrates with the operating system and is not an app. For example, some wireless network cards require binary 
 firmware blobs to be loaded into the hardware upon boot. These firmware blobs are installed into the operating system, so that they 
@@ -217,8 +210,7 @@ operating system at an early stage at boot, so that the operating system can pic
 The advantage of using ExtensionsImage files is that every extension is one file and can therefore be intuitively managed by the 
 user (e.g., installed, upgraded, removed, and moved to another machine).
 
-AppImage files
---------------
+### AppImage files
 
 An app often consists of hundred of files in addition to the main binary, e.g., icons, graphics, language files, and other 
 auxiliary files. Frequently, an app also requires libraries which are not normally part of the operating system. In this case, the 
@@ -230,8 +222,7 @@ The advantage of using AppImage files is that every app is one file and can ther
 installed, upgraded, removed, and moved to another machine). Also, by bundling the dependencies which are not part of the operating 
 systems, several versions of the same app can be installed alongside, even if they require incompatible versions of dependencies.
 
-Files in $HOME
---------------
+### Files in $HOME
 
 Since the operating system is run from a live system, changes to the running system are non-persistent by default, which means that 
 user data in $HOME is deleted whenever the machine is shut down. Hence, it is advisable to mount the $HOME directory from a 
@@ -240,8 +231,7 @@ persistent location, e.g., a data partition or data loopback file, or from a net
 The advantage of using $HOME in this way is that user data is preserved between boots, while the rest of the system is in a clean 
 state after every boot.
 
-The result
-==========
+## The result
 
 In the system proposed here, what does the typical end user see?
 
