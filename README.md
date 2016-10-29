@@ -278,3 +278,7 @@ The system proposed here allows not only for substantial complexity reduction by
 users to try out operating systems and apps more easily, without having to "commit" to them (in the form of "installing"). This is 
 done by removing the tight coupling between and by encapsulating operating systems, operating system extensions, applications, customizations, and user data. 
 Unlike with system-level virtualization, the performace overhead involved is relatively minor.
+
+## References
+
+https://wiki.archlinux.org/index.php/Multiboot_USB_drive#Workstation_live_medium GRUB2 loopback examples for many types of Live ISOs
