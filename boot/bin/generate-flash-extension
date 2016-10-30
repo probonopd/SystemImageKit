@@ -5,11 +5,13 @@ HERE="$(dirname "$(readlink -f "${0}")")"
 if [ -e /usr/bin/apt-get ] ; then
   which mksquashfs || apt-get -y install squashfs-tools
   which wget || apt-get -y install wget
+  which curl || apt-get -y install curl
 fi
 
 if [ -e /usr/bin/yum ] ; then
   which mksquashfs || yum -y install squashfs-tools
   which wget || yum -y install wget
+  which curl || yum -y install curl
 fi
 
 VERSION=$(curl -q "http://get.adobe.com/flashplayer/webservices/json/" | strings | python -m json.tool | grep "install_flash_player_11_linux.i386.tar.gz" | cut -d "/" -f 7)
