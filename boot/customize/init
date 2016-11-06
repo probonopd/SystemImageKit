@@ -310,6 +310,11 @@ EOF
 
 rm /usr/share/pixmaps/fedora_whitelogo.svg 2>/dev/null # No fedora logo in the bottom right corner
 
+# Downloading debs without asking? On a live system? Give me a break!
+# xubuntu-16.04.1-desktop-amd64.iso has this
+rm -f /usr/bin/unattended-upgrade 2>/dev/null
+rm -f /etc/apt/apt.conf.d/20auto-upgrades 2>/dev/null
+
 #############################################
 #
 # AppImage handling
