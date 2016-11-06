@@ -16,11 +16,19 @@ umount -lf /sysroot
 
 mkdir /run/sysroot
 
-# Mount the squashfs image and the ext3fs image therein
+# Mount the squashfs image and the filesystem image therein
 # TODO: do not hardcode the names
 # but rather do it similar to /sbin/dmsquash-live-root.sh
 mount /run/initramfs/live/LiveOS/squashfs.img /run/initramfs/squashfs
-mount /run/initramfs/squashfs/LiveOS/ext3fs.img /run/sysroot
+
+# F23-
+if [ -e /run/initramfs/squashfs/LiveOS/ext3fs.img ] ; then
+  mount /run/initramfs/squashfs/LiveOS/ext3fs.img /run/sysroot
+fi
+# F24+
+if [ -e /run/initramfs/squashfs/LiveOS/rootfs.img ] ; then
+  mount /run/initramfs/squashfs/LiveOS/rootfs.img /run/sysroot
+fi
 
 # Use overlayfs to mount /run "over" the root filesystem coming from the Live ISO
 # TODO: Could mount additional lowerdirs

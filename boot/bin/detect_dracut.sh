@@ -32,10 +32,10 @@ find "$MOUNTPOINT"/LiveOS/squashfs.img 2>/dev/null || return
 # Parse the required information out of the ISO
 #
 
-LIVETOOL="dracut"
-LIVETOOLVERSION=1
 mount "$MOUNTPOINT"/LiveOS/squashfs.img "$MOUNTPOINT" -o loop
 if [ -e "$MOUNTPOINT"/LiveOS/ext3fs.img ] ; then
+  LIVETOOL="dracut"
+  LIVETOOLVERSION=1
   mount "$MOUNTPOINT"/LiveOS/ext3fs.img "$MOUNTPOINT" -o loop
   if [ -e "$MOUNTPOINT"/lib/dracut/dracut-version.sh ] ; then
     . "$MOUNTPOINT"/lib/dracut/dracut-version.sh # conveniently sets DRACUT_VERSION but does not exist in CentOS 6.4
@@ -45,6 +45,9 @@ if [ -e "$MOUNTPOINT"/LiveOS/ext3fs.img ] ; then
     # yumdb is no longer there in Fedora 23
   fi
   umount "$MOUNTPOINT"
+else
+  umount "$MOUNTPOINT"
+  return
 fi
 umount "$MOUNTPOINT"
 
@@ -52,13 +55,13 @@ CFG=$(find "$MOUNTPOINT" -name isolinux.cfg | head -n 1)
 
 LINUX=$(cat $CFG | grep "kernel " | head -n 1 | sed -e 's|kernel ||g' | xargs)
 if [[ $LINUX != *"/"* ]] ; then
-  LINUX=$(find "$MOUNTPOINT" -name "$LINUX" | sed -e "s|$MOUNTPOINT||g" ) # Need to get full path
+  LINUX=$(find "$MOUNTPOINT" -name "$LINUX" | head -n 1 | sed -e "s|$MOUNTPOINT||g" ) # Need to get full path
 fi
 echo "* LINUX $LINUX"
 
 INITRD=$(cat $CFG | grep "append " | head -n 1 | cut -d = -f 2 | cut -d " " -f 1 | xargs)
 if [[ $INITRD != *"/"* ]] ; then
-  INITRD=$(find "$MOUNTPOINT" -name "$INITRD" | sed -e "s|$MOUNTPOINT||g" ) # Need to get full path
+  INITRD=$(find "$MOUNTPOINT" -name "$INITRD" | head -n 1 | sed -e "s|$MOUNTPOINT||g" ) # Need to get full path
 fi
 echo "* INITRD $INITRD"
 

@@ -13,6 +13,7 @@ HERE=$(dirname $(readlink -f $0))
 . "$HERE"/detect_arch.sh || exit 1
 . "$HERE"/detect_casper.sh || exit 1
 . "$HERE"/detect_dracut.sh || exit 1
+. "$HERE"/detect_lmc.sh || exit 1
 . "$HERE"/detect_tumbleweed.sh || exit 1
 . "$HERE"/detect_mageia.sh || exit 1
 
@@ -25,7 +26,7 @@ function finish {
   umount /opt 2>/dev/null
   gsettings set org.gnome.desktop.media-handling automount 'true' 2>/dev/null
 }
-trap finish EXIT 
+trap finish EXIT
 
 # Temporarily disable GNOME automount
 # also for Unity in Ubuntu 11.04 and later
@@ -48,6 +49,7 @@ echo $UUID
 ISOS=$(find "$LIVEMNT"/boot/iso -name "*.iso")
 
 for ISO in $ISOS; do
+  echo ""
   echo $ISO
   unset LIVETOOL
   unset LIVETOOLVERSION
@@ -61,9 +63,10 @@ for ISO in $ISOS; do
   detect_arch "/opt" >/dev/null
   detect_casper "/opt" >/dev/null
   detect_dracut "/opt" >/dev/null
+  detect_lmc "/opt" >/dev/null
   detect_kiwi "/opt" >/dev/null
   detect_mageia "/opt" >/dev/null
-  
+
   sleep 0.1
   umount /opt
 
