@@ -33,7 +33,7 @@ cd /tmp/appimaged_x86_64
 # It looks like it is too late here to populate skel, hence this DOES NOT WORK
 mkdir -p etc/skel/.local/share/icons/hicolor/{16x16,22x22,24x24,32x32,36x36,48x48,64x64,72x72,96x96,128x128,192x192,256x256,512x512}/apps/
 mkdir -p etc/skel/.local/share/icons/hicolor/scalable/apps/
-find etc/skel/.local/share/icons -type d -name apps -exec echo "This directory must exist before the session starts in order to work" >> {}.note \;
+find etc/skel/.local/share/icons -type d -name apps -exec echo echo \"This directory must exist before the session starts in order to work\" \> {}/.note \; > commands
 bash -x commands
 rm commands
 mkdir -p etc/skel/.local/share/applications/appimagekit
