@@ -86,6 +86,7 @@ chmod a+x ExtensionRun
 mkdir -p etc/xdg/autostart/
 cat > etc/xdg/autostart/appimaged.desktop <<EOF
 [Desktop Entry]
+Name=appimaged
 Exec=systemctl --user start appimaged
 Terminal=false
 Type=Application
