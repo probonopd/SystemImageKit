@@ -16,6 +16,7 @@ HERE=$(dirname $(readlink -f $0))
 . "$HERE"/detect_lmc.sh || exit 1
 . "$HERE"/detect_tumbleweed.sh || exit 1
 . "$HERE"/detect_mageia.sh || exit 1
+. "$HERE"/detect_kiwi.sh || exit 1
 
 if [[ $EUID -ne 0 ]]; then
   echo "You must be a root user" 2>&1
