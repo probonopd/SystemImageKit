@@ -18,7 +18,7 @@ In order to do this, boot Ubuntu Live system (tested with Ubuntu 14.04 LTS Trust
 NOTE: All data on /dev/sdX will be deleted.
 
 ```
-sudo su
+sudo -i
 
 umount /dev/sdX*
 
