@@ -14,14 +14,15 @@ if [ -e /usr/bin/yum ] ; then
   which curl || yum -y install curl
 fi
 
-VERSION=$(curl -q "http://get.adobe.com/flashplayer/webservices/json/" | strings | python -m json.tool | grep "install_flash_player_11_linux.i386.tar.gz" | cut -d "/" -f 7)
-MAJORVERSION=$(echo $VERSION | cut -d "." -f 1)
-echo $VERSION
+# VERSION=$(curl -q "http://get.adobe.com/flashplayer/webservices/json/" | strings | python -m json.tool | grep "install_flash_player_11_linux.i386.tar.gz" | cut -d "/" -f 7)
+# MAJORVERSION=$(echo $VERSION | cut -d "." -f 1)
+# echo $VERSION
 
 mkdir /tmp/flash_x86_64
 cd /tmp/flash_x86_64
-wget -c "https://fpdownload.adobe.com/get/flashplayer/pdc/${VERSION}/install_flash_player_${MAJORVERSION}_linux.x86_64.tar.gz"
-tar xfvz *.tar.gz
+# wget -c "https://fpdownload.adobe.com/get/flashplayer/pdc/${VERSION}/install_flash_player_${MAJORVERSION}_linux.x86_64.tar.gz"
+# tar xfvz *.tar.gz
+wget -c https://fpdownload.macromedia.com/pub/labs/flashruntimes/flashplayer/linux64/libflashplayer.so
 mkdir -p usr/lib/mozilla/plugins/
 mv libflashplayer.so usr/lib/mozilla/plugins/
 rm -f *.tar.gz
@@ -32,8 +33,9 @@ cd -
 
 mkdir /tmp/flash_i686
 cd /tmp/flash_i686
-wget -c "https://fpdownload.adobe.com/get/flashplayer/pdc/${VERSION}/install_flash_player_${MAJORVERSION}_linux.i386.tar.gz"
-tar xfvz *.tar.gz
+# wget -c "https://fpdownload.adobe.com/get/flashplayer/pdc/${VERSION}/install_flash_player_${MAJORVERSION}_linux.i386.tar.gz"
+# tar xfvz *.tar.gz
+wget -c https://fpdownload.macromedia.com/pub/labs/flashruntimes/flashplayer/linux32/libflashplayer.so
 mkdir -p usr/lib/mozilla/plugins/
 mv libflashplayer.so usr/lib/mozilla/plugins/
 rm -f *.tar.gz
