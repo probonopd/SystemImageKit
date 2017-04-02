@@ -65,7 +65,7 @@ wget -c "http://releases.ubuntu.com/14.04.1/ubuntu-14.04.1-desktop-amd64.iso" -O
 /mnt/boot/bin/detect
 
 # Create and install ExtensionImages, e.g., for Adobe Flash Player and proprietary firmware
-bash /mnt/boot/bin/generate-*
+find /mnt/boot/bin/generate-* --exec bash {} \;
 
 umount /mnt
 
