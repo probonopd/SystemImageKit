@@ -23,17 +23,17 @@ find "$MOUNTPOINT"/syslinux.cfg 2>/dev/null || return
 # Parse the required information out of the ISO
 #
 
-LIVETOOL="kiwi"
+LIVETOOL="kiwi-ng"
 # LIVETOOLVERSION=1
 LIVETOOLVERSION=$(ls "$MOUNTPOINT"/*read-only* | rev | cut -d - -f 1 | rev )
 
 CFG="$MOUNTPOINT"/syslinux.cfg
 
-LINUX=$(cat $CFG | grep "kernel" | head -n 1 | sed -e 's|kernel ||g' | xargs)
+LINUX=$(cat $CFG | grep "kernel" | head -n 1 | sed -e 's|kernel ||g' | sed -e 's|($root)||g' | xargs)
 LINUX="/"$LINUX
 echo "* LINUX $LINUX"
 
-INITRD=$(cat $CFG | grep -o "initrd=.*initrd" | head -n 1 | sed -e 's|initrd=|/|g')
+INITRD=$(cat $CFG | grep -o "initrd=.*initrd" | head -n 1 | sed -e 's|initrd=|/|g' | sed -e 's|($root)||g')
 echo "* INITRD $INITRD"
 
 APPEND=$(cat $CFG | grep "append" | head -n 1 | sed -e 's|append ||g' | xargs)

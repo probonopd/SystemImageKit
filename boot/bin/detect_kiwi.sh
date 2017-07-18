@@ -28,10 +28,10 @@ LIVETOOLVERSION=1
 
 CFG="$MOUNTPOINT"/boot/grub2/grub.cfg
 
-LINUX=$(cat $CFG | grep "\$linux" | head -n 1 | sed -e 's|\$linux ||g' | xargs)
+LINUX=$(cat $CFG | grep "\$linux" | head -n 1 | sed -e 's|\$linux ||g' | sed -e 's|($root)||g' | xargs)
 echo "* LINUX $LINUX"
 
-INITRD=$(cat $CFG | grep "\$initrd" | head -n 1 | sed -e 's|\$initrd ||g' | xargs)
+INITRD=$(cat $CFG | grep "\$initrd" | head -n 1 | sed -e 's|\$initrd ||g' | sed -e 's|($root)||g' | xargs)
 echo "* INITRD $INITRD"
 
 APPEND="ramdisk_size=512000 ramdisk_blocksize=4096 quiet splash" # FIXME: Parse out of the file on the ISO
