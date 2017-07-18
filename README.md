@@ -65,7 +65,7 @@ wget -c "http://releases.ubuntu.com/14.04.1/ubuntu-14.04.1-desktop-amd64.iso" -O
 /mnt/boot/bin/detect
 
 # Create and install ExtensionImages, e.g., for Adobe Flash Player and proprietary firmware
-bash /mnt/boot/bin/generate-*
+find /mnt/boot/bin/generate-* --exec bash {} \;
 
 umount /mnt
 
@@ -112,11 +112,11 @@ files. Instead, installers and uninstallers (Windows) and package managers (Unix
 became increasingly dependent on these tools.
 
 On desktop systems, files in the filesystem can broadly be categorized into
-  # Files installed by the operating system
-  # Files installed as operating system extensions (e.g., firmware, codecs)
-  # Files installed by applications
-  # Files created by the administrator or user to customize the system (e.g., configuration files)
-  # Files created by the user as work products (e.g., documents)
+  * Files installed by the operating system
+  * Files installed as operating system extensions (e.g., firmware, codecs)
+  * Files installed by applications
+  * Files created by the administrator or user to customize the system (e.g., configuration files)
+  * Files created by the user as work products (e.g., documents)
 
 On most operating system setups, these are intermingled more or less in the same filesystem, which creates increasing complexity. 
 Because on most setups these files are distributed througout the filesystem, it is hard to
@@ -153,21 +153,21 @@ applying a set of customizations to multiple operating systems).
 
 By setting up the operating system in a way proposed here, it is possible to achieve the above use cases easily. We define 
 objects for the categories mentioned above as follows:
-  # A bootloader that is capable of booting image files
-  # One file per operating system
-  # One file per operating system extension (e.g., firmware, set of codecs)
-  # One file per application
-  # One file to customize the system
-  # Files created by the user as work products (e.g., documents)
+  * A bootloader that is capable of booting image files
+  * One file per operating system
+  * One file per operating system extension (e.g., firmware, set of codecs)
+  * One file per application
+  * One file to customize the system
+  * Files created by the user as work products (e.g., documents)
 
 In the implementation described here, we use:
-  # grub2 with custom helper scripts
-  # ISO files, containing one live operating system each
-  # ExtensionImage files, the contents of which are symlinked into the / upon boot
-  # AppImage files, the contents of which are mounted when the app is exected
-  # An init file that does local configuration and is run when the system boots (and an auxiliary initrd that helps loading this 
+  * grub2 with custom helper scripts
+  * ISO files, containing one live operating system each
+  * ExtensionImage files, the contents of which are symlinked into the / upon boot
+  * AppImage files, the contents of which are mounted when the app is exected
+  * An init file that does local configuration and is run when the system boots (and an auxiliary initrd that helps loading this 
 configuration)
-  # Files in $HOME which is mounted from a persistent location
+  * Files in $HOME which is mounted from a persistent location
 
 In the following paragraps, each of these components is discussed.
 

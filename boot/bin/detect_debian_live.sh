@@ -12,6 +12,7 @@
 # debian-live-8.0.0-amd64-xfce-desktop+nonfree.iso - live-boot 4.0.2-1
 # tails-i386-1.5.iso
 # tanglu-3.0-gnome-live-amd64.hybrid.iso
+# deepin-15.4-amd64.iso
 
 detect_debian_live() {
 
@@ -61,6 +62,8 @@ fi
 echo "* INITRD $INITRD"
 
 APPEND=$(cat $CFG | grep "append " | head -n 1 | sed -e 's|append ||g' | xargs | sed -e 's|initrd='$INITRD' ||g') # sed is for tails-i386-1.5.iso
+APPEND=$(echo $APPEND | sed -e 's| locales=zh_CN.UTF-8||g') # Deepin
+APPEND=$(echo $APPEND | sed -e 's| livecd-installer||g') # Deepin
 echo "* APPEND $APPEND"
 
 #

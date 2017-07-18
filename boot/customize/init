@@ -315,6 +315,9 @@ rm /usr/share/pixmaps/fedora_whitelogo.svg 2>/dev/null # No fedora logo in the b
 rm -f /usr/bin/unattended-upgrade 2>/dev/null
 rm -f /etc/apt/apt.conf.d/20auto-upgrades 2>/dev/null
 
+# KDE Wallet is only annoying on a Live system
+rm -rf /usr/bin/kwallet*
+
 #############################################
 #
 # AppImage handling
