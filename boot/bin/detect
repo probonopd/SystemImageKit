@@ -2,6 +2,7 @@
 
 LOCALE="de_DE.UTF-8" # Format: "de_DE.UTF-8"
 LOCALE_NODOT=$(echo $LOCALE | cut -d "." -f 1) # Format: "de_DE"
+LANGUAGE=$LOCALE_NODOT
 KEYBOARD="de" # Format: "de"
 TIMEZONE="Europe/Berlin" # Format: "Europe/Berlin"
 USERNAME="me" # Format: "me"
