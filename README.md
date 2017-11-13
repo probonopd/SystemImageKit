@@ -22,12 +22,8 @@ sudo -i
 
 umount /dev/sdX*
 
-# Make one partition # this command is broken in newer versions of sfdisk
-sfdisk --in-order -L -uS /dev/sdX <<-EOF
-63,,c
-;
-;
-EOF
+# Make one partition
+echo 'start=2048, type=83' | sfdisk /dev/sdX
 
 # Make first partition bootable
 sfdisk -A /dev/sdX 1
