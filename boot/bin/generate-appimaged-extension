@@ -95,8 +95,8 @@ EOF
 
 # Install AppImageUpdate to usr/local/bin
 APP=AppImageUpdate
-nodeFileName=$(wget -q "https://bintray.com/package/files/probono/AppImages/$APP?order=desc&sort=fileLastModified&basePath=&tab=files" -O - | grep -e '-x86_64.AppImage">' | cut -d '"' -f 6 | head -n 1)
-wget -c "https://bintray.com/$nodeFileName" -O "$APP"
+URL=$(wget -q https://api.github.com/repos/AppImage/AppImageUpdate/releases -O - | grep browser_download_url | grep -e 'AppImageUpdate-.*.AppImage\"' | cut -d '"' -f 4)
+wget -c "$URL" -O "$APP"
 chmod a+x "$APP"
 mkdir -p usr/local/bin/
 sudo mv "$APP" usr/local/bin/
