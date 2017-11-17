@@ -5,6 +5,8 @@ probono@puredarwin.org
 
 Image-based computing: Operating system complexity reduction by encapsulation.
 
+![grub](https://user-images.githubusercontent.com/2480569/32960053-e1b345d4-cbc3-11e7-9f34-c1cc11b5b1c7.png)
+
 SystemImageKit lets you run Fedora, CentOS, Ubuntu, Debian, and openSUSE (based) live systems, all directly from unchanged live ISOs all stored on the same physical medium (e.g., USB drive). Currently support for the live booting systems of the mentioned distributions is built in, but the system is modular so that detection scripts for other distributions can be added relatively easily.
 
 SystemImageKit also has means to customize every aspect of the boot process and the booted system, so that you can customize the live systems without having to remaster their live ISOs. It does so by allowing you to overlay files in the initramfs and to overlay files in the booted system.
