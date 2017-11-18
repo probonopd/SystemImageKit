@@ -318,6 +318,24 @@ rm -f /etc/apt/apt.conf.d/20auto-upgrades 2>/dev/null
 # KDE Wallet is only annoying on a Live system
 rm -rf /usr/bin/kwallet*
 
+# Firefox
+# /usr/lib/firefox/defaults/pref/vendor-gre.js is the location on Ubuntu
+# Check user's settings in:
+# ./.mozilla/firefox/*.default/prefs.js
+cat >> /usr/lib/firefox/defaults/pref/custom.js <<\EOF
+pref("browser.laterrun.enabled", false);
+pref("browser.onboarding.enabled", false);
+pref("browser.startup.firstrunSkipsHomepage", false);
+pref("browser.startup.homepage", "about:blank");
+pref("datareporting.healthreport.uploadEnabled", false);
+pref("privacy.donottrackheader.enabled", true);
+pref("privacy.resistFingerprinting", true);
+pref("privacy.trackingprotection.enabled", true);
+pref("signon.rememberSignons", false);
+pref("toolkit.telemetry.newProfilePing.enabled", false);
+pref("toolkit.telemetry.updatePing.enabled", false);
+EOF
+
 #############################################
 #
 # AppImage handling
