@@ -322,6 +322,7 @@ rm -rf /usr/bin/kwallet*
 # /usr/lib/firefox/defaults/pref/vendor-gre.js is the location on Ubuntu
 # Check user's settings in:
 # ./.mozilla/firefox/*.default/prefs.js
+mkdir -p /usr/lib/firefox/defaults/pref/ # Should not hurt
 cat >> /usr/lib/firefox/defaults/pref/custom.js <<\EOF
 pref("browser.laterrun.enabled", false);
 pref("browser.onboarding.enabled", false);
