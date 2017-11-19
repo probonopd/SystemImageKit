@@ -1,9 +1,10 @@
 #!/bin/bash
 
-LOCALE="de_DE.UTF-8" # Format: "de_DE.UTF-8"
+LOCALE="en_US.UTF-8"
+# LOCALE="de_DE.UTF-8" # Format: "de_DE.UTF-8"
 LOCALE_NODOT=$(echo $LOCALE | cut -d "." -f 1) # Format: "de_DE"
 LANGUAGE=$LOCALE_NODOT
-KEYBOARD="de" # Format: "de"
+KEYBOARD="de" # Format: "de", change to "en" if you like
 TIMEZONE="Europe/Berlin" # Format: "Europe/Berlin"
 USERNAME="me" # Format: "me"
 HOSTNAME="host" # Format: "host"
