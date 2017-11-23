@@ -49,6 +49,9 @@ fi
 
 echo "3"
 cat > /usr/share/glib-2.0/schemas/60_site.gschema.override <<EOF
+[org.gnome.shell.extensions.dash-to-dock]
+click-action='minimize'
+
 [com.canonical.Unity.Launcher]
 favorites=['application://gedit.desktop', 'application://gnome-terminal.desktop', 'application://nautilus.desktop', 'application://firefox.desktop', 'application://libreoffice-writer.desktop', 'application://libreoffice-calc.desktop', 'application://libreoffice-impress.desktop', 'application://ubuntu-software-center.desktop', 'application://unity-control-center.desktop', 'unity://running-apps', 'unity://expo-icon', 'unity://devices']
 
