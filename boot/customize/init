@@ -335,7 +335,7 @@ pref("datareporting.healthreport.uploadEnabled", false);
 pref("privacy.donottrackheader.enabled", true);
 pref("privacy.resistFingerprinting", true);
 pref("privacy.trackingprotection.enabled", true);
-pref("privacy.trackingprotection.introCount", 20);
+pref("privacy.trackingprotection.introCount", 50);
 pref("signon.rememberSignons", false);
 pref("toolkit.telemetry.newProfilePing.enabled", false);
 pref("toolkit.telemetry.updatePing.enabled", false);
