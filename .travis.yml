@@ -8,8 +8,6 @@ install:
 
 script:
   - set -e # Stop on errors, https://github.com/travis-ci/travis-ci/issues/1066
-  - sudo touch /tmp/test
-  - ls /tmp
   - cd ..
   - wget -c "https://raw.githubusercontent.com/Outernet-Project/dir2fat32/master/dir2fat32.sh"
   - bash -e dir2fat32.sh boot.img 33 SystemImageKit
