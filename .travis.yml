@@ -4,7 +4,7 @@ sudo: require
 dist: trusty
 
 install:
-  - sudo apt-get -y install util-linux dosfstools mtools kpartx grub-pc grub-efi-amd64
+  - sudo apt-get -y install util-linux dosfstools mtools kpartx grub-pc # grub-efi-amd64 conflicts grub-pc
 
 script:
   - cd ..
@@ -16,7 +16,8 @@ script:
   - sudo mkdir boot
   - sudo mount /dev/mapper/loop0p1 mnt
   - sudo grub-install --no-floppy --root-directory=./mnt /dev/loop0
-  - sudo apt-get -y install 
+  - sudo apt-get -y remove grub-pc 
+  - sudo apt-get -y install util-linux dosfstools mtools kpartx grub-efi-amd64
   - sudo mkdir ./mnt/boot/efi
   - sudo grub-install --target=x86_64-efi --efi-directory=./mnt/boot/EFI --boot-directory=./mnt/boot/ /dev/loop0
   - # May need https://superuser.com/a/200442
