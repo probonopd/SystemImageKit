@@ -34,10 +34,10 @@ script:
   - sudo losetup -d /dev/loop1
   - sudo kpartx -v -d /dev/loop0
   - ls -lh .
+  - VERSION=$(cd SystemImageKit ; git rev-parse --short HEAD)
   - mkdir -p BootImage
   - mv boot.img BootImage/BootImage.img
-  - cd SystemImageKit
-  - VERSION=$(git rev-parse --short HEAD)
+  - cd BootImage
   - SEARCH=$(strings  BootImage.img | grep search.fs_uuid | grep root | cut -d ' ' -f 2)
   - REPLACE=$(sudo blkid BootImage.img | cut -d '"' -f 2)
   - REPLACEMENT=$(echo ${REPLACE:0:4}-${REPLACE:4:8})
