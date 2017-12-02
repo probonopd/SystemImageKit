@@ -29,6 +29,7 @@ script:
   - sudo grub-install --target=x86_64-efi --efi-directory=./mnt/boot/EFI --boot-directory=./mnt/boot/ /dev/loop0 || true
   - sudo mkdir -p ./mnt/EFI/BOOT
   - sudo wget -c -q "http://ftp.scientificlinux.org/linux/fedora/releases/18/Fedora/x86_64/os/EFI/BOOT/grubx64.efi" -O ./mnt/EFI/BOOT/bootx64.efi
+  - (cd ./mnt/EFI/BOOT/ && echo "7c97ca7b8220f7eda17294acf4abb2d33e86f09b12629d627cdc07b7582d9885  bootx64.efi" | sha256sum -c) || exit 1
   - sudo bash -e ./mnt/boot/iso/additional-initramfs/generate # Generate additional initrd (gets loaded in addition to the one on the ISO)
   - sudo find ./mnt/
   - sudo touch mnt/boot/grub/grub.cfg # Because it is empty?
