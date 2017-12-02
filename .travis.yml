@@ -18,6 +18,7 @@ script:
   - sleep 1
   - sudo mkfs.vfat /dev/mapper/loop0p1
   - sudo mount /dev/loop1 mnt
+  - sudo df -h
   - sudo cp -r SystemImageKit/* ./mnt/
   - sudo wget -c "http://download.grml.org/grml64-small_2017.05.iso" -O ./mnt/boot/iso/grml64-small_2017.05.iso ####
   - sudo parted /dev/loop0 set 1 boot on # Set boot flag
