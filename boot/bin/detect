@@ -90,7 +90,7 @@ for ISO in $ISOS; do
 done
 
 # For Ubuntu
-grub-script-check /tmp/grub.cfg && (
+which grub-script-check && /tmp/grub.cfg && (
 # Backup the previous version
 cp "$LIVEMNT"/boot/grub/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg.old
 cp /tmp/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg
@@ -98,7 +98,7 @@ echo "Successfully updated bootloader configuration"
 )
 
 # For openSUSE
-grub2-script-check /tmp/grub.cfg && (
+which grub2-script-check && grub2-script-check /tmp/grub.cfg && (
 # Backup the previous version
 cp "$LIVEMNT"/boot/grub/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg.old
 cp /tmp/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg
