@@ -25,9 +25,8 @@ script:
   - sudo find /mnt/boot/bin/generate-appimaged* --exec bash {} \; # Create and install ExtensionImage
   - sudo umount ./mnt/
   - ls -lh .
-
-umount /mnt
-  - exit 0
+  - tar cfvj boot.img.bz2 boot.img
+  - ls -lh .
 
 after_success:
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
