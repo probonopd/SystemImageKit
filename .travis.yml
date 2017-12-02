@@ -27,10 +27,10 @@ script:
   - # find /mnt
   - sudo mkdir -p ./mnt/EFI/BOOT
   - sudo wget -c "http://ftp.scientificlinux.org/linux/fedora/releases/18/Fedora/x86_64/os/EFI/BOOT/grubx64.efi" -O ./mnt/EFI/BOOT/bootx64.efi
-  - # sudo mv /mnt/boot/EFI/*/grubx64.efi /mnt/EFI/BOOT/bootx64.efi
-  - sudo bash -e /mnt/boot/iso/additional-initramfs/generate # Generate additional initrd (gets loaded in addition to the one on the ISO)
+  - # sudo mv ./mnt/boot/EFI/*/grubx64.efi ./mnt/EFI/BOOT/bootx64.efi
+  - sudo bash -e ./mnt/boot/iso/additional-initramfs/generate # Generate additional initrd (gets loaded in addition to the one on the ISO)
   - sudo ./mnt/boot/bin/detect # Configure bootloader
-  - sudo find /mnt/boot/bin/generate-appimaged* --exec bash {} \; # Create and install ExtensionImage
+  - sudo find ./mnt/boot/bin/generate-appimaged* --exec bash {} \; # Create and install ExtensionImage
   - sudo umount ./mnt/
   - ls -lh .
   - tar cfvj boot.img.bz2 boot.img
