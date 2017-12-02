@@ -17,9 +17,9 @@ script:
   - sudo losetup /dev/loop1 /dev/mapper/loop0p1
   - sudo mount /dev/loop1 mnt
   - sudo find ./mnt/
-  - sudo grub-install --no-floppy --root-directory=./mnt /dev/loop0
-  - sudo apt-get -y remove grub-pc 
-  - sudo apt-get -y install util-linux dosfstools mtools kpartx grub-efi-amd64
+  - sudo grub-install --no-floppy --boot-directory=./mnt/boot /dev/loop0
+  - # sudo apt-get -y remove grub-pc 
+  - # sudo apt-get -y install grub-efi-amd64
   - # sudo mkdir -p ./mnt/boot/efi
   - # sudo modprobe efivars
   - # sudo grub-install --target=x86_64-efi --efi-directory=./mnt/boot/EFI --boot-directory=./mnt/boot/ /dev/loop0
