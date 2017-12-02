@@ -95,7 +95,7 @@ which grub-script-check && grub-script-check /tmp/grub.cfg && (
 cp "$LIVEMNT"/boot/grub/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg.old
 cp /tmp/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg
 echo "Successfully updated bootloader configuration"
-)
+) && exit 0
 
 # For openSUSE
 which grub2-script-check && grub2-script-check /tmp/grub.cfg && (
@@ -103,4 +103,4 @@ which grub2-script-check && grub2-script-check /tmp/grub.cfg && (
 cp "$LIVEMNT"/boot/grub/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg.old
 cp /tmp/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg
 echo "Successfully updated bootloader configuration"
-)
+) && exit 0
