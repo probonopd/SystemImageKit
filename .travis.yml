@@ -4,7 +4,7 @@ sudo: require
 dist: trusty
 
 install:
-  - sudo apt-get -y install util-linux dosfstools mtools kpartx grub-pc # grub-efi-amd64 conflicts grub-pc
+  - sudo apt-get -y install util-linux dosfstools mtools kpartx grub-pc grub-common # grub-efi-amd64 conflicts grub-pc
 
 script:
   - set -e # Stop on errors, https://github.com/travis-ci/travis-ci/issues/1066
