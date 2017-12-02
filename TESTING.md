@@ -2,6 +2,21 @@
 
 Flash BootImage.img to a USB stick, `/dev/sdc` in the example below.
 
+## Mac
+
+### BIOS emulation ("Windows") on Mac
+
+```
+This is not a bootable disk.  Please insert a bootable floppy and
+press any key to try again ... 
+```
+
+Reason unknown.
+
+### EFI on Mac
+
+Works.
+
 ## QEMU
 
 ### BIOS on QEMU
