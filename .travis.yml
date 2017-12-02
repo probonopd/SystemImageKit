@@ -42,7 +42,7 @@ script:
   - wget -c "https://github.com/$DLD" # Workaround for https://github.com/resin-io/etcher/issues/1893
   - unzip etcher-*-linux-x86_64.zip
   - EVERSION=$(ls etcher-*x86_64.AppImage | cut -d "-" -f 2)
-  - mv etcher-1.2.0-x86_64.AppImage Etcher-$EVER-x86_64.AppImage
+  - mv etcher-1.2.0-x86_64.AppImage Etcher-$EVERSION-x86_64.AppImage
 
 after_success:
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
