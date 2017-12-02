@@ -16,7 +16,7 @@ script:
   - sudo mkdir mnt
   - sudo losetup /dev/loop1 /dev/mapper/loop0p1
   - sleep 1
-  - mkfs.vfat /dev/mapper/loop0p1
+  - sudo mkfs.vfat /dev/mapper/loop0p1
   - sudo mount /dev/loop1 mnt
   - sudp cp -r SystemImageKit/* SystemImageKit/.* ./mnt/
   - sudo parted /dev/loop0 set 1 boot on # Set boot flag
