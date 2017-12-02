@@ -35,7 +35,7 @@ me@host:~$ find /cdrom/EFI/
 
 If we have not done this,
 
-Then, at the `grub>` prompt, enter (using tab completion):
+then, at the `grub>` prompt, enter (using tab completion):
 
 ```
 grub> configfile (hd0,msdos1)/boot/grub/grub.cfg
