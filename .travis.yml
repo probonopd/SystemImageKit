@@ -21,9 +21,9 @@ script:
   - # https://superuser.com/a/200442
   - sudo mkdir -p ./mnt/boot/grub
   - sudo cat > ./mnt/boot/grub/device.map <<EOF
-  - (hd0)   /dev/loop0
-  - (hd0,1) /dev/loop1
-  - EOF
+    (hd0)   /dev/loop0
+    (hd0,1) /dev/loop1
+    EOF
   - sudo grub-install --no-floppy --boot-directory=./mnt/boot --grub-mkdevicemap=./mnt/boot/grub/device.map /dev/loop0
   - sudo apt-get -y remove grub-pc 
   - sudo apt-get -y install grub-efi-amd64
