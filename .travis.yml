@@ -18,7 +18,7 @@ script:
   - sleep 1
   - sudo mkfs.vfat /dev/mapper/loop0p1
   - sudo mount /dev/loop1 mnt
-  - sudp cp -r SystemImageKit/* SystemImageKit/.* ./mnt/
+  - sudo cp -r SystemImageKit/* SystemImageKit/.* ./mnt/
   - sudo parted /dev/loop0 set 1 boot on # Set boot flag
   - # https://superuser.com/a/200442
   - sudo grub-install --modules="biosdisk part_msdos configfile normal multiboot" --no-floppy --boot-directory=./mnt/boot --grub-mkdevicemap=./mnt/boot/grub/device.map /dev/loop0
