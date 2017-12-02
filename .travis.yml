@@ -14,9 +14,9 @@ script:
   - # http://nairobi-embedded.org/making_a_qemu_disk_image_bootable_with_grub.html#installing-grub-in-the-disk-image
   - sudo kpartx -av boot.img 
   - sudo mkdir mnt
-  - sudo mount
   - sudo losetup /dev/loop1 /dev/mapper/loop0p1
   - sudo mount /dev/loop1 mnt
+  - sudo find ./mnt/
   - sudo grub-install --no-floppy --root-directory=./mnt /dev/loop0
   - sudo apt-get -y remove grub-pc 
   - sudo apt-get -y install util-linux dosfstools mtools kpartx grub-efi-amd64
