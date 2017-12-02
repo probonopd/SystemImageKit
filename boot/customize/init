@@ -319,7 +319,12 @@ rm -f /usr/bin/unattended-upgrade 2>/dev/null
 rm -f /etc/apt/apt.conf.d/20auto-upgrades 2>/dev/null
 
 # KDE Wallet is only annoying on a Live system
-rm -rf /usr/bin/kwallet*
+rm -rf /usr/bin/kwallet*  2>/dev/null || true
+
+# Package ubuntu-web-launchers
+rm -rf /usr/share/applications/com.canonical.launcher.amazon.desktop 2>/dev/null || true
+rm -rf /usr/share/applications/ubuntu-amazon-default.desktop 2>/dev/null || true
+rm -rf /usr/share/ubuntu-web-launchers 2>/dev/null || true
 
 # Firefox
 # /usr/lib/firefox/defaults/pref/vendor-gre.js is the location on Ubuntu
