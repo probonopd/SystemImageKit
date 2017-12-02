@@ -36,7 +36,14 @@ script:
   - ls -lh .
   - mkdir -p BootImage
   - mv boot.img BootImage/BootImage.img
-  - VERSION=$(cd SystemImageKit ; git rev-parse --short HEAD)
+  - cd SystemImageKit
+  - VERSION=$(git rev-parse --short HEAD)
+  - SEARCH=$(strings  BootImage.img | grep search.fs_uuid | grep root | cut -d ' ' -f 2)
+  - REPLACE=$(sudo blkid BootImage.img | cut -d '"' -f 2)
+  - REPLACEMENT=$(echo ${REPLACE:0:4}-${REPLACE:4:8})
+  - echo "Patching $SEARCH to $REPLACEMENT"
+  - sudo sed -i -e 's|'$SEARCH'|'$REPLACEMENT'|g' BootImage.img
+  - cd ..
   - ( cd BootImage ; zip ../BootImage-$VERSION-x86_64 * )
   - DLD=$(wget -q "https://github.com/resin-io/etcher/releases" -O - | grep linux-x86_64.zip | head -n 1 | cut -d '"' -f 2)
   - wget -c -q "https://github.com/$DLD" # Workaround for https://github.com/resin-io/etcher/issues/1893
