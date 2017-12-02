@@ -20,13 +20,14 @@ script:
   - sudo grub-install --no-floppy --root-directory=./mnt /dev/loop0
   - sudo apt-get -y remove grub-pc 
   - sudo apt-get -y install util-linux dosfstools mtools kpartx grub-efi-amd64
-  - sudo mkdir -p ./mnt/boot/efi
-  - sudo modprobe efivars
-  - sudo grub-install --target=x86_64-efi --efi-directory=./mnt/boot/EFI --boot-directory=./mnt/boot/ /dev/loop0
+  - # sudo mkdir -p ./mnt/boot/efi
+  - # sudo modprobe efivars
+  - # sudo grub-install --target=x86_64-efi --efi-directory=./mnt/boot/EFI --boot-directory=./mnt/boot/ /dev/loop0
   - # May need https://superuser.com/a/200442
-  - find /mnt
+  - # find /mnt
   - sudo mkdir -p ./mnt/EFI/BOOT
-  - sudo mv /mnt/boot/EFI/*/grubx64.efi /mnt/EFI/BOOT/bootx64.efi
+  - wget -c "http://ftp.scientificlinux.org/linux/fedora/releases/18/Fedora/x86_64/os/EFI/BOOT/grubx64.efi" -O ./mnt/EFI/BOOT/bootx64.efi
+  - # sudo mv /mnt/boot/EFI/*/grubx64.efi /mnt/EFI/BOOT/bootx64.efi
   - sudo bash -e /mnt/boot/iso/additional-initramfs/generate # Generate additional initrd (gets loaded in addition to the one on the ISO)
   - sudo ./mnt/boot/bin/detect # Configure bootloader
   - sudo find /mnt/boot/bin/generate-appimaged* --exec bash {} \; # Create and install ExtensionImage
