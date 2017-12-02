@@ -30,7 +30,7 @@ script:
   - # sudo mv ./mnt/boot/EFI/*/grubx64.efi ./mnt/EFI/BOOT/bootx64.efi
   - sudo bash -e ./mnt/boot/iso/additional-initramfs/generate # Generate additional initrd (gets loaded in addition to the one on the ISO)
   - sudo find ./mnt/
-  - touch mnt/boot/grub/grub.cfg # Because it is empty?
+  - sudo touch mnt/boot/grub/grub.cfg # Because it is empty?
   - sudo ./mnt/boot/bin/detect # Configure bootloader
   - sudo find ./mnt/boot/bin/generate-appimaged* --exec bash {} \; # Create and install ExtensionImage
   - sudo umount ./mnt/
