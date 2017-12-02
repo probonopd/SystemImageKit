@@ -4,12 +4,17 @@ sudo: require
 dist: trusty
 
 install:
-  - sudo apt-get -y install util-linux dosfstools mtools
+  - sudo apt-get -y install util-linux dosfstools mtools kpartx
 
 script:
   - cd ..
   - wget -c "https://raw.githubusercontent.com/Outernet-Project/dir2fat32/master/dir2fat32.sh"
-  - bash -ex dir2fat32.sh SystemImageKit.img 33 SystemImageKit
+  - bash -ex dir2fat32.sh boot.img 33 SystemImageKit
+  - sudo kpartx -l boot.img
+  - sudo kpartx -a boot.img 
+  - mkdir boot
+  - sudo mount /dev/mapper/loop0p1 boot
+  - # sudo ${GRUB_INSTALL}/usr/sbin/grub-install --no-floppy --root-directory=./ /dev/loop0
   - exit 1
 
 after_success:
