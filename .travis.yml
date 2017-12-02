@@ -25,7 +25,7 @@ script:
   - # May need https://superuser.com/a/200442
   - find /mnt
   - sudo mkdir -p ./mnt/EFI/BOOT
-  - sudo wget -c "http://ftp.scientificlinux.org/linux/fedora/releases/18/Fedora/x86_64/os/EFI/BOOT/grubx64.efi" -O ./mnt/EFI/BOOT/bootx64.efi
+  - sudo wget -c -q "http://ftp.scientificlinux.org/linux/fedora/releases/18/Fedora/x86_64/os/EFI/BOOT/grubx64.efi" -O ./mnt/EFI/BOOT/bootx64.efi
   - # sudo mv ./mnt/boot/EFI/*/grubx64.efi ./mnt/EFI/BOOT/bootx64.efi
   - sudo bash -e ./mnt/boot/iso/additional-initramfs/generate # Generate additional initrd (gets loaded in addition to the one on the ISO)
   - sudo find ./mnt/
@@ -41,7 +41,7 @@ script:
   - VERSION=$(cd SystemImageKit ; git rev-parse --short HEAD)
   - ( cd BootImage ; zip ../BootImage-$VERSION-x86_64 * )
   - DLD=$(wget -q "https://github.com/resin-io/etcher/releases" -O - | grep linux-x86_64.zip | head -n 1 | cut -d '"' -f 2)
-  - wget -c "https://github.com/$DLD" # Workaround for https://github.com/resin-io/etcher/issues/1893
+  - wget -c -q "https://github.com/$DLD" # Workaround for https://github.com/resin-io/etcher/issues/1893
   - unzip etcher-*-linux-x86_64.zip
   - EVERSION=$(ls etcher-*x86_64.AppImage | cut -d "-" -f 2)
   - mv etcher-1.2.0-x86_64.AppImage Etcher-$EVERSION-x86_64.AppImage
