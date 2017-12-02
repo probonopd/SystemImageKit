@@ -12,13 +12,14 @@ script:
   - bash -ex dir2fat32.sh boot.img 33 SystemImageKit
   - # http://nairobi-embedded.org/making_a_qemu_disk_image_bootable_with_grub.html#installing-grub-in-the-disk-image
   - sudo kpartx -l boot.img
-  - sudo kpartx -a boot.img 
+  - sudo kpartx -av boot.img 
   - sudo mkdir mnt
-  - sudo mount /dev/loop0 mnt
+  - sudo mount
+  - sudo mount /dev/loop0p1 mnt
   - sudo grub-install --no-floppy --root-directory=./mnt /dev/loop0
   - sudo apt-get -y remove grub-pc 
   - sudo apt-get -y install util-linux dosfstools mtools kpartx grub-efi-amd64
-  - sudo mkdir ./mnt/boot/efi
+  - sudo mkdir -p ./mnt/boot/efi
   - sudo grub-install --target=x86_64-efi --efi-directory=./mnt/boot/EFI --boot-directory=./mnt/boot/ /dev/loop0
   - # May need https://superuser.com/a/200442
   - sudo mkdir -p ./mnt/EFI/BOOT
