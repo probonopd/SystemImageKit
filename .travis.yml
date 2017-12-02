@@ -30,6 +30,7 @@ script:
   - sudo ./mnt/boot/bin/detect # Configure bootloader
   - sudo find ./mnt/boot/bin/generate-appimaged* -exec bash {} \; # Create and install ExtensionImage
   - sudo umount ./mnt
+  - sudo fdisk -l /dev/loop0
   - sudo losetup -d /dev/loop1
   - sudo kpartx -v -d /dev/loop0
   - ls -lh .
