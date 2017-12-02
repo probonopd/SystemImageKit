@@ -9,7 +9,7 @@ install:
 script:
   - set -e # Stop on errors, https://github.com/travis-ci/travis-ci/issues/1066
   - cd ..
-  - dd if=/dev/zero of=boot.img count=20 bs=1M
+  - dd if=/dev/zero of=boot.img count=300 bs=1M ####
   - parted --script boot.img mklabel msdos mkpart p fat32 1 20 set 1 boot on # # Make the partition table, partition and set it bootable
   - # http://nairobi-embedded.org/making_a_qemu_disk_image_bootable_with_grub.html#installing-grub-in-the-disk-image
   - sudo kpartx -av boot.img 
@@ -19,6 +19,7 @@ script:
   - sudo mkfs.vfat /dev/mapper/loop0p1
   - sudo mount /dev/loop1 mnt
   - sudo cp -r SystemImageKit/* ./mnt/
+  - sudo wget -c "http://download.grml.org/grml64-small_2017.05.iso" -O ./mnt/live/iso/grml64-small_2017.05.iso ####
   - sudo parted /dev/loop0 set 1 boot on # Set boot flag
   - # https://superuser.com/a/200442
   - sudo grub-install --modules="biosdisk part_msdos configfile normal multiboot" --no-floppy --boot-directory=./mnt/boot --grub-mkdevicemap=./mnt/boot/grub/device.map /dev/loop0
