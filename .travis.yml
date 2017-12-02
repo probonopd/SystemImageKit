@@ -10,7 +10,7 @@ script:
   - set -e # Stop on errors, https://github.com/travis-ci/travis-ci/issues/1066
   - cd ..
   - wget -c "https://raw.githubusercontent.com/Outernet-Project/dir2fat32/master/dir2fat32.sh"
-  - bash -ex dir2fat32.sh boot.img 33 SystemImageKit
+  - bash -e dir2fat32.sh boot.img 33 SystemImageKit
   - # http://nairobi-embedded.org/making_a_qemu_disk_image_bootable_with_grub.html#installing-grub-in-the-disk-image
   - sudo kpartx -av boot.img 
   - sudo mkdir mnt
@@ -29,6 +29,7 @@ script:
   - sudo wget -c "http://ftp.scientificlinux.org/linux/fedora/releases/18/Fedora/x86_64/os/EFI/BOOT/grubx64.efi" -O ./mnt/EFI/BOOT/bootx64.efi
   - # sudo mv ./mnt/boot/EFI/*/grubx64.efi ./mnt/EFI/BOOT/bootx64.efi
   - sudo bash -e ./mnt/boot/iso/additional-initramfs/generate # Generate additional initrd (gets loaded in addition to the one on the ISO)
+  - sudo find ./mnt/
   - sudo ./mnt/boot/bin/detect # Configure bootloader
   - sudo find ./mnt/boot/bin/generate-appimaged* --exec bash {} \; # Create and install ExtensionImage
   - sudo umount ./mnt/
