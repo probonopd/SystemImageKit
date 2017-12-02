@@ -1,0 +1,22 @@
+language: cpp
+compiler: gcc
+sudo: require
+dist: trusty
+
+install:
+  - sudo apt-get -y install util-linux dosfstools mtools
+
+script:
+  - cd ..
+  - wget -c "https://raw.githubusercontent.com/Outernet-Project/dir2fat32/master/dir2fat32.sh"
+  - bash -ex dir2fat32.sh SystemImageKit.img 33 SystemImageKit
+  - exit 1
+
+after_success:
+  - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+  - bash upload.sh ./APPNAME*.AppImage*
+  
+branches:
+  except:
+    - # Do not build tags that we create when we upload to GitHub Releases
+    - /^(?i:continuous)/
