@@ -90,7 +90,7 @@ for ISO in $ISOS; do
 done
 
 # For Ubuntu
-which grub-script-check && /tmp/grub.cfg && (
+which grub-script-check && grub-script-check /tmp/grub.cfg && (
 # Backup the previous version
 cp "$LIVEMNT"/boot/grub/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg.old
 cp /tmp/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg
