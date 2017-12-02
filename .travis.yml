@@ -14,7 +14,7 @@ script:
   - sudo kpartx -l boot.img
   - sudo kpartx -a boot.img 
   - sudo mkdir boot
-  - sudo mount /dev/mapper/loop0p1 mnt
+  - sudo mount /dev/loop0p1 mnt
   - sudo grub-install --no-floppy --root-directory=./mnt /dev/loop0
   - sudo apt-get -y remove grub-pc 
   - sudo apt-get -y install util-linux dosfstools mtools kpartx grub-efi-amd64
