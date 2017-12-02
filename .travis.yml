@@ -36,9 +36,9 @@ script:
   - sudo kpartx -v -d /dev/loop0
   - ls -lh .
   - mkdir -p BootImage
-  - mv boot.img BootImage/
+  - mv boot.img BootImage/BootImage.img
   - VERSION=$(cd SystemImageKit ; git rev-parse --short HEAD)
-  - ( cd BootImage/ ; tar cfvj ../BootImage-$VERSION-x86_64.tar.bz2 boot.img )
+  - ( cd foo ; zip ../BootImage-$VERSION-x86_64 * )
   - DLD=$(wget -q "https://github.com/resin-io/etcher/releases" -O - | grep linux-x86_64.zip | head -n 1 | cut -d '"' -f 2)
   - wget -c "https://github.com/$DLD" # Workaround for https://github.com/resin-io/etcher/issues/1893
   - unzip etcher-*-linux-x86_64.zip
