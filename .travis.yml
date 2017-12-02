@@ -23,6 +23,7 @@ script:
   - sudo mkdir -p ./mnt/boot/efi
   - sudo grub-install --target=x86_64-efi --efi-directory=./mnt/boot/EFI --boot-directory=./mnt/boot/ /dev/loop0
   - # May need https://superuser.com/a/200442
+  - sudo modprobe efivars
   - find /mnt
   - sudo mkdir -p ./mnt/EFI/BOOT
   - sudo mv /mnt/boot/EFI/*/grubx64.efi /mnt/EFI/BOOT/bootx64.efi
@@ -33,6 +34,9 @@ script:
   - ls -lh .
   - tar cfvj boot.img.bz2 boot.img
   - ls -lh .
+  - sudo umount ./mnt
+  - sudo losetup -d /dev/loop1
+  - sudo kpartx -v -d /dev/loop0
 
 after_success:
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
