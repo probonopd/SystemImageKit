@@ -31,17 +31,16 @@ script:
   - sudo touch mnt/boot/grub/grub.cfg # Because it is empty?
   - sudo ./mnt/boot/bin/detect # Configure bootloader
   - sudo find ./mnt/boot/bin/generate-appimaged* -exec bash {} \; # Create and install ExtensionImage
-  - sudo umount mnt
-  - ls -lh .
-  - tar cfvj boot.img.bz2 boot.img
-  - ls -lh .
   - sudo umount ./mnt
   - sudo losetup -d /dev/loop1
   - sudo kpartx -v -d /dev/loop0
+  - ls -lh .
+  - tar cfvj boot.img.bz2 boot.img
+  - ls -lh .
 
 after_success:
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-  - bash upload.sh ./APPNAME*.AppImage*
+  - bash upload.sh ./boot.img.bz2
   
 branches:
   except:
