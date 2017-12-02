@@ -21,6 +21,8 @@ Works.
 
 ### BIOS on QEMU
 
+Works.
+
 ```
 sudo apt -y install qemu-system-x86
 sudo qemu-system-x86_64 -m 1G -vga qxl -enable-kvm /dev/sdc
@@ -29,6 +31,8 @@ sudo qemu-system-x86_64 -m 1G -vga qxl -enable-kvm /dev/sdc
 Note: Without `-m 1G` it boots, but hangs in the emergency busybox shell.
 
 ### EFI on QEMU
+
+Works.
 
 ```
 sudo apt -y install qemu-system-x86 ovmf
