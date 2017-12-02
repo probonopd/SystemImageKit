@@ -1,5 +1,7 @@
 # Testing
 
+Flash BootImage.img to a USB stick, `/dev/sdc` in the example below.
+
 ## QEMU
 
 ```
