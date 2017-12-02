@@ -9,7 +9,7 @@ install:
 script:
   - set -e # Stop on errors, https://github.com/travis-ci/travis-ci/issues/1066
   - cd ..
-  - dd if=/dev/zero of=boot.img count=2048 bs=1M ####
+  - dd if=/dev/zero of=boot.img count=64 bs=1M ####
   - parted --script boot.img mklabel msdos mkpart p fat32 1 100% set 1 boot on # # Make the partition table, partition and set it bootable
   - # http://nairobi-embedded.org/making_a_qemu_disk_image_bootable_with_grub.html#installing-grub-in-the-disk-image
   - sudo kpartx -av boot.img 
