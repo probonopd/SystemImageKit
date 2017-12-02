@@ -7,6 +7,7 @@ install:
   - sudo apt-get -y install util-linux dosfstools mtools kpartx grub-pc # grub-efi-amd64 conflicts grub-pc
 
 script:
+  - set -e # Stop on errors, https://github.com/travis-ci/travis-ci/issues/1066
   - cd ..
   - wget -c "https://raw.githubusercontent.com/Outernet-Project/dir2fat32/master/dir2fat32.sh"
   - bash -ex dir2fat32.sh boot.img 33 SystemImageKit
@@ -22,6 +23,7 @@ script:
   - sudo mkdir -p ./mnt/boot/efi
   - sudo grub-install --target=x86_64-efi --efi-directory=./mnt/boot/EFI --boot-directory=./mnt/boot/ /dev/loop0
   - # May need https://superuser.com/a/200442
+  - find /mnt
   - sudo mkdir -p ./mnt/EFI/BOOT
   - sudo mv /mnt/boot/EFI/*/grubx64.efi /mnt/EFI/BOOT/bootx64.efi
   - sudo bash -e /mnt/boot/iso/additional-initramfs/generate # Generate additional initrd (gets loaded in addition to the one on the ISO)
