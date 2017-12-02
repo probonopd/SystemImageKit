@@ -13,7 +13,7 @@ script:
   - # http://nairobi-embedded.org/making_a_qemu_disk_image_bootable_with_grub.html#installing-grub-in-the-disk-image
   - sudo kpartx -l boot.img
   - sudo kpartx -a boot.img 
-  - sudo mkdir boot
+  - sudo mkdir mnt
   - sudo mount /dev/loop0 mnt
   - sudo grub-install --no-floppy --root-directory=./mnt /dev/loop0
   - sudo apt-get -y remove grub-pc 
