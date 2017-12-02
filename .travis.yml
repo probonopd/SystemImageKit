@@ -18,11 +18,16 @@ script:
   - sudo mount /dev/loop1 mnt
   - sudo parted /dev/loop0 set 1 boot on # Set boot flag
   - sudo find ./mnt/
-  - sudo grub-install --no-floppy --boot-directory=./mnt/boot /dev/loop0
+  - # https://superuser.com/a/200442
+  - sudo mkdir -p /mnt/boot/grub
+  - sudo cat > ./mnt/boot/grub/device.map <<EOF
+  - (hd0)   /dev/loop0
+  - (hd0,1) /dev/loop1
+  - EOF
+  - sudo grub-install --no-floppy --boot-directory=./mnt/boot --grub-mkdevicemap=./mnt/boot/grub/device.map /dev/loop0
   - sudo apt-get -y remove grub-pc 
   - sudo apt-get -y install grub-efi-amd64
   - sudo grub-install --target=x86_64-efi --efi-directory=./mnt/boot/EFI --boot-directory=./mnt/boot/ /dev/loop0 || true
-  - # May need https://superuser.com/a/200442
   - find /mnt
   - sudo mkdir -p ./mnt/EFI/BOOT
   - sudo wget -c -q "http://ftp.scientificlinux.org/linux/fedora/releases/18/Fedora/x86_64/os/EFI/BOOT/grubx64.efi" -O ./mnt/EFI/BOOT/bootx64.efi
