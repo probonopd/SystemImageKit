@@ -21,9 +21,9 @@ script:
   - sudo apt-get -y remove grub-pc 
   - sudo apt-get -y install util-linux dosfstools mtools kpartx grub-efi-amd64
   - sudo mkdir -p ./mnt/boot/efi
+  - sudo modprobe efivars
   - sudo grub-install --target=x86_64-efi --efi-directory=./mnt/boot/EFI --boot-directory=./mnt/boot/ /dev/loop0
   - # May need https://superuser.com/a/200442
-  - sudo modprobe efivars
   - find /mnt
   - sudo mkdir -p ./mnt/EFI/BOOT
   - sudo mv /mnt/boot/EFI/*/grubx64.efi /mnt/EFI/BOOT/bootx64.efi
