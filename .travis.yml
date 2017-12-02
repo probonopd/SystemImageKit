@@ -33,6 +33,7 @@ script:
   - sudo find ./mnt/
   - sudo touch mnt/boot/grub/grub.cfg # Because it is empty?
   - sudo ./mnt/boot/bin/detect # Configure bootloader
+  - sudo cat ./mnt/boot/grub/grub.cfg
   - sudo find ./mnt/boot/bin/generate-appimaged* -exec bash {} \; # Create and install ExtensionImage
   - sudo umount ./mnt
   - sudo fdisk -l /dev/loop0
