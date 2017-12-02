@@ -4,7 +4,7 @@ sudo: require
 dist: trusty
 
 install:
-  - sudo apt-get -y install util-linux dosfstools mtools kpartx
+  - sudo apt-get -y install util-linux dosfstools mtools kpartx grub2 grub-efi-amd64
 
 script:
   - cd ..
@@ -12,10 +12,22 @@ script:
   - bash -ex dir2fat32.sh boot.img 33 SystemImageKit
   - sudo kpartx -l boot.img
   - sudo kpartx -a boot.img 
-  - mkdir boot
-  - sudo mount /dev/mapper/loop0p1 boot
-  - # sudo ${GRUB_INSTALL}/usr/sbin/grub-install --no-floppy --root-directory=./ /dev/loop0
-  - exit 1
+  - sudo mkdir boot
+  - sudo mount /dev/mapper/loop0p1 mnt
+  - sudo grub-install --no-floppy --root-directory=./mnt /dev/loop0
+  - sudo apt-get -y install 
+  - sudo mkdir ./mnt/boot/efi
+  - sudo grub-install --target=x86_64-efi --efi-directory=./mnt/boot/EFI --boot-directory=./mnt/boot/ /dev/loop0
+  - sudo mkdir -p ./mnt/EFI/BOOT
+  - sudo mv /mnt/boot/EFI/*/grubx64.efi /mnt/EFI/BOOT/bootx64.efi
+  - sudo bash -e /mnt/boot/iso/additional-initramfs/generate # Generate additional initrd (gets loaded in addition to the one on the ISO)
+  - sudo ./mnt/boot/bin/detect # Configure bootloader
+  - sudo find /mnt/boot/bin/generate-appimaged* --exec bash {} \; # Create and install ExtensionImage
+  - sudo umount ./mnt/
+  - ls -lh .
+
+umount /mnt
+  - exit 0
 
 after_success:
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
