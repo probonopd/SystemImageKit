@@ -6,7 +6,7 @@ Flash BootImage.img to a USB stick, `/dev/sdc` in the example below.
 
 ```
 sudo apt -y install qemu-system-x86
-sudo qemu-system-x86_64 -m 1G -enable-kvm /dev/sdc
+sudo qemu-system-x86_64 -m 1G -vga qxl -enable-kvm /dev/sdc
 ```
 
 It boots, but hangs in the emergency busybox shell.
@@ -15,7 +15,7 @@ It boots, but hangs in the emergency busybox shell.
 
 ```
 sudo apt -y install qemu-system-x86 ovmf
-sudo qemu-system-x86_64 -m 1G -bios /usr/share/ovmf/OVMF.fd -enable-kvm /dev/sdc
+sudo qemu-system-x86_64 -m 1G -vga qxl -bios /usr/share/ovmf/OVMF.fd -enable-kvm /dev/sdc
 ```
 
 Note: As part of the BootImage generation process, need to have copied
