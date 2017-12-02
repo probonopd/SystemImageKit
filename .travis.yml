@@ -21,7 +21,7 @@ script:
   - sudp cp -r SystemImageKit/* SystemImageKit/.* ./mnt/
   - sudo parted /dev/loop0 set 1 boot on # Set boot flag
   - # https://superuser.com/a/200442
-  - sudo grub-install --modules part_msdos --no-floppy --boot-directory=./mnt/boot --grub-mkdevicemap=./mnt/boot/grub/device.map /dev/loop0
+  - sudo grub-install --modules="biosdisk part_msdos configfile normal multiboot" --no-floppy --boot-directory=./mnt/boot --grub-mkdevicemap=./mnt/boot/grub/device.map /dev/loop0
   - sudo apt-get -y remove grub-pc 
   - sudo apt-get -y install grub-efi-amd64
   - sudo grub-install --target=x86_64-efi --efi-directory=./mnt/boot/EFI --boot-directory=./mnt/boot/ /dev/loop0 || true
