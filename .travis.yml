@@ -9,13 +9,16 @@ install:
 script:
   - # set -e # Stop on errors, https://github.com/travis-ci/travis-ci/issues/1066
   - cd ..
-  - wget -c "https://raw.githubusercontent.com/Outernet-Project/dir2fat32/master/dir2fat32.sh"
-  - bash -e dir2fat32.sh boot.img 33 SystemImageKit
+  - dd if=/dev/zero of=mink.img count=20 bs=1M
+  - parted --script mink.img mklabel msdos mkpart p fat32 1 20 set 1 boot on # # Make the partition table, partition and set it bootable
   - # http://nairobi-embedded.org/making_a_qemu_disk_image_bootable_with_grub.html#installing-grub-in-the-disk-image
   - sudo kpartx -av boot.img 
   - sudo mkdir mnt
   - sudo losetup /dev/loop1 /dev/mapper/loop0p1
+  - sleep 1
+  - mkfs.vfat /dev/mapper/loop0p1
   - sudo mount /dev/loop1 mnt
+  - sudp cp -r SystemImageKit/* SystemImageKit/.* ./mnt/
   - sudo parted /dev/loop0 set 1 boot on # Set boot flag
   - # https://superuser.com/a/200442
   - sudo grub-install --modules part_msdos --no-floppy --boot-directory=./mnt/boot --grub-mkdevicemap=./mnt/boot/grub/device.map /dev/loop0
