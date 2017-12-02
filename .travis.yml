@@ -30,7 +30,6 @@ script:
   - sudo ./mnt/boot/bin/detect # Configure bootloader
   - sudo find ./mnt/boot/bin/generate-appimaged* -exec bash {} \; # Create and install ExtensionImage
   - sudo umount ./mnt
-  - sudo blkid /dev/loop0 #####
   - sudo fdisk -l /dev/loop0
   - sudo losetup -d /dev/loop1
   - sudo kpartx -v -d /dev/loop0
@@ -39,9 +38,8 @@ script:
   - mkdir -p BootImage
   - mv boot.img BootImage/BootImage.img
   - cd BootImage
-  - SEARCH=$(strings  BootImage.img | grep search.fs_uuid | grep root | cut -d ' ' -f 2)
-  - sudo blkid BootImage.img #####
-  - REPLACE=$(sudo blkid BootImage.img | cut -d '"' -f 2)
+  - SEARCH=$(strings BootImage.img | grep search.fs_uuid | grep root | cut -d ' ' -f 2)
+  - REPLACE=$(sudo fdisk -l BootImage.img | grep "Disk identifier" | cut -d " " -f 3 | cut -d "x" -f 2)
   - REPLACEMENT=$(echo ${REPLACE:0:4}-${REPLACE:4:8})
   - echo "Patching $SEARCH to $REPLACEMENT"
   - sudo sed -i -e 's|'$SEARCH'|'$REPLACEMENT'|g' BootImage.img
