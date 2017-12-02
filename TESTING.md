@@ -4,12 +4,14 @@ Flash BootImage.img to a USB stick, `/dev/sdc` in the example below.
 
 ## QEMU
 
+### BIOS on QEMU
+
 ```
 sudo apt -y install qemu-system-x86
 sudo qemu-system-x86_64 -m 1G -vga qxl -enable-kvm /dev/sdc
 ```
 
-It boots, but hangs in the emergency busybox shell.
+Note: Without `-m 1G` it boots, but hangs in the emergency busybox shell.
 
 ### EFI on QEMU
 
