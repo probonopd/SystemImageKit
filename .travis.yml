@@ -15,7 +15,7 @@ script:
   - cd ..
   - if [ -z "$ISO" ] ; then dd if=/dev/zero of=boot.img count=64 bs=1M ; fi #### 64
   - if [ ! -z "$ISO" ] ; then wget -c "$ISO" ; fi
-  - if [ ! -z "$ISO" ] ; then  SIZE=$(($(ls -lh *.iso | cut -d " " -f 5 | cut -d M -f 1) + 100)) ; fi # 100 MB larger than ISO
+  - if [ ! -z "$ISO" ] ; then  SIZE=$(($(ls -lh --block-size=M *.iso | cut -d " " -f 5 | cut -d M -f 1) + 100)) ; fi # 100 MB larger than ISO
   - if [ ! -z "$ISO" ] ; then dd if=/dev/zero of=boot.img count=$SIZE bs=1M ; fi
   - parted --script boot.img mklabel msdos mkpart p fat32 1 100% set 1 boot on # # Make the partition table, partition and set it bootable
   - # http://nairobi-embedded.org/making_a_qemu_disk_image_bootable_with_grub.html#installing-grub-in-the-disk-image
@@ -53,7 +53,8 @@ script:
   - VERSION=$(cd SystemImageKit ; git rev-parse --short HEAD)
   - mkdir -p BootImage
   - mv boot.img BootImage/BootImage.img
-  - ( cd BootImage ; zip ../BootImage-$VERSION-x86_64 * )
+  - if [ ! -z "$ISO" ] ; then SUFFIX=$(basename $ISO | cut -d "-" -f 1-2) ; fi
+  - ( cd BootImage ; zip ../BootImage$SUFFIX-$VERSION-x86_64 * )
   - DLD=$(wget -q "https://github.com/resin-io/etcher/releases" -O - | grep linux-x86_64.zip | head -n 1 | cut -d '"' -f 2)
   - wget -c -q "https://github.com/$DLD" # Workaround for https://github.com/resin-io/etcher/issues/1893
   - unzip etcher-*-linux-x86_64.zip
