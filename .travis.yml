@@ -63,7 +63,7 @@ script:
 
 after_success:
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-  - bash upload.sh ./BootImage-* Etcher-*AppImage
+  - bash upload.sh ./BootImage*zip Etcher-*AppImage
   
 branches:
   except:
