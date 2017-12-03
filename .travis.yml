@@ -23,7 +23,7 @@ script:
   - sudo mkdir mnt
   - sudo losetup /dev/loop1 /dev/mapper/loop0p1
   - sleep 1
-  - sudo mkfs.vfat -F 32 /dev/mapper/loop0p1
+  - sudo mkdosfs -F 32 /dev/mapper/loop0p1
   - sudo mount /dev/loop1 mnt
   - sudo df -h
   - sudo cp -r SystemImageKit/* ./mnt/
