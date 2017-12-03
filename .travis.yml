@@ -9,7 +9,7 @@ install:
 script:
   - set -e # Stop on errors, https://github.com/travis-ci/travis-ci/issues/1066
   - cd ..
-  - dd if=/dev/zero of=boot.img count=64 bs=1M ####
+  - dd if=/dev/zero of=boot.img count=350 bs=1M #### 64
   - parted --script boot.img mklabel msdos mkpart p fat32 1 100% set 1 boot on # # Make the partition table, partition and set it bootable
   - # http://nairobi-embedded.org/making_a_qemu_disk_image_bootable_with_grub.html#installing-grub-in-the-disk-image
   - sudo kpartx -av boot.img 
@@ -20,7 +20,7 @@ script:
   - sudo mount /dev/loop1 mnt
   - sudo df -h
   - sudo cp -r SystemImageKit/* ./mnt/
-  - # sudo wget -c "http://releases.ubuntu.com/16.04.3/ubuntu-16.04.3-desktop-amd64.iso" -O ./mnt/boot/iso/ubuntu-16.04.3-desktop-amd64.iso ####
+  - sudo wget -c "https://ftp.fau.de/devuan-cd/devuan_jessie/minimal-live/devuan_jessie_1.0.0_amd64_minimal-live.iso" -O ./mnt/boot/iso/devuan_jessie_1.0.0_amd64_minimal-live.iso ####
   - sudo parted /dev/loop0 set 1 boot on # Set boot flag
   - # https://superuser.com/a/200442
   - sudo grub-install --modules="biosdisk part_msdos configfile normal multiboot" --no-floppy --boot-directory=./mnt/boot --grub-mkdevicemap=./mnt/boot/grub/device.map /dev/loop0
