@@ -55,6 +55,7 @@ script:
   - mv boot.img BootImage/BootImage.img
   - if [ ! -z "$ISO" ] ; then SUFFIX=$(basename $ISO | cut -d "-" -f 1-2) ; fi
   - ( cd BootImage ; zip ../BootImage$SUFFIX-$VERSION-x86_64 * )
+  - ls
   - DLD=$(wget -q "https://github.com/resin-io/etcher/releases" -O - | grep linux-x86_64.zip | head -n 1 | cut -d '"' -f 2)
   - wget -c -q "https://github.com/$DLD" # Workaround for https://github.com/resin-io/etcher/issues/1893
   - unzip etcher-*-linux-x86_64.zip
