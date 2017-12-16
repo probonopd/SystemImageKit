@@ -73,6 +73,19 @@ touchpad-enabled=true
 [com.canonical.indicator.datetime]
 timezone-name='Europe/Berlin Berlin'
 EOF
+
+# Deepin
+cat > /usr/share/glib-2.0/schemas/60_site_deepin.gschema.override <<EOF
+[com.deepin.dde.sound-effect]
+enabled=false
+
+[com.deepin.dde.appearance]
+cursor-theme='Adwaita'
+
+[com.deepin.dde.power]
+sleep-lock=false
+EOF
+
 sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
 
 # The following is run whenever a shell (terminal window) is opened by each user
@@ -132,6 +145,11 @@ fi
 if [ -e /etc/xdg/autostart/SUSEgreeter.desktop ] ; then
   rm /etc/xdg/autostart/SUSEgreeter.desktop
 fi
+
+# Deepin; is copied into $HOME by
+# https://github.com/linuxdeepin/deepin-installer/blob/master/live-config/1070deepin-installer
+rm /usr/share/applications/deepin-installer.desktop || true
+rm /usr/share/dbus-1/services/com.deepin.dde.welcome.service || true
 
 # Disable autostarts, e.g., Antergos cnchi and Ubuntu MATE ubuntu-mate-welcome
 rm /etc/skel/.config/autostart/*.desktop 2>/dev/null || true
