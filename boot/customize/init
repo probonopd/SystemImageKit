@@ -29,6 +29,14 @@ try() {
 }
 
 echo "2"
+# XFCE
+mkdir -p /usr/share/xfwm4/
+cat >> /usr/share/xfwm4/defaults <<EOF
+DisableTouchpadWhileTyping=true
+DisableTouchpadDuration=0.100000
+lock-screen-suspend-hibernate=false
+EOF
+
 # Fedora; based on
 # http://anderson.the-silvas.com/2014/02/14/fedora-20-on-a-macbook-pro-13-late-2013-retina-display/
 if [ -e /usr/libexec/gsd-backlight-helper ] ; then
