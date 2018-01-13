@@ -29,6 +29,14 @@ try() {
 }
 
 echo "2"
+# XFCE
+mkdir -p /usr/share/xfwm4/
+cat >> /usr/share/xfwm4/defaults <<EOF
+DisableTouchpadWhileTyping=true
+DisableTouchpadDuration=0.100000
+lock-screen-suspend-hibernate=false
+EOF
+
 # Fedora; based on
 # http://anderson.the-silvas.com/2014/02/14/fedora-20-on-a-macbook-pro-13-late-2013-retina-display/
 if [ -e /usr/libexec/gsd-backlight-helper ] ; then
@@ -73,6 +81,19 @@ touchpad-enabled=true
 [com.canonical.indicator.datetime]
 timezone-name='Europe/Berlin Berlin'
 EOF
+
+# Deepin
+cat > /usr/share/glib-2.0/schemas/60_site_deepin.gschema.override <<EOF
+[com.deepin.dde.sound-effect]
+enabled=false
+
+[com.deepin.dde.appearance]
+cursor-theme='Adwaita'
+
+[com.deepin.dde.power]
+sleep-lock=false
+EOF
+
 sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
 
 # The following is run whenever a shell (terminal window) is opened by each user
@@ -132,6 +153,11 @@ fi
 if [ -e /etc/xdg/autostart/SUSEgreeter.desktop ] ; then
   rm /etc/xdg/autostart/SUSEgreeter.desktop
 fi
+
+# Deepin; is copied into $HOME by
+# https://github.com/linuxdeepin/deepin-installer/blob/master/live-config/1070deepin-installer
+rm /usr/share/applications/deepin-installer.desktop || true
+rm /usr/share/dbus-1/services/com.deepin.dde.welcome.service || true
 
 # Disable autostarts, e.g., Antergos cnchi and Ubuntu MATE ubuntu-mate-welcome
 rm /etc/skel/.config/autostart/*.desktop 2>/dev/null || true
@@ -319,7 +345,12 @@ rm -f /usr/bin/unattended-upgrade 2>/dev/null
 rm -f /etc/apt/apt.conf.d/20auto-upgrades 2>/dev/null
 
 # KDE Wallet is only annoying on a Live system
-rm -rf /usr/bin/kwallet*
+rm -rf /usr/bin/kwallet*  2>/dev/null || true
+
+# Package ubuntu-web-launchers
+rm -rf /usr/share/applications/com.canonical.launcher.amazon.desktop 2>/dev/null || true
+rm -rf /usr/share/applications/ubuntu-amazon-default.desktop 2>/dev/null || true
+rm -rf /usr/share/ubuntu-web-launchers 2>/dev/null || true
 
 # Firefox
 # /usr/lib/firefox/defaults/pref/vendor-gre.js is the location on Ubuntu
@@ -335,7 +366,7 @@ pref("datareporting.healthreport.uploadEnabled", false);
 pref("privacy.donottrackheader.enabled", true);
 pref("privacy.resistFingerprinting", true);
 pref("privacy.trackingprotection.enabled", true);
-pref("privacy.trackingprotection.introCount", 20);
+pref("privacy.trackingprotection.introCount", 50);
 pref("signon.rememberSignons", false);
 pref("toolkit.telemetry.newProfilePing.enabled", false);
 pref("toolkit.telemetry.updatePing.enabled", false);

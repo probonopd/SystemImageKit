@@ -4,7 +4,7 @@ LOCALE="en_US.UTF-8"
 # LOCALE="de_DE.UTF-8" # Format: "de_DE.UTF-8"
 LOCALE_NODOT=$(echo $LOCALE | cut -d "." -f 1) # Format: "de_DE"
 LANGUAGE=$LOCALE_NODOT
-KEYBOARD="de" # Format: "de", change to "en" if you like
+KEYBOARD="de-latin1-nodeadkeys" # Format: "de", change to "en" if you like; https://wiki.archlinux.de/title/Arch_Linux_auf_Deutsch_stellen
 TIMEZONE="Europe/Berlin" # Format: "Europe/Berlin"
 USERNAME="me" # Format: "me"
 HOSTNAME="host" # Format: "host"
@@ -92,17 +92,17 @@ for ISO in $ISOS; do
 done
 
 # For Ubuntu
-grub-script-check /tmp/grub.cfg && (
+which grub-script-check && grub-script-check /tmp/grub.cfg && (
 # Backup the previous version
 cp "$LIVEMNT"/boot/grub/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg.old
 cp /tmp/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg
 echo "Successfully updated bootloader configuration"
-)
+) && exit 0
 
 # For openSUSE
-grub2-script-check /tmp/grub.cfg && (
+which grub2-script-check && grub2-script-check /tmp/grub.cfg && (
 # Backup the previous version
 cp "$LIVEMNT"/boot/grub/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg.old
 cp /tmp/grub.cfg "$LIVEMNT"/boot/grub/grub.cfg
 echo "Successfully updated bootloader configuration"
-)
+) && exit 0
