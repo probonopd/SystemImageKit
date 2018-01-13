@@ -41,7 +41,6 @@ script:
   - #sudo wget -c -q "http://ftp.scientificlinux.org/linux/fedora/releases/18/Fedora/x86_64/os/EFI/BOOT/grubx64.efi" -O ./mnt/EFI/BOOT/bootx64.efi
   - sudo bash -e ./mnt/boot/iso/additional-initramfs/generate # Generate additional initrd (gets loaded in addition to the one on the ISO)
   - sudo find ./mnt/
-  - sudo touch mnt/boot/grub/grub.cfg # Because it is empty?
   - sudo ./mnt/boot/bin/detect # Configure bootloader
   - sudo cat ./mnt/boot/grub/grub.cfg
   - sudo find ./mnt/boot/bin/generate-appimaged* -exec bash {} \; # Create and install ExtensionImage
@@ -56,15 +55,11 @@ script:
   - if [ ! -z "$ISO" ] ; then SUFFIX=$(basename $ISO | cut -d "-" -f 1-2) ; fi
   - ( cd BootImage ; zip ../BootImage$SUFFIX-$VERSION-x86_64 * )
   - ls
-  - DLD=$(wget -q "https://github.com/resin-io/etcher/releases" -O - | grep linux-x86_64.zip | head -n 1 | cut -d '"' -f 2)
-  - wget -c -q "https://github.com/$DLD" # Workaround for https://github.com/resin-io/etcher/issues/1893
-  - unzip etcher-*-linux-x86_64.zip
-  - EVERSION=$(ls etcher-*x86_64.AppImage | cut -d "-" -f 2)
-  - mv etcher-1.2.0-x86_64.AppImage Etcher-$EVERSION-x86_64.AppImage
+ppImage
 
 after_success:
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-  - bash upload.sh ./BootImage*zip Etcher-*AppImage
+  - bash upload.sh ./BootImage*zip
   
 branches:
   except:
