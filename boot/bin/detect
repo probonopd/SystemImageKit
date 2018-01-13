@@ -11,6 +11,7 @@ HOSTNAME="host" # Format: "host"
 
 HERE=$(dirname $(readlink -f $0))
 
+. "$HERE"/detect_loopbackcfg.sh || exit 1
 . "$HERE"/detect_debian_live.sh || exit 1
 . "$HERE"/detect_arch.sh || exit 1
 . "$HERE"/detect_casper.sh || exit 1
@@ -62,6 +63,7 @@ for ISO in $ISOS; do
   mount "$ISO" /opt -oloop,ro
   ISONAME=$(basename "$ISO")
 
+  detect_loopbackcfg "/opt" >/dev/null
   detect_debian_live "/opt" >/dev/null
   detect_arch "/opt" >/dev/null
   detect_casper "/opt" >/dev/null
