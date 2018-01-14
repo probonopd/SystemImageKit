@@ -55,7 +55,6 @@ script:
   - if [ ! -z "$ISO" ] ; then SUFFIX=$(basename $ISO | cut -d "-" -f 1-2) ; fi
   - ( cd BootImage ; zip ../BootImage$SUFFIX-$VERSION-x86_64 * )
   - ls
-ppImage
 
 after_success:
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
