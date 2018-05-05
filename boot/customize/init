@@ -54,6 +54,9 @@ fi
 
 # Configure dconf
 # Obtained with dconf watch /
+# It seems to need [org.gnome.desktop.peripherals.touchpad] for Ubuntu 18.04 whereas
+# it seems to need [org.gnome.settings-daemon.peripherals.touchpad] for earlier versions
+# why do they keep changing stuff around like that; annoying!
 
 echo "3"
 cat > /usr/share/glib-2.0/schemas/60_site.gschema.override <<EOF
@@ -67,6 +70,18 @@ favorites=['application://gedit.desktop', 'application://gnome-terminal.desktop'
 launcher-capture-mouse=false
 
 [org.gnome.settings-daemon.peripherals.touchpad]
+speed=1.0
+tap-to-click=true
+natural-scroll=false
+left-handed='mouse'
+scroll-method='two-finger-scrolling'
+motion-acceleration=8.1
+horiz-scroll-enabled=true
+disable-while-typing=true
+motion-threshold=2
+touchpad-enabled=true
+
+[org.gnome.desktop.peripherals.touchpad]
 speed=1.0
 tap-to-click=true
 natural-scroll=false
