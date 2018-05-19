@@ -235,6 +235,16 @@ Volume=100
 EOF
 )
 
+# Do not ask about securing the keyring with a password; does this work?
+cat > /etc/skel/.local/share/keyrings/Default_keyring.keyring <<\EOF
+[keyring]
+display-name=Default keyring
+ctime=1526038479
+mtime=0
+lock-on-idle=false
+lock-after=false
+EOF
+
 echo "7"
 # Revert stupidity that prevents running bash files from FAT disks
 if [ -e /usr/lib/udisks/udisks-daemon ] ; then
