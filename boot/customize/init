@@ -8,6 +8,62 @@ HERE="$(dirname "$(readlink -f "${0}")")"
 echo "$HERE running"
 set -x
 
+############################
+
+# Google Chrome
+# https://www.chromium.org/administrators/linux-quick-start
+# https://www.chromium.org/administrators/policy-list-3
+# https://www.chromium.org/administrators/configuring-other-preferences
+sudo sed -i -e 's| %U| --password-store=basic about:blank %U|g' /usr/share/applications/google-chrome.desktop
+
+############################
+
+# Is copied into $HOME by
+# https://github.com/linuxdeepin/deepin-installer/blob/master/live-config/1070deepin-installer
+rm /usr/share/applications/deepin-installer.desktop || true
+
+# Works
+rm /usr/share/dbus-1/services/com.deepin.dde.welcome.service || true
+
+# TODO: Allow passwordless login
+# sudo usermod -a -G nopasswdlogin $THEUSERTOBECHANGED
+
+# Does not work because too late?
+mkdir -p /etc/skel/.config/deepin/deepin-terminal/
+cat > /etc/skel/.config/deepin/deepin-terminal/config.conf <<EOF
+[general]
+theme=hemisu light
+EOF
+
+# GConf is obsolete. It is the older GNOME 2.x configuration API and system,
+# and has been replaced by DConf/GSettings in newer versions.
+# However, some applications still use it.
+# GSettings is a GLib implementation of DConf,
+# which stores its data in a binary database.
+
+# Works
+cat > /usr/share/glib-2.0/schemas/60_site_deepin.gschema.override <<EOF
+[com.deepin.dde.sound-effect]
+enabled=false
+
+[com.deepin.dde.appearance]
+cursor-theme='Adwaita'
+
+[com.deepin.dde.power]
+sleep-lock=false
+
+[com.deepin.dde.appearance]
+font-size=9.6999998092651367
+
+[com.deepin.xsettings]
+gtk-font-name='FreeSans 9.699999809265137'
+EOF
+
+sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
+
+############################
+
+
 echo "1"
 
 # Mount first FAT partition that is mounted read-write
@@ -377,12 +433,73 @@ rm -rf /usr/share/applications/com.canonical.launcher.amazon.desktop 2>/dev/null
 rm -rf /usr/share/applications/ubuntu-amazon-default.desktop 2>/dev/null || true
 rm -rf /usr/share/ubuntu-web-launchers 2>/dev/null || true
 
+#############################################
+#
 # Firefox
+#
+#############################################
+
 # /usr/lib/firefox/defaults/pref/vendor-gre.js is the location on Ubuntu
 # Check user's settings in:
 # ./.mozilla/firefox/*.default/prefs.js
-mkdir -p /usr/lib/firefox/defaults/pref/ # Should not hurt
-cat >> /usr/lib/firefox/defaults/pref/custom.js <<\EOF
+
+mkdir -p /usr/lib/firefox/defaults/pref # Should not hurt
+
+cat > /usr/lib/firefox/defaults/pref/00_admin-prefs.js <<\EOF
+// Any comment. You must start the file with a single-line comment!
+// https://developer.mozilla.org/en-US/Firefox/Enterprise_deployment_before_60
+pref("general.config.filename", "mozilla.cfg");
+pref("general.config.obscure_value", 0);
+EOF
+
+cat >> /usr/lib/firefox/mozilla.cfg <<\EOF
+// Any comment. You must start the file with a comment!
+// https://developer.mozilla.org/en-US/Firefox/Enterprise_deployment_before_60
+
+// Disable updater
+lockPref("app.update.enabled", false);
+// make absolutely sure it is really off
+lockPref("app.update.auto", false);
+lockPref("app.update.mode", 0);
+lockPref("app.update.service.enabled", false);
+
+// Disable Add-ons compatibility checking
+clearPref("extensions.lastAppVersion"); 
+
+// Don't show 'know your rights' on first run
+pref("browser.rights.3.shown", true);
+
+// Don't show WhatsNew on first run after every update
+pref("browser.startup.homepage_override.mstone","ignore");
+
+// Set default homepage - users can change
+// Requires a complex preference
+defaultPref("browser.startup.homepage","data:text/plain,browser.startup.homepage=http://home.example.com");
+
+// Disable the internal PDF viewer
+pref("pdfjs.disabled", true);
+
+// Disable the flash to javascript converter
+pref("shumway.disabled", true);
+
+// Don't ask to install the Flash plugin
+pref("plugins.notifyMissingFlash", false);
+
+//Disable plugin checking
+lockPref("plugins.hide_infobar_for_outdated_plugin", true);
+clearPref("plugins.update.url");
+
+// Disable health reporter
+lockPref("datareporting.healthreport.service.enabled", false);
+
+// Disable all data upload (Telemetry and FHR)
+lockPref("datareporting.policy.dataSubmissionEnabled", false);
+
+// Disable crash reporter
+lockPref("toolkit.crashreporter.enabled", false);
+Components.classes["@mozilla.org/toolkit/crash-reporter;1"].getService(Components.interfaces.nsICrashReporter).submitReports = false; 
+
+// Other
 pref("browser.laterrun.enabled", false);
 pref("browser.onboarding.enabled", false);
 pref("browser.startup.firstrunSkipsHomepage", false);
