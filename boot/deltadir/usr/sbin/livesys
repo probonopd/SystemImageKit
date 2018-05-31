@@ -3,15 +3,7 @@
 # Based on former Fedora Init script for live image
 #
 
-. /etc/init.d/functions
-
-if ! strstr "`cat /proc/cmdline`" rd.live.image ; then
-    exit 0
-fi
-
-if [ -e /.liveimg-configured ] ; then
-    configdone=1
-fi
+grep -r rd.live /proc/cmdline || exit 0
 
 exists() {
     which $1 >/dev/null 2>&1 || return
