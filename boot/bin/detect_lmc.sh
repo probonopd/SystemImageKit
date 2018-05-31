@@ -6,6 +6,7 @@
 # Successfully detects
 # Fedora-Workstation-Live-x86_64-24-1.2.iso
 # Solus-1.1.iso
+# openSUSE-Tumbleweed-Rescue-CD-x86_64-Current.iso as of 5/2018
 
 detect_lmc() {
 
@@ -66,7 +67,7 @@ read -r -d '' GRUBENTRY << EOM
 menuentry "$ISONAME - $LIVETOOL $LIVETOOLVERSION" --class fedora {
         iso_path="/boot/iso/$ISONAME"
         search --no-floppy --file \${iso_path} --set
-        live_args="for-dracut --> iso-scan/filename=\${iso_path} selinux=0 rd.live.deltadir=/run/initramfs/isoscan/boot/deltadir rd.live.user=$USERNAME rd.live.host=$HOSTNAME vconsole.keymap=$KEYBOARD locale.LANG=$LOCALE max_loop=256"
+        live_args="for-dracut --> iso-scan/filename=\${iso_path} selinux=0 max_loop=256 rd.live.deltadir=/run/initramfs/isoscan/boot/deltadir rd.live.user=$USERNAME rd.live.host=$HOSTNAME vconsole.keymap=$KEYBOARD locale.LANG=$LOCALE  workaround-for-suse-> lang=de_DE"
         custom_args=""
         iso_args="$APPEND"
         loopback loop \${iso_path}
