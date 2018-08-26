@@ -51,7 +51,7 @@ apt-get -y install grub-efi-amd64
 mkdir /mnt/boot/efi
 sudo grub-install --target=x86_64-efi --efi-directory=/mnt/boot/EFI --boot-directory=/mnt/boot/ /dev/sdX1
 mkdir -p /mnt/EFI/BOOT
-mv /mnt/boot/ -name grubx64.efi -exec cp {} /mnt/EFI/BOOT/bootx64.efi \;
+find /mnt/boot/ -name grubx64.efi -exec cp {} /mnt/EFI/BOOT/bootx64.efi \;
 
 # Generate additional initrd (gets loaded in addition to the one on the ISO)
 /mnt/boot/iso/additional-initramfs/generate
