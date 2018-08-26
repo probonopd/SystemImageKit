@@ -1,4 +1,4 @@
-Copyright (c) 2004-16 Simon Peter
+Copyright (c) 2004-18 Simon Peter
 probono@puredarwin.org
 
 # SystemImageKit
@@ -63,7 +63,7 @@ wget -c "http://releases.ubuntu.com/14.04.1/ubuntu-14.04.1-desktop-amd64.iso" -O
 /mnt/boot/bin/detect
 
 # Create and install ExtensionImages, e.g., for Adobe Flash Player and proprietary firmware
-find /mnt/boot/bin/generate-* --exec bash {} \;
+find /mnt/boot/bin/generate-* -exec bash {} \;
 
 umount /mnt
 
