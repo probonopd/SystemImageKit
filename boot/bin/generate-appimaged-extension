@@ -44,7 +44,8 @@ echo "This directory must exist before the session starts in order to work" >> e
 mkdir -p usr/bin
 
 # Get the ID of the last successful build on Travis CI
-wget -c "https://github.com/probonopd/AppImageKit/releases/download/continuous/appimaged_1.0_amd64.deb"
+DLD=$(wget -q https://github.com/AppImage/appimaged/releases -O - | grep "appimaged_.*64*.deb" | head -n 1 | cut -d '"' -f 2)
+wget -c "https://github.com/$DLD"
 dpkg -x appimaged_*.deb . && rm appimaged_*.deb
 # Without those, the service doesn't automatically launch on boot
 cat > ExtensionRun <<\EOF
