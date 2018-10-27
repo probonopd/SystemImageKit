@@ -28,7 +28,7 @@ sudo -i
 umount /dev/sdX*
 
 # Make one partition
-echo 'start=2048, type=83' | sfdisk /dev/sdX
+echo 'start=2048, type=0b' | sfdisk /dev/sdX
 
 # Make first partition bootable
 sfdisk -A /dev/sdX 1
