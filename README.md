@@ -40,6 +40,10 @@ mount /dev/sdX1 /mnt/
 apt-get -y install git
 git clone https://github.com/probonopd/SystemImageKit.git /mnt
 
+# Clear the gap between the boot sector and the first partition
+# to prevent from GRUB having issues being installed
+dd if=/dev/zero of=/dev/sdX seek=1 count=2047
+
 # Install bootloader for PC
 # Tested with grub-install (GRUB) 2.02~beta2-9 from Ubuntu 14.04 LTS Trusty Tahr
 # and with grub2-install (GRUB) 2.02~beta2 from Fedora 22 (Rawhide)
