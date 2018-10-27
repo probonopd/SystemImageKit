@@ -55,7 +55,7 @@ grub2-install --boot-directory=/mnt/boot/ /dev/sdX # Fedora
 
 # Install bootloader for Mac
 apt-get -y install grub-efi-amd64
-mkdir /mnt/boot/efi
+mkdir -p /mnt/boot/efi
 sudo grub-install --target=x86_64-efi --efi-directory=/mnt/boot/EFI --boot-directory=/mnt/boot/ /dev/sdX1
 mkdir -p /mnt/EFI/BOOT
 find /mnt/boot/ -name grubx64.efi -exec cp {} /mnt/EFI/BOOT/bootx64.efi \;
