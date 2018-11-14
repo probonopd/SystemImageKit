@@ -139,7 +139,7 @@ applications, and user data
 applications, and user data
   * Run two different versions of the same app alongside
   * Install extensions and apps without the help of installers or package managers
-  * Completely remove extensions and apps without "leftovers" without the help of uninstaller tools or package mangers
+  * Completely remove extensions and apps without "leftovers" without the help of uninstaller tools or package managers
   * Quickly verify that the system has not been modified and is in a "sane" state, e.g., using a checksum
   * Allow for any kind of non-permanent modification in the system, because the system is reset to a "known good" state at each 
 reboot
@@ -151,10 +151,10 @@ system.
 
 ## The solution
 
-System-level virtuaization has been used to address some of the issue above (e.g., running multiple operating systems 
+System-level virtuaization has been used to address some of the issues above (e.g., running multiple operating systems 
 easily on the 
 same system, being able to reset systems by using snapshots) . However, system-level virtualization (e.g., VMware, VirtualBox, qemu) 
-comes at a performance penalty, and unneccessarily increases complexity by requiring a host 
+comes at a performance penalty, and unnecessarily increases complexity by requiring a host 
 operating system on which a guest operating system is run. Yet, it does not solve some of the issues mentioned above (e.g., 
 applying a set of customizations to multiple operating systems).
 
@@ -171,25 +171,23 @@ In the implementation described here, we use:
   * grub2 with custom helper scripts
   * ISO files, containing one live operating system each
   * ExtensionImage files, the contents of which are symlinked into the / upon boot
-  * AppImage files, the contents of which are mounted when the app is exected
+  * AppImage files, the contents of which are mounted when the app is executed
   * An init file that does local configuration and is run when the system boots (and an auxiliary initrd that helps loading this 
 configuration)
   * Files in $HOME which is mounted from a persistent location
 
-In the following paragraps, each of these components is discussed.
+In the following paragraphs, each of these components is discussed.
 
 ### Bootloader
 
-We use grub2, a bootloader that is capable of booting operating systems contained in ISO image files. grub2 can loop-mount and ISO 
+We use grub2, a bootloader that is capable of booting operating systems contained in ISO image files. grub2 can loop-mount an ISO 
 file and load the kernel and the initrd from the ISO. What happens once the kernel has control is up to the operating system. 
 Luckily, many common operating systems (such as CentOS, Fedora, debian, Ubuntu and openSUSE) nowadays are capable of loop-mounting 
 ISO files and continue the boot process from there (at least with a little help in the form of an additional, secondary initrd image 
-that patches the required functionality if required, e.g., for openSUSE). We use a helper script to generate the secondary initrd 
-image. The contents of this image are loaded in addition to the contents of the original initrd image supplied on the operating 
-system ISO.
+that patches the functionality if required, e.g., for openSUSE). We use a helper script to generate the secondary initrd 
+image. The contents of this image are loaded in addition to the contents of the original initrd image supplied on the operating system ISO.
 
-The advantage of using the bootloader in the way described is that virtually unlimited operating systems can be booted on a computer 
-without having to partition the mass storage.
+The advantage of using the bootloader in the way described is that virtually unlimited operating systems can be booted on a computer without having to partition the mass storage.
 
 ### Operating system ISO files
 
@@ -198,10 +196,7 @@ Many common operating systems (such as	CentOS,	Fedora,	debian,	Ubuntu and openSU
 software that we can expect to be installed in each system. For example, if we use the CentOS 7 live ISO we know exactly the set of 
 software included therein, and can assume this to be present on any computer running the CentOS 7 live ISO. This is important, as it 
 allows us to simplify dependency management substantially. Also, live systems are non-persistent by default, which means that 
-changes can be made to all aspects of the system but after a reboot, the system is back to its original condition ("stateless"). As 
-mentioned above, some live ISOs are not designed to be booted without being burnt to a CD-ROM and/or DVD (e.g., openSUSE), but by 
-adding a secondary initrd image we can patch the required functionality 
-in without having to remaster the ISO.
+changes can be made to all aspects of the system but after a reboot, the system is back to its original condition ("stateless"). As mentioned above, some live ISOs are not designed to be booted without being burnt to a CD-ROM and/or DVD (e.g., openSUSE), but by adding a secondary initrd image we can patch the required functionality in without having to remaster the ISO.
 
 The advantage of using live system ISO files in the way described is that operating systems can be added and removed very easily, 
 and at each reboot the system is back to its original condition.
@@ -219,11 +214,9 @@ user (e.g., installed, upgraded, removed, and moved to another machine).
 
 ### AppImage files
 
-An app often consists of hundred of files in addition to the main binary, e.g., icons, graphics, language files, and other 
+An app often consists of a hundred files in addition to the main binary, e.g., icons, graphics, language files, and other 
 auxiliary files. Frequently, an app also requires libraries which are not normally part of the operating system. In this case, the 
-corresponding libraries have to be installed into the system prior to running the app. By using AppImages, all of this is abstracted 
-by encapsulating each app with all the auxiliary files and libraries that it needs to run which are not part of the operating 
-system.
+corresponding libraries have to be installed into the system prior to running the app. By using AppImages, all of this is abstracted by encapsulating each app with all the auxiliary files and libraries that it needs to run which are not part of the operating system.
 
 The advantage of using AppImage files is that every app is one file and can therefore be intuitively managed by the user (e.g., 
 installed, upgraded, removed, and moved to another machine). Also, by bundling the dependencies which are not part of the operating 
