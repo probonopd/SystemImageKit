@@ -151,7 +151,7 @@ system.
 
 ## The solution
 
-System-level virtuaization has been used to address some of the issue above (e.g., running multiple operating systems 
+System-level virtuaization has been used to address some of the issues above (e.g., running multiple operating systems 
 easily on the 
 same system, being able to reset systems by using snapshots) . However, system-level virtualization (e.g., VMware, VirtualBox, qemu) 
 comes at a performance penalty, and unneccessarily increases complexity by requiring a host 
