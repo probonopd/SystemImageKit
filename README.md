@@ -214,11 +214,9 @@ user (e.g., installed, upgraded, removed, and moved to another machine).
 
 ### AppImage files
 
-An app often consists of hundred of files in addition to the main binary, e.g., icons, graphics, language files, and other 
+An app often consists of a hundred files in addition to the main binary, e.g., icons, graphics, language files, and other 
 auxiliary files. Frequently, an app also requires libraries which are not normally part of the operating system. In this case, the 
-corresponding libraries have to be installed into the system prior to running the app. By using AppImages, all of this is abstracted 
-by encapsulating each app with all the auxiliary files and libraries that it needs to run which are not part of the operating 
-system.
+corresponding libraries have to be installed into the system prior to running the app. By using AppImages, all of this is abstracted by encapsulating each app with all the auxiliary files and libraries that it needs to run which are not part of the operating system.
 
 The advantage of using AppImage files is that every app is one file and can therefore be intuitively managed by the user (e.g., 
 installed, upgraded, removed, and moved to another machine). Also, by bundling the dependencies which are not part of the operating 
