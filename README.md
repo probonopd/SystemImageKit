@@ -139,7 +139,7 @@ applications, and user data
 applications, and user data
   * Run two different versions of the same app alongside
   * Install extensions and apps without the help of installers or package managers
-  * Completely remove extensions and apps without "leftovers" without the help of uninstaller tools or package mangers
+  * Completely remove extensions and apps without "leftovers" without the help of uninstaller tools or package managers
   * Quickly verify that the system has not been modified and is in a "sane" state, e.g., using a checksum
   * Allow for any kind of non-permanent modification in the system, because the system is reset to a "known good" state at each 
 reboot
