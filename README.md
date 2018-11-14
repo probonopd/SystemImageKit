@@ -154,7 +154,7 @@ system.
 System-level virtuaization has been used to address some of the issues above (e.g., running multiple operating systems 
 easily on the 
 same system, being able to reset systems by using snapshots) . However, system-level virtualization (e.g., VMware, VirtualBox, qemu) 
-comes at a performance penalty, and unecessarily increases complexity by requiring a host 
+comes at a performance penalty, and unnecessarily increases complexity by requiring a host 
 operating system on which a guest operating system is run. Yet, it does not solve some of the issues mentioned above (e.g., 
 applying a set of customizations to multiple operating systems).
 
