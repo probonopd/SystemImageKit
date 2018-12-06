@@ -474,7 +474,7 @@ pref("browser.startup.homepage_override.mstone","ignore");
 
 // Set default homepage - users can change
 // Requires a complex preference
-defaultPref("browser.startup.homepage","data:text/plain,browser.startup.homepage=http://home.example.com");
+defaultPref("browser.startup.homepage","data:text/plain,browser.startup.homepage=about:blank");
 
 // Disable the internal PDF viewer
 pref("pdfjs.disabled", true);
