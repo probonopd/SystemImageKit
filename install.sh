@@ -89,13 +89,17 @@ find /mnt/boot/ -name grubx64.efi -exec cp {} /mnt/EFI/BOOT/bootx64.efi \;
 # Generate additional initrd (gets loaded in addition to the one on the ISO)
 /mnt/boot/iso/additional-initramfs/generate
 
-# Download Ubuntu ISO
-
+# Download Starter ISO
 if [ -e "/isodevice/boot/iso/xubuntu-18.04-desktop-amd64.iso" ] ; then
   cp "/isodevice/boot/iso/xubuntu-18.04-desktop-amd64.iso" /mnt/boot/iso/
 else
   wget -c "http://cdimage.ubuntu.com/xubuntu/releases/18.04/release/xubuntu-18.04-desktop-amd64.iso" -O /mnt/boot/iso/xubuntu-18.04-desktop-amd64.iso
 fi
+
+# Download Starter Applications
+mkdir -p /mnt/Applications # This is where AppImageKit picks them up
+FILENAME=$(wget -q "https://dl.bintray.com/probono/AppImages/" -O - | grep Firefox-[0-9] | grep -v zsync | cut -d ":" -f 2 | cut -d '"' -f 1 | sort -Vr | head -n 1)
+wget -c "https://dl.bintray.com/probono/AppImages/:$FILENAME" -O "/mnt/Applications/$FILENAME"
 
 # Configure bootloader
 /mnt/boot/bin/detect
