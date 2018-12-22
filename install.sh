@@ -57,6 +57,7 @@ echo 'start=2048, type=0b' | sfdisk $SDX
 
 # Make first partition bootable
 sfdisk -A $SDX 1
+sleep 1
 
 # Format
 mkfs.vfat "$SDX"1
