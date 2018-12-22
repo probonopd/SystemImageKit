@@ -406,15 +406,19 @@ opt
 proc
 run
 sbin
+snap
 srv
 sys
 tmp
 usr
 var
 initrd.img
+initrd.img.old
 vmlinuz
+vmlinuz.old
 rofs
 cdrom
+ExtensionRun
 LGPL
 EOF
 
