@@ -52,6 +52,10 @@ systemctl stop udisks2.service
 
 umount $SDX* || true
 
+# Nuke any previous partitioning scheme; otherwise the next
+# step may fail if the disk was previously partitioned differently
+sudo dd if=/dev/zero of=$SDX bs=2M count=1
+
 # Make one partition
 echo 'start=2048, type=0b' | sfdisk $SDX
 
@@ -99,7 +103,7 @@ fi
 # Download Starter Applications
 mkdir -p /mnt/Applications # This is where AppImageKit picks them up
 FILENAME=$(wget -q "https://dl.bintray.com/probono/AppImages/" -O - | grep Firefox-[0-9] | grep -v zsync | cut -d ":" -f 2 | cut -d '"' -f 1 | sort -Vr | head -n 1)
-wget -c "https://dl.bintray.com/probono/AppImages/:$FILENAME" -O "/mnt/Applications/$FILENAME"
+wget -c "https://dl.bintray.com/probono/AppImages/$FILENAME" -O "/mnt/Applications/$FILENAME"
 
 # Configure bootloader
 /mnt/boot/bin/detect
