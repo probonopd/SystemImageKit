@@ -185,8 +185,8 @@ if [ $(which dconf) ] ; then
   # Fix Ubuntu multiscreen stupidity (sticky edges, multiple docks)
   dconf write /org/compiz/profiles/unity/plugins/unityshell/launcher-capture-mouse false
   dconf write /org/compiz/profiles/unity/plugins/unityshell/num-launchers 1
-
 fi
+HISTTIMEFORMAT="$(echo -e '\r\e[K')"
 EOF
 chmod a+x /etc/profile.d/customize.sh
 
