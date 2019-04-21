@@ -302,7 +302,12 @@ lock-after=false
 EOF
 
 echo "7"
-# Revert stupidity that prevents running bash files from FAT disks
+# Revert stupidity that prevents running executable files from FAT disks
+# https://forum.kde.org/viewtopic.php?f=225&t=108693
+# https://cgit.freedesktop.org/udisks/commit/?id=7e7ec1abca069e9443f8eed49acec4ea32589d0c
+# https://bugzilla.redhat.com/show_bug.cgi?id=646673
+# https://ubuntuforums.org/showthread.php?t=1665289
+# https://bugs.launchpad.net/ubuntu/+source/udisks/+bug/663815
 if [ -e /usr/lib/udisks/udisks-daemon ] ; then
   sed -i -e 's|showexec|\x00\x00\x00\x00\x00\x00\x00\x00|g' /usr/lib/udisks/udisks-daemon
 fi
