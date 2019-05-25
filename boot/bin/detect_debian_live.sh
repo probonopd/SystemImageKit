@@ -8,6 +8,7 @@
 # kali-linux-2.0-amd64.iso - live-boot 4.0.2-1
 # debian-live-7.5.0-i386-gnome-desktop.iso - live-boot 3.0.1-1
 # debian-live-7.5-i386-gnome-desktop+nonfree.iso - live-boot 3.0.1-1
+# debian-live-9.6.0-amd64-mate+nonfree.iso
 # debian_7.0.0_wheezy_i386_20130705_binary.hybrid.iso - live-boot 3.0.1-1
 # debian-live-8.0.0-amd64-xfce-desktop+nonfree.iso - live-boot 4.0.2-1
 # tails-i386-1.5.iso

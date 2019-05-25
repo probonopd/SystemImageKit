@@ -44,8 +44,14 @@ echo "This directory must exist before the session starts in order to work" >> e
 mkdir -p usr/bin
 
 # Get the ID of the last successful build on Travis CI
-DLD=$(wget -q https://github.com/AppImage/appimaged/releases -O - | grep "appimaged_.*64*.deb" | head -n 1 | cut -d '"' -f 2)
-wget -c "https://github.com/$DLD"
+# DLD=$(wget -q https://github.com/AppImage/appimaged/releases -O - | grep "appimaged_.*64*.deb" | head -n 1 | cut -d '"' -f 2)
+# wget -c "https://github.com/$DLD"
+
+# artifactory for libappimage-0.2 based appimaged builds
+LINK=$(wget -q "https://artifacts.assassinate-you.net/artifactory/appimaged/" -O - | grep "travis-" | cut -d '"' -f 2 | sort -Vr | head -n 1)
+URL=$(wget -q "https://artifacts.assassinate-you.net/artifactory/appimaged/$LINK/" -O - | grep "amd64.deb" | cut -d '"' -f 2 | head -n 1)
+wget -c "https://artifacts.assassinate-you.net/artifactory/appimaged/$LINK/$URL"
+
 dpkg -x appimaged_*.deb . && rm appimaged_*.deb
 # Without those, the service doesn't automatically launch on boot
 cat > ExtensionRun <<\EOF

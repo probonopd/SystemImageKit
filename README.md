@@ -15,70 +15,11 @@ SystemImageKit also has means to customize every aspect of the boot process and 
 
 The following steps illustrate how to install an Operating System onto a USB drive using SystemImageKit.
 
-In order to do this, boot Ubuntu Live system (tested with Ubuntu 14.04 LTS Trusty Tahr) and run the following steps.
+In order to do this, boot Ubuntu Live system (tested with Ubuntu 14.04 LTS Trusty Tahr) and run the following script.
 
-NOTE: All data on /dev/sdX will be deleted.
+__NOTE:__ All data on /dev/sdX will be deleted.
 
-```
-# On the desktop, stop automatic mounting of disks
-systemctl stop udisks2.service
-
-sudo -i
-
-umount /dev/sdX*
-
-# Make one partition
-echo 'start=2048, type=0b' | sfdisk /dev/sdX
-
-# Make first partition bootable
-sfdisk -A /dev/sdX 1
-
-# Format
-mkfs.vfat /dev/sdX1
-
-# Mount
-mount /dev/sdX1 /mnt/
-
-# Install SystemImageKit
-apt-get -y install git
-git clone https://github.com/probonopd/SystemImageKit.git /mnt
-
-# Clear the gap between the boot sector and the first partition
-# to prevent from GRUB having issues being installed
-dd if=/dev/zero of=/dev/sdX seek=1 count=2047
-
-# Install bootloader for PC
-# Tested with grub-install (GRUB) 2.02~beta2-9 from Ubuntu 14.04 LTS Trusty Tahr
-# and with grub2-install (GRUB) 2.02~beta2 from Fedora 22 (Rawhide)
-grub-install --boot-directory=/mnt/boot/ /dev/sdX # Ubuntu
-grub2-install --boot-directory=/mnt/boot/ /dev/sdX # Fedora
-
-# Install bootloader for Mac
-apt-get -y install grub-efi-amd64
-mkdir -p /mnt/boot/efi
-sudo grub-install --target=x86_64-efi --efi-directory=/mnt/boot/EFI --boot-directory=/mnt/boot/ /dev/sdX1
-mkdir -p /mnt/EFI/BOOT
-find /mnt/boot/ -name grubx64.efi -exec cp {} /mnt/EFI/BOOT/bootx64.efi \;
-
-# Generate additional initrd (gets loaded in addition to the one on the ISO)
-/mnt/boot/iso/additional-initramfs/generate
-
-# Download Ubuntu ISO
-wget -c "http://releases.ubuntu.com/14.04.1/ubuntu-14.04.1-desktop-amd64.iso" -O /mnt/boot/iso/ubuntu-14.04.1-desktop-amd64.iso
-
-# Configure bootloader
-/mnt/boot/bin/detect
-
-# Create and install ExtensionImages, e.g., for Adobe Flash Player and proprietary firmware
-find /mnt/boot/bin/generate-* -exec bash {} \;
-
-umount /mnt
-
-# The disk should now be bootable
-
-# On the desktop, stop automatic mounting of disks
-systemctl start udisks2.service
-```
+https://github.com/probonopd/SystemImageKit/blob/master/install.sh
 
 If you format the device manually and run into "error: will not proceed with blocklists", then use gparted to move the start of the first partition up 1MB. This works without having to reformat the device.
 
