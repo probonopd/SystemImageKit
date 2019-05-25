@@ -30,7 +30,9 @@ if [ -e "$MOUNTPOINT"/LiveOS/rootfs.img ] ; then
   LIVETOOL="livemedia-creator"
   LIVETOOLVERSION=1
   mount "$MOUNTPOINT"/LiveOS/rootfs.img "$MOUNTPOINT" -o loop
-    LIVETOOLVERSION2=$(find /var/lib/dnf/yumdb/ -name "*dracut-live*" | cut -d "-" -f 4-5)
+    if [ -e /var/lib/dnf/yumdb/ ] ; then
+      LIVETOOLVERSION2=$(find /var/lib/dnf/yumdb/ -name "*dracut-live*" | cut -d "-" -f 4-5)
+    fi
     if [ ! -z $LIVETOOLVERSION2 ] ; then
       LIVETOOLVERSION=$LIVETOOLVERSION2
     fi
@@ -55,7 +57,7 @@ if [[ $INITRD != *"/"* ]] ; then
 fi
 echo "* INITRD $INITRD"
 
-APPEND=$(cat $CFG | grep "append " | head -n 1 | sed -e 's|append ||g' | sed -e 's|initrd=initrd0.img ||g' | xargs)
+APPEND=$(cat $CFG | grep "append " | head -n 1 | sed -e 's|append ||g' | sed -e 's|initrd=initrd0.img ||g' | sed -e 's| rd.live.overlay.persistent rd.live.overlay.cowfs=ext4||g' | xargs)
 echo "* APPEND $APPEND"
 
 #
