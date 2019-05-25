@@ -49,6 +49,11 @@ umount "$MOUNTPOINT"
 
 CFG=$(find "$MOUNTPOINT" -name live.cfg | head -n 1)
 
+# Needed for debian-live-9.6.0-amd64-mate+nonfree.iso
+if [ -z "$CFG" ] ;  then
+  CFG=$(find "$MOUNTPOINT" -name grub.cfg | head -n 1)
+fi
+
 LINUX=$(cat $CFG | grep "linux " | head -n 1 | sed -e 's|linux ||g' | xargs)
 if [ "$LINUX" == "" ] ; then
   LINUX=$(cat $CFG | grep "kernel " | head -n 1 | sed -e 's|kernel ||g' | xargs) # tails-i386-1.5.iso

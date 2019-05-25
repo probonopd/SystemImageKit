@@ -291,6 +291,54 @@ Volume=100
 EOF
 )
 
+# Configure Xfce desktop
+mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/
+cat > /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml <<\EOF
+<?xml version="1.0" encoding="UTF-8"?>
+
+<channel name="xfce4-desktop" version="1.0">
+  <property name="desktop-icons" type="empty">
+    <property name="style" type="empty"/>
+    <property name="file-icons" type="empty">
+      <property name="show-home" type="empty"/>
+      <property name="show-filesystem" type="empty"/>
+      <property name="show-removable" type="empty"/>
+      <property name="show-trash" type="empty"/>
+    </property>
+    <property name="icon-size" type="empty"/>
+    <property name="tooltip-size" type="empty"/>
+  </property>
+  <property name="backdrop" type="empty">
+    <property name="screen0" type="empty">
+      <property name="monitor0" type="empty">
+        <property name="image-path" type="empty"/>
+        <property name="image-style" type="empty"/>
+        <property name="image-show" type="empty"/>
+        <property name="workspace0" type="empty">
+          <property name="color-style" type="int" value="0"/>
+          <property name="image-style" type="int" value="0"/>
+          <property name="color1" type="array">
+            <value type="uint" value="22744"/>
+            <value type="uint" value="30175"/>
+            <value type="uint" value="39891"/>
+            <value type="uint" value="65535"/>
+          </property>
+        </property>
+      </property>
+      <property name="monitor1" type="empty">
+        <property name="image-path" type="empty"/>
+        <property name="image-style" type="empty"/>
+        <property name="image-show" type="empty"/>
+      </property>
+    </property>
+  </property>
+  <property name="last" type="empty">
+    <property name="window-width" type="int" value="584"/>
+    <property name="window-height" type="int" value="526"/>
+  </property>
+</channel>
+EOF
+
 # Do not ask about securing the keyring with a password; does this work?
 cat > /etc/skel/.local/share/keyrings/Default_keyring.keyring <<\EOF
 [keyring]

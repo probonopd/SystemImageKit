@@ -32,7 +32,7 @@ fi
 
 CFG=$(find "$MOUNTPOINT" -name loopback.cfg | head -n 1)
 
-LINUX=$(cat $CFG | grep "linux" | head -n 1 | sed -e 's|linux\t||g' | sed -e 's|linux ||g' | xargs)
+LINUX=$(cat $CFG | grep "linux" | head -n 1 | sed -e 's|linux\t||g' | sed -e 's|linux ||g' | xargs | sed -e 's|.efi||g')
 echo "* LINUX $LINUX"
 
 INITRD=$(cat $CFG | grep "initrd" | head -n 1 | sed -e 's|initrd\t||g' | sed -e 's|initrd ||g' | xargs)
