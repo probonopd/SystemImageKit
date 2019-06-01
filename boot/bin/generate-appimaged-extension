@@ -102,7 +102,7 @@ EOF
 
 # Install AppImageUpdate to usr/local/bin
 APP=AppImageUpdate
-URL=$(wget -q https://api.github.com/repos/AppImage/AppImageUpdate/releases -O - | grep browser_download_url | grep -e 'AppImageUpdate-.*.AppImage\"' | head -n 1 | cut -d '"' -f 4)
+URL=$(wget -q https://api.github.com/repos/AppImage/AppImageUpdate/releases -O - | grep browser_download_url | grep -e 'AppImageUpdate-.*x86_64.AppImage\"' | head -n 1 | cut -d '"' -f 4)
 wget -c "$URL" -O "$APP"
 chmod a+x "$APP"
 mkdir -p usr/local/bin/
