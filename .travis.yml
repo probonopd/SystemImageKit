@@ -52,7 +52,7 @@ script:
   - VERSION=$(cd SystemImageKit ; git rev-parse --short HEAD)
   - xz boot.img
   - if [ ! -z "$ISO" ] ; then SUFFIX=$(basename $ISO | cut -d "-" -f 1-2) ; fi
-  - mv boot.img BootImage_$SUFFIX-$VERSION-x86_64.img.xz )
+  - mv boot.img.gz BootImage_$SUFFIX-$VERSION-x86_64.img.xz )
   - ls
 
 after_success:
