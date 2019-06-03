@@ -4,7 +4,7 @@ sudo: require
 dist: trusty
 
 env:
-  - ISO="http://releases.ubuntu.com/16.04.3/ubuntu-16.04.3-desktop-amd64.iso"
+  # ISO="http://releases.ubuntu.com/16.04.3/ubuntu-16.04.3-desktop-amd64.iso"
   - ISO=""
 
 install:
@@ -50,15 +50,14 @@ script:
   - sudo kpartx -v -d /dev/loop0
   - ls -lh .
   - VERSION=$(cd SystemImageKit ; git rev-parse --short HEAD)
-  - mkdir -p BootImage
-  - mv boot.img BootImage/BootImage.img
+  - xz boot.img
   - if [ ! -z "$ISO" ] ; then SUFFIX=$(basename $ISO | cut -d "-" -f 1-2) ; fi
-  - ( cd BootImage ; zip ../BootImage$SUFFIX-$VERSION-x86_64 * )
+  - mv boot.img BootImage_$SUFFIX-$VERSION-x86_64.img.xz )
   - ls
 
 after_success:
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-  - bash upload.sh ./BootImage*zip
+  - bash upload.sh ./*.xz
   
 branches:
   except:
