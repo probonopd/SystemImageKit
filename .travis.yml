@@ -35,8 +35,8 @@ script:
   - # https://superuser.com/a/200442
   - sudo rm -rf ./mnt/boot/grub/device.map # grub-install: warning: the device.map entry `hd0,1' is invalid. Ignoring it. Please correct or delete your device.map.
   - sudo grub-install --modules="biosdisk part_msdos configfile normal multiboot" --no-floppy --boot-directory=./mnt/boot /dev/loop0
-  - sudo mkdir -p /mnt/boot/efi
-  - sudo grub-install --target=x86_64-efi --boot-directory=/mnt/boot --efi-directory=/mnt/boot/efi /dev/mapper/loop0p1
+  - sudo mkdir -p ./mnt/boot/efi
+  - sudo grub-install --target=x86_64-efi --boot-directory=./mnt/boot --efi-directory=./mnt/boot/efi /dev/mapper/loop0p1
   # sudo mkdir -p ./mnt/EFI/BOOT
   # sudo find /tmp/. -name grubx64.efi -exec cp {} ./mnt/EFI/BOOT/bootx64.efi \;
   - sudo bash -e ./mnt/boot/iso/additional-initramfs/generate # Generate additional initrd (gets loaded in addition to the one on the ISO)
