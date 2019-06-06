@@ -33,6 +33,7 @@ script:
   - if [ ! -z "$ISO" ] ; then sudo mv *.iso ./mnt/boot/iso/ ; fi
   - sudo parted /dev/loop0 set 1 boot on # Set boot flag
   - # https://superuser.com/a/200442
+  - rm ./mnt/boot/grub/device.map # grub-install: warning: the device.map entry `hd0,1' is invalid. Ignoring it. Please correct or delete your device.map.
   - sudo grub-install --modules="biosdisk part_msdos configfile normal multiboot" --no-floppy --boot-directory=./mnt/boot /dev/loop0
   - if [ ! -z "$ISO" ] ; then sudo mount ./mnt/boot/iso/*.iso /mnt -o loop,ro ; fi
   - if [ ! -z "$ISO" ] ; then sudo cp -r /mnt/EFI ./mnt/ ; fi
