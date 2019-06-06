@@ -35,16 +35,9 @@ script:
   - # https://superuser.com/a/200442
   - sudo rm -rf ./mnt/boot/grub/device.map # grub-install: warning: the device.map entry `hd0,1' is invalid. Ignoring it. Please correct or delete your device.map.
   - sudo grub-install --modules="biosdisk part_msdos configfile normal multiboot" --no-floppy --boot-directory=./mnt/boot /dev/loop0
-  - if [ ! -z "$ISO" ] ; then sudo mount ./mnt/boot/iso/*.iso /mnt -o loop,ro ; fi
-  - if [ ! -z "$ISO" ] ; then sudo cp -r /mnt/EFI ./mnt/ ; fi
-  - if [ ! -z "$ISO" ] ; then sudo umount /mnt ; fi
-  # sudo apt-get -y remove grub-pc 
-  # sudo apt-get -y install grub-efi-amd64
-  # sudo grub-install --target=x86_64-efi --efi-directory=./mnt/boot/EFI --boot-directory=./mnt/boot/ /dev/loop0 || true
-  - apt download grub-efi-amd64 && dpkg-deb -x grub-efi-amd64*.deb .
+  - cd /tmp/ && apt download grub-efi-amd64 && dpkg-deb -x grub-efi-amd64*.deb .
   - sudo mkdir -p ./mnt/EFI/BOOT
-  - sudo find . -name grubx64.efi -exec cp {} ./mnt/EFI/BOOT/bootx64.efi \;
-  - #sudo wget -c -q "http://ftp.scientificlinux.org/linux/fedora/releases/18/Fedora/x86_64/os/EFI/BOOT/grubx64.efi" -O ./mnt/EFI/BOOT/bootx64.efi
+  - sudo find /tmp/. -name grubx64.efi -exec cp {} ./mnt/EFI/BOOT/bootx64.efi \;
   - sudo bash -e ./mnt/boot/iso/additional-initramfs/generate # Generate additional initrd (gets loaded in addition to the one on the ISO)
   - sudo find ./mnt/
   - sudo ./mnt/boot/bin/detect # Configure bootloader
