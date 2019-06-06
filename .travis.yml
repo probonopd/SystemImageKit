@@ -49,14 +49,16 @@ script:
   - sudo kpartx -v -d /dev/loop0
   - ls -lh .
   - VERSION=$(cd SystemImageKit ; git rev-parse --short HEAD)
-  - travis_wait 30 xz -0 boot.img
+  # travis_wait 30 xz -0 boot.img
   - if [ ! -z "$ISO" ] ; then SUFFIX=$(basename $ISO | cut -d "-" -f 1-2) ; fi
-  - mv boot.img.xz BootImage-$SUFFIX-$VERSION-x86_64.img.xz
-  - ls
+  # mv boot.img.xz BootImage-$SUFFIX-$VERSION-x86_64.img.xz # takes time
+  - mv boot.img BootImage-$SUFFIX-$VERSION-x86_64.img
+  - ls -lh
 
 after_success:
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-  - bash upload.sh ./*.xz
+  # bash upload.sh ./*.xz
+  - bash upload.sh ./*.img
   
 branches:
   except:
