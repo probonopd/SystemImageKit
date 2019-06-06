@@ -4,7 +4,7 @@ sudo: require
 dist: trusty
 
 env:
-  - ISO="http://mirror.us.leaseweb.net/ubuntu-cdimage/xubuntu/releases/19.04/release/xubuntu-19.04-desktop-amd64.iso"
+  - ISO="http://us.cdimage.ubuntu.com/xubuntu/releases/19.04/release/xubuntu-19.04-desktop-amd64.iso"
   - ISO=""
 
 install:
@@ -14,7 +14,7 @@ script:
   - set -e # Stop on errors, https://github.com/travis-ci/travis-ci/issues/1066
   - cd ..
   - if [ -z "$ISO" ] ; then dd if=/dev/zero of=boot.img count=64 bs=1M ; fi #### 64
-  - if [ ! -z "$ISO" ] ; then wget -c "$ISO" ; fi
+  - if [ ! -z "$ISO" ] ; then wget -c -nv "$ISO" ; fi
   - if [ ! -z "$ISO" ] ; then  SIZE=$(($(ls -lh --block-size=M *.iso | cut -d " " -f 5 | cut -d M -f 1) + 100)) ; fi # 100 MB larger than ISO
   - if [ ! -z "$ISO" ] ; then dd if=/dev/zero of=boot.img count=$SIZE bs=1M ; fi
   - parted --script boot.img mklabel msdos mkpart p fat32 1 100% set 1 boot on # # Make the partition table, partition and set it bootable
@@ -49,7 +49,7 @@ script:
   - sudo kpartx -v -d /dev/loop0
   - ls -lh .
   - VERSION=$(cd SystemImageKit ; git rev-parse --short HEAD)
-  - xz boot.img
+  - travis_wait 30 xz boot.img
   - if [ ! -z "$ISO" ] ; then SUFFIX=$(basename $ISO | cut -d "-" -f 1-2) ; fi
   - mv boot.img.xz BootImage-$SUFFIX-$VERSION-x86_64.img.xz
   - ls
