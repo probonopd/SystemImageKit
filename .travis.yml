@@ -49,7 +49,7 @@ script:
   - sudo kpartx -v -d /dev/loop0
   - ls -lh .
   - VERSION=$(cd SystemImageKit ; git rev-parse --short HEAD)
-  - travis_wait 30 xz boot.img
+  - travis_wait 30 xz -0 boot.img
   - if [ ! -z "$ISO" ] ; then SUFFIX=$(basename $ISO | cut -d "-" -f 1-2) ; fi
   - mv boot.img.xz BootImage-$SUFFIX-$VERSION-x86_64.img.xz
   - ls
