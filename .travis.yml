@@ -4,7 +4,7 @@ sudo: require
 dist: trusty
 
 env:
-  # ISO="http://releases.ubuntu.com/16.04.3/ubuntu-16.04.3-desktop-amd64.iso"
+  - ISO="http://mirror.us.leaseweb.net/ubuntu-cdimage/xubuntu/releases/19.04/release/xubuntu-19.04-desktop-amd64.iso"
   - ISO=""
 
 install:
@@ -35,10 +35,9 @@ script:
   - # https://superuser.com/a/200442
   - sudo rm -rf ./mnt/boot/grub/device.map # grub-install: warning: the device.map entry `hd0,1' is invalid. Ignoring it. Please correct or delete your device.map.
   - sudo grub-install --modules="biosdisk part_msdos configfile normal multiboot" --no-floppy --boot-directory=./mnt/boot /dev/loop0
-  - sudo mkdir -p ./EFI/BOOT
-  - sudo grub-install --target=x86_64-efi --boot-directory=./mnt/boot --efi-directory=./EFI/BOOT /dev/mapper/loop0p1
-  # sudo mkdir -p ./mnt/EFI/BOOT
-  # sudo find /tmp/. -name grubx64.efi -exec cp {} ./mnt/EFI/BOOT/bootx64.efi \;
+  - sudo mkdir -p ./mnt/boot/efi ./mnt/EFI/
+  - sudo grub-install --target=x86_64-efi --boot-directory=./mnt/boot --efi-directory=./mnt/boot/efi /dev/mapper/loop0p1
+  - sudo mv ./mnt/boot/EFI/BOOT ./mnt/EFI/BOOT
   - sudo bash -e ./mnt/boot/iso/additional-initramfs/generate # Generate additional initrd (gets loaded in addition to the one on the ISO)
   - sudo find ./mnt/
   - sudo ./mnt/boot/bin/detect # Configure bootloader
@@ -51,8 +50,8 @@ script:
   - ls -lh .
   - VERSION=$(cd SystemImageKit ; git rev-parse --short HEAD)
   - xz boot.img
-  # if [ ! -z "$ISO" ] ; then SUFFIX=$(basename $ISO | cut -d "-" -f 1-2) ; fi
-  # mv boot.img.gz BootImage_$SUFFIX-$VERSION-x86_64.img.xz
+  - if [ ! -z "$ISO" ] ; then SUFFIX=$(basename $ISO | cut -d "-" -f 1-2) ; fi
+  - mv boot.img.xz BootImage-$SUFFIX-$VERSION-x86_64.img.xz
   - ls
 
 after_success:
