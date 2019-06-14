@@ -80,15 +80,14 @@ dd if=/dev/zero of=$SDX seek=1 count=2047
 # Install bootloader for PC
 # Tested with grub-install (GRUB) 2.02~beta2-9 from Ubuntu 14.04 LTS Trusty Tahr
 # and with grub2-install (GRUB) 2.02~beta2 from Fedora 22 (Rawhide)
-rm -rf ./mnt/boot/grub/device.map
-grub-install --boot-directory=/mnt/boot/ $SDX || true # Ubuntu
-grub2-install --boot-directory=/mnt/boot/ $SDX || true # Fedora
+grub-install --recheck --boot-directory=/mnt/boot/ $SDX || true # Ubuntu
+grub2-install --recheck --boot-directory=/mnt/boot/ $SDX || true # Fedora
 
 # Install bootloader for Mac
 mkdir -p /mnt/boot/efi
-sudo grub-install --target=x86_64-efi --efi-directory=/mnt/boot/EFI --boot-directory=/mnt/boot/ "$SDX"1 || true
-mkdir -p /mnt/EFI/BOOT
-mv ./mnt/boot/EFI/BOOT ./mnt/EFI/BOOT
+sudo grub-install --recheck --no-nvram --target=x86_64-efi --efi-directory=/mnt/boot/EFI --boot-directory=/mnt/boot/ "$SDX"1 || true
+mkdir -p /mnt/EFI
+mv /mnt/boot/EFI/BOOT /mnt/EFI/BOOT
 
 # Generate additional initrd (gets loaded in addition to the one on the ISO)
 /mnt/boot/iso/additional-initramfs/generate
