@@ -4,17 +4,17 @@ sudo: require
 dist: trusty
 
 env:
-  - ISO="http://releases.ubuntu.com/16.04.3/ubuntu-16.04.3-desktop-amd64.iso"
+  - ISO="http://us.cdimage.ubuntu.com/xubuntu/releases/19.04/release/xubuntu-19.04-desktop-amd64.iso"
   - ISO=""
 
 install:
-  - sudo apt-get -y install util-linux dosfstools mtools kpartx grub-pc grub-common parted util-linux # grub-efi-amd64 conflicts grub-pc
+  - sudo apt-get -y install util-linux dosfstools mtools kpartx grub-pc-bin grub-common grub-efi-amd64-bin parted util-linux # grub-efi-amd64 conflicts grub-pc
 
 script:
   - set -e # Stop on errors, https://github.com/travis-ci/travis-ci/issues/1066
   - cd ..
   - if [ -z "$ISO" ] ; then dd if=/dev/zero of=boot.img count=64 bs=1M ; fi #### 64
-  - if [ ! -z "$ISO" ] ; then wget -c "$ISO" ; fi
+  - if [ ! -z "$ISO" ] ; then wget -c -nv "$ISO" ; fi
   - if [ ! -z "$ISO" ] ; then  SIZE=$(($(ls -lh --block-size=M *.iso | cut -d " " -f 5 | cut -d M -f 1) + 100)) ; fi # 100 MB larger than ISO
   - if [ ! -z "$ISO" ] ; then dd if=/dev/zero of=boot.img count=$SIZE bs=1M ; fi
   - parted --script boot.img mklabel msdos mkpart p fat32 1 100% set 1 boot on # # Make the partition table, partition and set it bootable
@@ -23,22 +23,21 @@ script:
   - sudo mkdir mnt
   - sudo losetup /dev/loop1 /dev/mapper/loop0p1
   - sleep 1
-  - sudo mkfs.vfat -s2 -F32 /dev/mapper/loop0p1
+  # If you get the message WARNING: Not enough clusters for a 32 bit FAT!, reduce cluster size with mkfs.fat -s2 -F32 ... or -s1;
+  # otherwise the partition may be unreadable by UEFI. See mkfs.fat(8) for supported cluster sizes. 
+  # https://wiki.archlinux.org/index.php/EFI_system_partition#MBR_partitioned_disks
+  - sudo mkfs.vfat -s1 -F32 /dev/mapper/loop0p1
   - sudo mount /dev/loop1 mnt
   - sudo df -h
   - sudo cp -r SystemImageKit/* ./mnt/
   - if [ ! -z "$ISO" ] ; then sudo mv *.iso ./mnt/boot/iso/ ; fi
   - sudo parted /dev/loop0 set 1 boot on # Set boot flag
   - # https://superuser.com/a/200442
-  - sudo grub-install --modules="biosdisk part_msdos configfile normal multiboot" --no-floppy --boot-directory=./mnt/boot --grub-mkdevicemap=./mnt/boot/grub/device.map /dev/loop0
-  - if [ ! -z "$ISO" ] ; then sudo mount ./mnt/boot/iso/*.iso /mnt -o loop,ro ; fi
-  - if [ ! -z "$ISO" ] ; then sudo cp -r /mnt/EFI ./mnt/ ; fi
-  - if [ ! -z "$ISO" ] ; then sudo umount /mnt ; fi
-  - #sudo apt-get -y remove grub-pc 
-  - #sudo apt-get -y install grub-efi-amd64
-  - #sudo grub-install --target=x86_64-efi --efi-directory=./mnt/boot/EFI --boot-directory=./mnt/boot/ /dev/loop0 || true
-  - #sudo mkdir -p ./mnt/EFI/BOOT
-  - #sudo wget -c -q "http://ftp.scientificlinux.org/linux/fedora/releases/18/Fedora/x86_64/os/EFI/BOOT/grubx64.efi" -O ./mnt/EFI/BOOT/bootx64.efi
+  - sudo rm -rf ./mnt/boot/grub/device.map # grub-install: warning: the device.map entry `hd0,1' is invalid. Ignoring it. Please correct or delete your device.map.
+  - sudo grub-install --modules="biosdisk part_msdos configfile normal multiboot" --no-floppy --boot-directory=./mnt/boot /dev/loop0
+  - sudo mkdir -p ./mnt/boot/efi ./mnt/EFI/
+  - sudo grub-install --target=x86_64-efi --boot-directory=./mnt/boot --efi-directory=./mnt/boot/efi /dev/mapper/loop0p1
+  - sudo mv ./mnt/boot/EFI/BOOT ./mnt/EFI/BOOT
   - sudo bash -e ./mnt/boot/iso/additional-initramfs/generate # Generate additional initrd (gets loaded in addition to the one on the ISO)
   - sudo find ./mnt/
   - sudo ./mnt/boot/bin/detect # Configure bootloader
@@ -50,15 +49,16 @@ script:
   - sudo kpartx -v -d /dev/loop0
   - ls -lh .
   - VERSION=$(cd SystemImageKit ; git rev-parse --short HEAD)
-  - mkdir -p BootImage
-  - mv boot.img BootImage/BootImage.img
+  # travis_wait 30 xz -0 boot.img
   - if [ ! -z "$ISO" ] ; then SUFFIX=$(basename $ISO | cut -d "-" -f 1-2) ; fi
-  - ( cd BootImage ; zip ../BootImage$SUFFIX-$VERSION-x86_64 * )
-  - ls
+  # mv boot.img.xz BootImage-$SUFFIX-$VERSION-x86_64.img.xz # takes time
+  - mv boot.img BootImage-$SUFFIX-$VERSION-x86_64.img
+  - ls -lh
 
 after_success:
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-  - bash upload.sh ./BootImage*zip
+  # bash upload.sh ./*.xz
+  - bash upload.sh ./*.img
   
 branches:
   except:

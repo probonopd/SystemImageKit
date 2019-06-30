@@ -19,7 +19,7 @@ In order to do this, boot Ubuntu Live system (tested with Ubuntu 14.04 LTS Trust
 
 __NOTE:__ All data on /dev/sdX will be deleted.
 
-https://github.com/probonopd/SystemImageKit/blob/master/install.sh
+https://raw.githubusercontent.com/probonopd/SystemImageKit/master/install.sh
 
 If you format the device manually and run into "error: will not proceed with blocklists", then use gparted to move the start of the first partition up 1MB. This works without having to reformat the device.
 
