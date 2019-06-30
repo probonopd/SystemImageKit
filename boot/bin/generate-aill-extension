@@ -51,8 +51,9 @@ wget -c "https://artifacts.assassinate-you.net/artifactory/AppImageLauncher/$URL
 
 
 chmod +x appimagelauncher-lite-*.AppImage
+ls -lh
 ./appimagelauncher-lite-*.AppImage --appimage-extract
-cp -Rf ./squashfs-root/* . && rm -r ./squashfs-root/* 
+cp -Rf ./squashfs-root/* . && rm -r ./squashfs-root/*
 # Without those, the service doesn't automatically launch on boot
 cat > ExtensionRun <<\EOF
 #!/bin/sh
@@ -85,6 +86,18 @@ Terminal=false
 Type=Application
 NoDisplay=true
 EOF
+
+# Remove leftovers that AILL does not need but that can cripple the system
+if [ -e ./usr/lib/binfmt.d ] ; then
+  rm -rf ./usr/lib/binfmt.d
+fi
+if [ -e ./usr/lib/systemd/user/appimagelauncherfs.service ] ; then
+  rm -f ./usr/lib/systemd/user/appimagelauncherfs.service
+fi
+rm -rf ./usr/lib/libsystemd.so.0 || true
+
+chown -R root:root .
+chmod -R a+rx .
 
 mkdir -p "${HERE}/../customize/x86_64/"
 mksquashfs . "${HERE}/../customize/x86_64/appimagelauncherd.ExtensionImage" -noappend
