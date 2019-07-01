@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # To test:
-# 	
+#
 # systemctl --user enable appimagelauncherd
 # systemctl --user start appimagelauncherd
 
@@ -24,6 +24,15 @@ fi
 mkdir -p /tmp/appimagelauncherd_x86_64
 cd /tmp/appimagelauncherd_x86_64
 
+mkdir -p etc/skel/.config
+ISOMOUNTPOINT=$(mount | grep fat | head -n 1 | cut -d " " -f 3)
+cat > etc/skel/.config/appimagelauncher.cfg <<EOF
+[AppImageLauncher]
+ask_to_move=false
+destination=$ISOMOUNTPOINT/Applications
+enable_daemon=true
+EOF
+
 # The following directories must exist when the session starts, otherwise the user must log out and in
 # for appimagelauncherd to work properly. This is NOT an appimagelauncherd bug. Send a pull request if you can fix this.
 # It looks like it is too late here to populate skel, hence this DOES NOT WORK
@@ -37,6 +46,10 @@ echo "This directory must exist before the session starts in order to work" >> e
 mkdir -p etc/skel/.local/share/mime/packages/
 echo "This directory must exist before the session starts in order to work" >> etc/skel/.local/share/mime/packages/.note
 
+# FIXME in appimagelauncher-lite.AppImage
+mkdir -p etc/skel/.config/systemd/user/
+echo "This directory must exist before the session starts in order to work" >> etc/skel/.config/systemd/user/.note
+
 mkdir -p usr/bin
 
 # Get the ID of the last successful build on Travis CI
@@ -49,27 +62,19 @@ URL=travis-623/appimagelauncher-lite-1.3.1-x86_64.AppImage ### FIXME, hardcoded 
 # wget -c "https://artifacts.assassinate-you.net/artifactory/AppImageLauncher/$LINK/$URL"
 wget -c "https://artifacts.assassinate-you.net/artifactory/AppImageLauncher/$URL"
 
-
 chmod +x appimagelauncher-lite-*.AppImage
 ls -lh
-./appimagelauncher-lite-*.AppImage --appimage-extract
-cp -Rf ./squashfs-root/* . && rm -r ./squashfs-root/*
+mkdir -p usr/lib/
+mv ./appimagelauncher-lite-*.AppImage usr/lib/appimagelauncher-lite.AppImage
+
 # Without those, the service doesn't automatically launch on boot
 cat > ExtensionRun <<\EOF
 #!/bin/sh
 
-mkdir -p /usr/lib/systemd/user/
-
-# Enable per-user launchd unit for all users in a way that users can disable it
-systemctl --global enable appimagelauncherd # does not seem to work
-
-# Enable per-user launchd unit for all users, does not seem to work either
-mkdir -p /usr/lib/systemd/user/graphical.target.wants/
-( cd /usr/lib/systemd/user/graphical.target.wants/ ; ln -s ../appimagelauncherd.service . )
-
-# Really desperate now
-mkdir -p /home/me/.config/systemd/user/graphical.target.wants/
-ln -s /usr/lib/systemd/user/appimagelauncherd.service /home/me/.config/systemd/user/graphical.target.wants/appimagelauncherd.service
+# Apparently we are too late for skel being used, so copying it in by hand
+# FIXME: DO NOT HARDCODE USERNAME
+mkdir -p /home/me/
+cp -Rf /etc/skel/. /home/me # Note the .
 chown -R me /home/me/
 EOF
 
@@ -78,27 +83,18 @@ chmod a+x ExtensionRun
 # Since all of the above does not work, I am using an autostart file
 # but it would nice if systemd could do this on its own
 mkdir -p etc/xdg/autostart/
-cat > etc/xdg/autostart/appimagelauncherd.desktop <<EOF
+cat > etc/xdg/autostart/appimagelauncher-lite.desktop <<EOF
 [Desktop Entry]
-Name=appimagelauncherd
-Exec=systemctl --user start appimagelauncherd
+Name=appimagelauncher-lite
+Exec=/usr/lib/appimagelauncher-lite.AppImage install
 Terminal=false
 Type=Application
 NoDisplay=true
 EOF
 
-# Remove leftovers that AILL does not need but that can cripple the system
-if [ -e ./usr/lib/binfmt.d ] ; then
-  rm -rf ./usr/lib/binfmt.d
-fi
-if [ -e ./usr/lib/systemd/user/appimagelauncherfs.service ] ; then
-  rm -f ./usr/lib/systemd/user/appimagelauncherfs.service
-fi
-rm -rf ./usr/lib/libsystemd.so.0 || true
-
 chown -R root:root .
 chmod -R a+rx .
 
 mkdir -p "${HERE}/../customize/x86_64/"
-mksquashfs . "${HERE}/../customize/x86_64/appimagelauncherd.ExtensionImage" -noappend
+mksquashfs . "${HERE}/../customize/x86_64/aill.ExtensionImage" -noappend
 cd -
