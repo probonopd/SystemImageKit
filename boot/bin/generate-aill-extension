@@ -67,17 +67,9 @@ ls -lh
 mkdir -p usr/lib/
 mv ./appimagelauncher-lite-*.AppImage usr/lib/appimagelauncher-lite.AppImage
 
-# Without those, the service doesn't automatically launch on boot
 cat > ExtensionRun <<\EOF
 #!/bin/sh
-
-# Apparently we are too late for skel being used, so copying it in by hand
-# FIXME: DO NOT HARDCODE USERNAME
-mkdir -p /home/me/
-cp -Rf /etc/skel/. /home/me # Note the .
-chown -R me /home/me/
 EOF
-
 chmod a+x ExtensionRun
 
 # Since all of the above does not work, I am using an autostart file
