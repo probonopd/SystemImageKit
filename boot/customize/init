@@ -318,9 +318,9 @@ cat > /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml <<\EO
           <property name="color-style" type="int" value="0"/>
           <property name="image-style" type="int" value="0"/>
           <property name="color1" type="array">
-            <value type="uint" value="22744"/>
-            <value type="uint" value="30175"/>
-            <value type="uint" value="39891"/>
+            <value type="uint" value="29596"/>
+            <value type="uint" value="29596"/>
+            <value type="uint" value="29596"/>
             <value type="uint" value="65535"/>
           </property>
         </property>
