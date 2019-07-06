@@ -498,6 +498,7 @@ rm -rf /usr/share/ubuntu-web-launchers 2>/dev/null || true
 
 # Remove system-provided Firefox. We bring our own AppImage
 rm /usr/share/applications/firefox.desktop  || true
+rm /usr/share/applications/exo-web-browser.desktop || true
 
 # /usr/lib/firefox/defaults/pref/vendor-gre.js is the location on Ubuntu
 # Check user's settings in:
@@ -607,9 +608,12 @@ sudo update-desktop-database /usr/share/applications/
 
 # Copy in skel
 # Apparently we are too late for skel being used, so copying it in by hand
-USERNAME=me # FIXME: DO NOT HARDCODE USERNAME
-mkdir -p /home/$USERNAME/
-cp -Rf /etc/skel/. /home/$USERNAME # Note the .
-chown -R $USERNAME /home/$USERNAME/
+USERNAMES=$(cd /home && ls)
+for USERNAME in $USERNAMES; do
+  # sudo -u $USERNAME ...
+  mkdir -p /home/$USERNAME/
+  cp -Rf /etc/skel/. /home/$USERNAME # Note the .
+  chown -R $USERNAME /home/$USERNAME/
+done
 
 grep -r init= /proc/cmdline && exec /sbin/init

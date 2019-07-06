@@ -52,15 +52,9 @@ echo "This directory must exist before the session starts in order to work" >> e
 
 mkdir -p usr/bin
 
-# Get the ID of the last successful build on Travis CI
-# DLD=$(wget -q https://github.com/TheAssassin/AppImageLauncher/releases -O - | grep "appimagelauncherd_.*64*.deb" | head -n 1 | cut -d '"' -f 2)
-# wget -c "https://github.com/$DLD"
-
-LINK=$(wget -q "https://artifacts.assassinate-you.net/artifactory/AppImageLauncher/" -O - | grep "travis-" | cut -d '"' -f 2 | sort -Vr | head -n 1)
-URL=$(wget -q "https://artifacts.assassinate-you.net/artifactory/AppImageLauncher/$LINK/" -O - | grep "amd64.deb" | cut -d '"' -f 2 | head -n 1)
-URL=travis-623/appimagelauncher-lite-1.3.1-x86_64.AppImage ### FIXME, hardcoded for now
-# wget -c "https://artifacts.assassinate-you.net/artifactory/AppImageLauncher/$LINK/$URL"
-wget -c "https://artifacts.assassinate-you.net/artifactory/AppImageLauncher/$URL"
+# Get the last successful build on Travis CI
+DLD=$(wget -q https://github.com/TheAssassin/AppImageLauncher/releases/ -O - | grep "appimagelauncher-lite-.*-x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
+wget -c "https://github.com/$DLD"
 
 chmod +x appimagelauncher-lite-*.AppImage
 ls -lh
