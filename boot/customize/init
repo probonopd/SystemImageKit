@@ -356,6 +356,8 @@ echo "7"
 # https://bugzilla.redhat.com/show_bug.cgi?id=646673
 # https://ubuntuforums.org/showthread.php?t=1665289
 # https://bugs.launchpad.net/ubuntu/+source/udisks/+bug/663815
+# https://github.com/storaged-project/udisks/pull/708
+# https://github.com/storaged-project/udisks/issues/707
 if [ -e /usr/lib/udisks/udisks-daemon ] ; then
   sed -i -e 's|showexec|\x00\x00\x00\x00\x00\x00\x00\x00|g' /usr/lib/udisks/udisks-daemon
 fi
