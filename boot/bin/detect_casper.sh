@@ -16,7 +16,9 @@ MOUNTPOINT="$1"
 #
 
 find "$MOUNTPOINT"/casper 2>/dev/null || return
-ls "$MOUNTPOINT"/boot/grub/loopback.cfg 2>/dev/null || return
+ls "$MOUNTPOINT"/boot/grub/grub.cfg 2>/dev/null && CFG="$MOUNTPOINT"/boot/grub/grub.cfg # pop-os_19.04_amd64_nvidia_7.iso
+ls "$MOUNTPOINT"/boot/grub/loopback.cfg 2>/dev/null && CFG="$MOUNTPOINT"/boot/grub/loopback.cfg # Hopefully all newer casper ISOs
+if [ -z $CFG ] ; then return ; fi
 
 #
 # Parse the required information out of the ISO
@@ -29,8 +31,6 @@ LIVETOOLVERSION=$(grep -e "^casper" "$MOUNTPOINT"/casper/filesystem.manifest | h
 if [ "x$LIVETOOLVERSION" == "x" ] ; then
   LIVETOOLVERSION=0
 fi
-
-CFG=$(find "$MOUNTPOINT" -name loopback.cfg | head -n 1)
 
 LINUX=$(cat $CFG | grep "linux" | head -n 1 | sed -e 's|linux\t||g' | sed -e 's|linux ||g' | xargs | sed -e 's|.efi||g')
 echo "* LINUX $LINUX"

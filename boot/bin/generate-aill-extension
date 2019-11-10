@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# To test:
+#
+# systemctl --user enable appimagelauncherd
+# systemctl --user start appimagelauncherd
+
+set -e
+
+HERE="$(dirname "$(readlink -f "${0}")")"
+
+if [ -e /usr/bin/apt-get ] ; then
+  which mksquashfs || apt-get -y install squashfs-tools
+  which wget || apt-get -y install wget
+  # which dpkg || apt-get -y install dpkg
+fi
+
+if [ -e /usr/bin/yum ] ; then
+  which mksquashfs || yum -y install squashfs-tools
+  which wget || yum -y install wget
+  # which dpkg || yum -y install dpkg
+fi
+
+mkdir -p /tmp/appimagelauncherd_x86_64
+cd /tmp/appimagelauncherd_x86_64
+
+mkdir -p etc/skel/.config
+ISOMOUNTPOINT=$(mount | grep fat | head -n 1 | cut -d " " -f 3)
+cat > etc/skel/.config/appimagelauncher.cfg <<EOF
+[AppImageLauncher]
+ask_to_move=false
+destination=$ISOMOUNTPOINT/Applications
+enable_daemon=true
+EOF
+
+# The following directories must exist when the session starts, otherwise the user must log out and in
+# for appimagelauncherd to work properly. This is NOT an appimagelauncherd bug. Send a pull request if you can fix this.
+# It looks like it is too late here to populate skel, hence this DOES NOT WORK
+mkdir -p etc/skel/.local/share/icons/hicolor/{16x16,22x22,24x24,32x32,36x36,48x48,64x64,72x72,96x96,128x128,192x192,256x256,512x512}/apps/
+mkdir -p etc/skel/.local/share/icons/hicolor/scalable/apps/
+find etc/skel/.local/share/icons -type d -name apps -exec echo echo \"This directory must exist before the session starts in order to work\" \> {}/.note \; > commands
+bash -x commands
+rm commands
+mkdir -p etc/skel/.local/share/applications/appimagekit
+echo "This directory must exist before the session starts in order to work" >> etc/skel/.local/share/applications/appimagekit/.note
+mkdir -p etc/skel/.local/share/mime/packages/
+echo "This directory must exist before the session starts in order to work" >> etc/skel/.local/share/mime/packages/.note
+
+# FIXME in appimagelauncher-lite.AppImage
+mkdir -p etc/skel/.config/systemd/user/
+echo "This directory must exist before the session starts in order to work" >> etc/skel/.config/systemd/user/.note
+
+mkdir -p usr/bin
+
+# Get the last successful build on Travis CI
+DLD=$(wget -q https://github.com/TheAssassin/AppImageLauncher/releases/ -O - | grep "appimagelauncher-lite-.*-x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
+wget -c "https://github.com/$DLD"
+
+chmod +x appimagelauncher-lite-*.AppImage
+ls -lh
+mkdir -p usr/lib/
+mv ./appimagelauncher-lite-*.AppImage usr/lib/appimagelauncher-lite.AppImage
+
+cat > ExtensionRun <<\EOF
+#!/bin/sh
+EOF
+chmod a+x ExtensionRun
+
+# Since all of the above does not work, I am using an autostart file
+# but it would nice if systemd could do this on its own
+mkdir -p etc/xdg/autostart/
+cat > etc/xdg/autostart/appimagelauncher-lite.desktop <<EOF
+[Desktop Entry]
+Name=appimagelauncher-lite
+Exec=/usr/lib/appimagelauncher-lite.AppImage install
+Terminal=false
+Type=Application
+NoDisplay=true
+EOF
+
+chown -R root:root .
+chmod -R a+rx .
+
+mkdir -p "${HERE}/../customize/x86_64/"
+mksquashfs . "${HERE}/../customize/x86_64/aill.ExtensionImage" -noappend
+cd -

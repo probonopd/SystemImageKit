@@ -322,9 +322,9 @@ cat > /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml <<\EO
           <property name="color-style" type="int" value="0"/>
           <property name="image-style" type="int" value="0"/>
           <property name="color1" type="array">
-            <value type="uint" value="22744"/>
-            <value type="uint" value="30175"/>
-            <value type="uint" value="39891"/>
+            <value type="uint" value="29596"/>
+            <value type="uint" value="29596"/>
+            <value type="uint" value="29596"/>
             <value type="uint" value="65535"/>
           </property>
         </property>
@@ -360,6 +360,8 @@ echo "7"
 # https://bugzilla.redhat.com/show_bug.cgi?id=646673
 # https://ubuntuforums.org/showthread.php?t=1665289
 # https://bugs.launchpad.net/ubuntu/+source/udisks/+bug/663815
+# https://github.com/storaged-project/udisks/pull/708
+# https://github.com/storaged-project/udisks/issues/707
 if [ -e /usr/lib/udisks/udisks-daemon ] ; then
   sed -i -e 's|showexec|\x00\x00\x00\x00\x00\x00\x00\x00|g' /usr/lib/udisks/udisks-daemon
 fi
@@ -500,6 +502,10 @@ rm -rf /usr/share/ubuntu-web-launchers 2>/dev/null || true
 #
 #############################################
 
+# Remove system-provided Firefox. We bring our own AppImage
+rm /usr/share/applications/firefox.desktop  || true
+rm /usr/share/applications/exo-web-browser.desktop || true
+
 # /usr/lib/firefox/defaults/pref/vendor-gre.js is the location on Ubuntu
 # Check user's settings in:
 # ./.mozilla/firefox/*.default/prefs.js
@@ -605,5 +611,15 @@ rm /tmp/executable.desktop
 sudo update-desktop-database /usr/share/applications/
 
 #############################################
+
+# Copy in skel
+# Apparently we are too late for skel being used, so copying it in by hand
+USERNAMES=$(cd /home && ls)
+for USERNAME in $USERNAMES; do
+  # sudo -u $USERNAME ...
+  mkdir -p /home/$USERNAME/
+  cp -Rf /etc/skel/. /home/$USERNAME # Note the .
+  chown -R $USERNAME /home/$USERNAME/
+done
 
 grep -r init= /proc/cmdline && exec /sbin/init

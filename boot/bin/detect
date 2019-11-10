@@ -51,7 +51,7 @@ LIVE=$( cat /proc/mounts  | grep "$LIVEMNT" | cut -d " " -f 1 | head -n 1) # /de
 mount "$LIVE" -o remount,rw
 UUID=$(blkid "$LIVE" -s UUID -o value)
 echo $UUID
-ISOS=$(find "$LIVEMNT"/boot/iso -name "*.iso")
+ISOS=$(find "$LIVEMNT"/boot/iso -name "*.iso" | sort)
 
 for ISO in $ISOS; do
   echo ""
