@@ -10,6 +10,10 @@ set -x
 
 ############################
 
+rm -rf /usr/lib/packagekit/packagekitd
+
+############################
+
 # Google Chrome
 # https://www.chromium.org/administrators/linux-quick-start
 # https://www.chromium.org/administrators/policy-list-3
