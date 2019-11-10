@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -e
+
+mkdir -p ./usr/bin/
+
+cat > ./usr/bin/appimagedlauncher <<\EOF
+#!/bin/bash
+
+# Launch the most recent (as per modification time)
+# appimaged AppImage from the Applications directory
+# of the first mounted vfat partition (which is where
+# Live ISOs are usually mounted from by SystemImageKit)
+
+exec "$(mount | grep fat | head -n 1 | cut -d " " -f 3)/Applications/$(ls -at /$(mount | grep fat | head -n 1 | cut -d " " -f 3)/Applications/ | grep -e "^appimaged-.*.AppImage" | head -n 1)" "$@"
+EOF
+chmod +x ./usr/bin/appimagedlauncher
+
+mkdir -p etc/xdg/autostart/
+
+cat > etc/xdg/autostart/appimaged.desktop <<\EOF
+[Desktop Entry]
+Type=Application
+Name=appimaged
+Comment=Optional AppImage daemon that registers AppImages in the system
+Exec=appimagedlauncher
+X-Fixme-Exec="\\$(mount | grep fat | head -n 1 | cut -d \" \" -f 3)/Applications/\\$(ls -at /\\$(mount | grep fat | head -n 1 | cut -d \" \" -f 3)/Applications/ | grep -e \"^appimaged-.*.AppImage\" | head -n 1)"
+X-GNOME-AutoRestart=true
+X-GNOME-Autostart-Notify=true
+EOF
+
+mksquashfs . "${HERE}/../customize/x86_64/appimaged.ExtensionImage" -noappend
+cd -
