@@ -2,6 +2,9 @@
 
 HERE="$(dirname "$(readlink -f "${0}")")"
 
+mkdir -p /tmp/appimaged_x86_64
+cd /tmp/appimaged_x86_64
+
 mkdir -p ./usr/bin/
 
 cat > ./usr/bin/appimagedlauncher <<\EOF
