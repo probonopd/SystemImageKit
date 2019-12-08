@@ -16,8 +16,9 @@ MOUNTPOINT="$1"
 #
 
 find "$MOUNTPOINT"/casper 2>/dev/null || return
-ls "$MOUNTPOINT"/boot/grub/grub.cfg 2>/dev/null && CFG="$MOUNTPOINT"/boot/grub/grub.cfg # pop-os_19.04_amd64_nvidia_7.iso
 ls "$MOUNTPOINT"/boot/grub/loopback.cfg 2>/dev/null && CFG="$MOUNTPOINT"/boot/grub/loopback.cfg # Hopefully all newer casper ISOs
+ls "$MOUNTPOINT"/boot/grub/grub.cfg 2>/dev/null && CFG="$MOUNTPOINT"/boot/grub/grub.cfg # pop-os_19.04_amd64_nvidia_7.iso
+# In elementary OS 5.1 /boot/grub/loopback.cfg contains just "source /boot/grub/grub.cfg" hence that one must be last
 if [ -z $CFG ] ; then return ; fi
 
 #
