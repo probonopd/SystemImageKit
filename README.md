@@ -1,6 +1,3 @@
-Copyright (c) 2004-18 Simon Peter
-probono@puredarwin.org
-
 # SystemImageKit
 
 Image-based computing: Operating system complexity reduction by encapsulation.
