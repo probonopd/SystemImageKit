@@ -15,22 +15,35 @@ cat > ./usr/bin/appimagedlauncher <<\EOF
 # of the first mounted vfat partition (which is where
 # Live ISOs are usually mounted from by SystemImageKit)
 
-exec "$(mount | grep fat | head -n 1 | cut -d " " -f 3)/Applications/$(ls -at /$(mount | grep fat | head -n 1 | cut -d " " -f 3)/Applications/ | grep -e "^appimaged-.*.AppImage" | head -n 1)" "$@"
+"$(mount | grep fat | head -n 1 | cut -d " " -f 3)/Applications/$(ls -at /$(mount | grep fat | head -n 1 | cut -d " " -f 3)/Applications/ | grep -e "^appimaged-.*.AppImage" | head -n 1)" "$@"
 EOF
 chmod +x ./usr/bin/appimagedlauncher
 
-mkdir -p etc/xdg/autostart/
+mkdir -p etc/systemd/user/
+cat > etc/systemd/user/appimaged.service <<\EOF
+[Unit]
+Description=AppImage system integration daemon
+After=syslog.target network.target
 
-cat > etc/xdg/autostart/appimaged.desktop <<\EOF
-[Desktop Entry]
-Type=Application
-Name=appimaged
-Comment=Optional AppImage daemon that registers AppImages in the system
-Exec=appimagedlauncher
-X-Fixme-Exec="\\$(mount | grep fat | head -n 1 | cut -d \" \" -f 3)/Applications/\\$(ls -at /\\$(mount | grep fat | head -n 1 | cut -d \" \" -f 3)/Applications/ | grep -e \"^appimaged-.*.AppImage\" | head -n 1)"
-X-GNOME-AutoRestart=true
-X-GNOME-Autostart-Notify=true
+[Service]
+Type=simple
+ExecStart=/usr/bin/appimagedlauncher
+
+RestartSec=3
+Restart=always
+
+StandardOutput=syslog
+StandardError=syslog
+
+SyslogIdentifier=appimaged
+
+[Install]
+WantedBy=default.target
 EOF
+
+# Not sure whether this works...
+mkdir -p etc/systemd/user/default.target.wants
+( cd etc/systemd/user/ ; ln -s appimaged.service default.target.wants/ )
 
 mksquashfs . "${HERE}/../customize/x86_64/appimaged.ExtensionImage" -noappend
 cd -
