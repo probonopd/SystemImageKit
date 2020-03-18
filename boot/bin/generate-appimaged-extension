@@ -37,6 +37,8 @@ StandardError=syslog
 
 SyslogIdentifier=appimaged
 
+Environment=LAUNCHED_BY_SYSTEMD=1
+
 [Install]
 WantedBy=default.target
 EOF
