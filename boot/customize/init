@@ -589,6 +589,142 @@ fi
 
 #############################################
 #
+# Font customization
+#
+#############################################
+
+# Remove "font spam"
+
+rm -rf /usr/share/fonts/{open,true}type /usr/share/fonts/X11/Type1 || true
+mkdir -p /usr/share/fonts/{open,true}type /usr/share/fonts/X11/Type1/
+
+# Use URW fonts
+
+cat > /etc/fonts/local.conf <<\EOF
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+  <match target="pattern">
+    <test qual="any" name="family"><string>Liberation Sans</string></test>
+    <edit name="family" mode="assign" binding="same"><string>Nimbus Sans L</string></edit>
+  </match>
+
+  <match target="pattern">
+    <test qual="any" name="family"><string>DejaVu Sans</string></test>
+    <edit name="family" mode="assign" binding="same"><string>Nimbus Sans L</string></edit>
+  </match>
+
+<selectfont>
+    <rejectfont>
+        <pattern>
+            <patelt name="family" >
+                <string>Liberation Sans</string>
+            </patelt>
+        </pattern>
+    </rejectfont>
+</selectfont>
+
+<selectfont>
+    <rejectfont>
+        <pattern>
+            <patelt name="family" >
+                <string>DejaVu Sans</string>
+            </patelt>
+        </pattern>
+    </rejectfont>
+</selectfont>
+
+  <match target="pattern">
+    <test qual="any" name="family"><string>Liberation Serif</string></test>
+    <edit name="family" mode="assign" binding="same"><string>Nimbus Roman No9 L</string></edit>
+  </match>
+
+  <match target="pattern">
+    <test qual="any" name="family"><string>DejaVu Serif</string></test>
+    <edit name="family" mode="assign" binding="same"><string>Nimbus Roman No9 L</string></edit>
+  </match>
+
+<selectfont>
+    <rejectfont>
+        <pattern>
+            <patelt name="family" >
+                <string>Liberation Serif</string>
+            </patelt>
+        </pattern>
+    </rejectfont>
+</selectfont>
+
+<selectfont>
+    <rejectfont>
+        <pattern>
+            <patelt name="family" >
+                <string>DejaVu Serif</string>
+            </patelt>
+        </pattern>
+    </rejectfont>
+</selectfont>
+
+  <match target="pattern">
+    <test qual="any" name="family"><string>Monospace</string></test>
+    <edit name="family" mode="assign" binding="same"><string>Nimbus Mono L</string></edit>
+  </match>
+
+<selectfont>
+    <rejectfont>
+        <pattern>
+            <patelt name="family" >
+                <string>Monospace</string>
+            </patelt>
+        </pattern>
+    </rejectfont>
+</selectfont>
+
+</fontconfig>
+EOF
+
+#############################################
+#
+# Terminal cosmetics
+#
+#############################################
+
+# Black text on white background for XFCE Terminal
+mkdir -p /etc/skel/.config/xfce4/terminal/
+cat > /etc/skel/.config/xfce4/terminal/terminalrc <<\EOF
+[Configuration]
+ColorForeground=#000000
+ColorBackground=#ffffff
+FontUseSystem=TRUE
+MiscAlwaysShowTabs=FALSE
+MiscBell=FALSE
+MiscBellUrgent=FALSE
+MiscBordersDefault=TRUE
+MiscCursorBlinks=FALSE
+MiscCursorShape=TERMINAL_CURSOR_SHAPE_BLOCK
+MiscDefaultGeometry=80x24
+MiscInheritGeometry=FALSE
+MiscMenubarDefault=TRUE
+MiscMouseAutohide=FALSE
+MiscMouseWheelZoom=TRUE
+MiscToolbarDefault=FALSE
+MiscConfirmClose=TRUE
+MiscCycleTabs=TRUE
+MiscTabCloseButtons=TRUE
+MiscTabCloseMiddleClick=TRUE
+MiscTabPosition=GTK_POS_TOP
+MiscHighlightUrls=TRUE
+MiscMiddleClickOpensUri=FALSE
+MiscCopyOnSelect=FALSE
+MiscShowRelaunchDialog=TRUE
+MiscRewrapOnResize=TRUE
+MiscUseShiftArrowsToScroll=FALSE
+MiscSlimTabs=FALSE
+MiscNewTabAdjacent=FALSE
+ColorBoldIsBright=FALSE
+EOF
+
+#############################################
+#
 # AppImage handling
 #
 #############################################
