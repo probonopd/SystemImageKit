@@ -682,6 +682,21 @@ cat > /etc/fonts/local.conf <<\EOF
 </fontconfig>
 EOF
 
+
+#############################################
+#
+# Drop shadow cosmetics
+#
+#############################################
+
+if [ -e /usr/share/themes/Greybird/xfwm4/themerc ] ; then
+  sed -i -e 's|^shadow_delta_height=.*|shadow_delta_height=25|g' /usr/share/themes/Greybird/xfwm4/themerc
+  sed -i -e 's|^shadow_delta_width=.*|shadow_delta_width=25|g' /usr/share/themes/Greybird/xfwm4/themerc
+  sed -i -e 's|^shadow_delta_x=.*|shadow_delta_x=20|g' /usr/share/themes/Greybird/xfwm4/themerc
+  sed -i -e 's|^shadow_delta_y=.*|shadow_delta_y=20|g' /usr/share/themes/Greybird/xfwm4/themerc
+  sed -i -e 's|^shadow_opacity=.*|shadow_opacity=20|g' /usr/share/themes/Greybird/xfwm4/themerc
+fi
+
 #############################################
 #
 # Terminal cosmetics
